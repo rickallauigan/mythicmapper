@@ -44,3 +44,26 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := controller_device
 LOCAL_SRC_FILES := $(JNI_SRC_PATH)/controller_device.c
 include $(BUILD_SHARED_LIBRARY)
+
+# Rust reference math is packaged but is not used by the active mapping runtime.
+ifeq ($(TARGET_ARCH_ABI),arm64-v8a)
+MYTHIC_RUST_TARGET := aarch64-linux-android
+else ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
+MYTHIC_RUST_TARGET := armv7-linux-androideabi
+else ifeq ($(TARGET_ARCH_ABI),x86)
+MYTHIC_RUST_TARGET := i686-linux-android
+else ifeq ($(TARGET_ARCH_ABI),x86_64)
+MYTHIC_RUST_TARGET := x86_64-linux-android
+endif
+
+include $(CLEAR_VARS)
+LOCAL_MODULE := mythicmapper_core
+LOCAL_SRC_FILES := ../engine/target/$(MYTHIC_RUST_TARGET)/release/libmythicmapper_core.a
+include $(PREBUILT_STATIC_LIBRARY)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE := mythicmapper_core_jni
+LOCAL_SRC_FILES := $(JNI_SRC_PATH)/mythicmapper_jni.c
+LOCAL_STATIC_LIBRARIES := mythicmapper_core
+LOCAL_LDLIBS := -ldl -lm -llog
+include $(BUILD_SHARED_LIBRARY)

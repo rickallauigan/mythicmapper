@@ -14,7 +14,7 @@ copied GPL code to Apache. License interpretation/complete provenance clearance 
 | scrcpy Point/Pointer/PointersState; Input derived pipeline | README explicit credit, com/genymobile/scrcpy paths | Apache-2.0 upstream; inherited copies lack original headers. Preserve/restore appropriate notices after pinning origin; exact copied revision/copyright still INVESTIGATE. https://github.com/Genymobile/scrcpy/blob/master/LICENSE |
 | SnakeYAML 2.5 | app/build.gradle; THIRD_PARTY_NOTICES | Apache-2.0; retain notices |
 | AndroidX / Compose / Material / constraint/coordinator / WebKit | app/build.gradle + resolved POM inventory | POM-declared licenses in dependency-licenses.json; typically Apache-2.0, verify every resolved artifact |
-| libsu core/service 5.3.0 | app/build.gradle | Resolve POM/license before legal clearance; do not guess from package name |
+| libsu core/service 5.3.0 | app/build.gradle | Apache-2.0 in resolved pinned POMs; preserve license/notice when redistributing |
 | Shizuku API/provider 13.1.5 | app/build.gradle | MIT upstream https://github.com/RikkaApps/Shizuku-API/blob/master/LICENSE; SDK is distinct from Shizuku app |
 | JUnit/Robolectric and transitives | testImplementation + Gradle cache | Test-only; inventory separately before redistribution |
 | AGP/Gradle/Kotlin/NDK/JDK | Gradle/settings/wrapper properties | Build tools; runtime components separately resolved. Tool licenses still apply if redistributed |

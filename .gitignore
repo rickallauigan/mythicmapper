@@ -8,3 +8,8 @@
 output*.json
 keystore.properties
 keystore.jks
+
+# Rust build products
+/engine/target/
+/.kotlin/
+__pycache__/
