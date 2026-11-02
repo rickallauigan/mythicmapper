@@ -38,7 +38,7 @@ jitter and SYN_DROPPED count. JSON snapshots are on-demand and local. No telemet
 ## Verified locally
 
 - Original baseline: 238 Android tests and debug APK PASS.
-- Combined development implementation: 253 Android tests; zero failures/errors/skips.
+- Combined development implementation: 254 Android tests; zero failures/errors/skips.
 - Android lint, debug APK assembly, runtime dependency inventory PASS.
 - Five Rust unit/property/replay tests and clippy -D warnings PASS.
 - Original Java/C JNI/Rust parity across 242406 vectors PASS.
@@ -51,7 +51,7 @@ jitter and SYN_DROPPED count. JSON snapshots are on-demand and local. No telemet
 - APK ZIP contains Rust JNI libraries for arm64-v8a, armeabi-v7a, x86, x86_64.
 - Basic tracked-source secret guard and git whitespace checks PASS; not an exhaustive security audit.
 
-Local build logs: /tmp/mythicmapper-baseline-gradle.log, /tmp/mythicmapper-complete-gradle.log.
+Local build logs: /tmp/mythicmapper-baseline-gradle.log, /tmp/mythicmapper-scope-reload-gradle.log.
 Rust cross-toolchain installed under /tmp only; no shell startup or system configuration changes.
 ADB listed no devices; it started its ordinary local development daemon. No APK installation,
 phone commands, mapper/profile changes on a device or physical gameplay validation occurred.
@@ -88,7 +88,11 @@ Resume on ui/mythicmapper-home. Read this checkpoint and inspect status/PR check
 Do not merge draft PRs or publish releases without a new explicit instruction.
 
 Development APK: `app/build/outputs/apk/debug/app-debug.apk`
-SHA-256: `970d72c5781d1c08f588d4edddc33820d4e6798601342c16da44ed0129214f90`. Debug-signed; not installed or gameplay-certified.
+SHA-256: `db4a608fee0cfc4151daf9783ad8b0c99553ad22a358c7f4fee8238c1b2782a6`. Debug-signed; not installed or gameplay-certified.
 
 Draft UI PR: https://github.com/rickallauigan/mythicmapper/pull/11.
 Archived README trailing whitespace was normalized; original attribution/content and Git history remain preserved.
+
+Follow-up review: scoped editor reloads reject unsupported definitions before installing them.
+The local XtMapper remote has its push URL set to DISABLED as an additional guard.
+The runtime parent branch was integrated with a normal local Git merge; no GitHub PR was merged.

@@ -24,3 +24,9 @@ Existing :app:dependencyInventory emits runtime coordinates, CycloneDX JSON and 
 records, not proof of compatibility or complete embedded notices. Empty licenses remain
 UNRESOLVED. Verify shaded/native/transitive notices before release; no legal-compliance claim
 is made from successful builds. Rust starts without third-party crate dependencies.
+
+Rust 1.99.0 standard-library runtime is also linked, despite the crate having no external
+Cargo dependencies. Its distributed `COPYRIGHT-library.html` (from the pinned official
+rustup toolchain) is 1,499,465 bytes, SHA-256 `5647be074c8edf7339fd863055923a8fc80bc5610a8d4661ec3b767b9d392c27`.
+Review its component-specific notices and bundle applicable license copies before production
+distribution; this runtime is not covered by the Maven POM inventory.
