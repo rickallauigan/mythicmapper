@@ -1,0 +1,5131 @@
+{
+  "upstream": "rickallauigan/XtMapper",
+  "ref": "603b11dd9f919fd447dee25a2640dad03932af97",
+  "method": "Every tracked file hashed; text files scanned for headers, imports and declarations. This inventory does not imply every line was manually reviewed.",
+  "files": [
+    {
+      "path": ".crowdin/crowdin.yml",
+      "sha256": "50b106e190296b05041d150c085744fda4a961c2c20557135b5d0a3aa7d8e5cd",
+      "bytes": 284,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": ".github/FUNDING.yml",
+      "sha256": "0b135fbedffcdf4e542267c289982edb5d90c68c64e1c0f7edbaa5077f27fe07",
+      "bytes": 15,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/new.md",
+      "sha256": "f031aa56b824fd24437bcbf6076a831b51d259ed53240c795b3bb1d0bccfa284",
+      "bytes": 580,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": ".github/dependabot.yml",
+      "sha256": "e1c4bccfe074f73aef76749a609e4cca65c60ef6a72bc7f83cb6e30ce7b97184",
+      "bytes": 754,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": ".github/pull_request_template.md",
+      "sha256": "53019d276fe7a15a96689969f5766d59a5489246158afbc77c1eae41546226d5",
+      "bytes": 710,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": ".github/workflows/build-apk.yml",
+      "sha256": "85bb4c291cd61cae7d67e5a7a162d7344c503169ee2aa996e7f32b65c0c035ed",
+      "bytes": 836,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": ".github/workflows/build-docs.yml",
+      "sha256": "162d02cb7344704a4126b7f3409e1d88b6431bda859b0e2488011123dc2620bd",
+      "bytes": 393,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": ".github/workflows/crowdin-action.yml",
+      "sha256": "e73529965385ba44ac122faed6826531f86c319dd62b11c422d494ced91a51d7",
+      "bytes": 1270,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": ".github/workflows/release-apk.yml",
+      "sha256": "3973b39b58f3e5d18f2903bf22dd33ea4cab042c1667cf05512f1d892abb221b",
+      "bytes": 4791,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": ".github/workflows/validate-pr.yml",
+      "sha256": "58ee5d24bc3a5e78aa25a6b1c53e302c89bc313b42f4029b9226ad1e115a5c6d",
+      "bytes": 2840,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "65ca1e05dfd0c3092f9a94bec72556b5b1bd372278123574f5600de4f8485700",
+      "bytes": 109,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "COMPATIBILITY.md",
+      "sha256": "431ec274fb6c355dbd438bcf199526dc9dce082379321d94b6f361ccfe9b4628",
+      "bytes": 3248,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "sha256": "6077aff90a4aaa12db8a068a3eca20a2dffce1700510b8eb9fc5ac4ec0b2f915",
+      "bytes": 992,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+      "bytes": 35149,
+      "spdx": [],
+      "copyright": [
+        "Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>",
+        "(1) assert copyright on the software, and (2) offer you this License",
+        "\"Copyright\" also means copyright-like laws that apply to other kinds of",
+        "\"The Program\" refers to any copyrightable work licensed under this",
+        "in a fashion requiring copyright permission, other than the making of an",
+        "infringement under applicable copyright law, except executing it on a"
+      ],
+      "imports": [],
+      "symbols": [
+        "displays",
+        "presents",
+        "that",
+        "code",
+        "code",
+        "code",
+        "definition",
+        "code",
+        "code",
+        "code",
+        "code",
+        "code",
+        "code",
+        "code",
+        "code",
+        "code",
+        "code",
+        "code",
+        "code",
+        "code",
+        "code",
+        "of",
+        "code",
+        "code",
+        "code"
+      ]
+    },
+    {
+      "path": "README.md",
+      "sha256": "3eaf74f879daa039e9d23ddf6ddd8a0a3d86dc0b0084dff679e73348e99ca497",
+      "bytes": 11933,
+      "spdx": [],
+      "copyright": [
+        "## Copyright and License",
+        "Copyright (C) 2022 Xtr126"
+      ],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "SECURITY.md",
+      "sha256": "16d463745608067b1d7559c3773cfe56b3ab15341d1c4802c12aebec6a2482d3",
+      "bytes": 2327,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "sha256": "9d9a8602e4222b1b78c9b7714424833d77a38275611886ebb8e56684214669bd",
+      "bytes": 524,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": [
+        "YAML"
+      ]
+    },
+    {
+      "path": "app/.gitignore",
+      "sha256": "1e96b9197b2c106e574284d5baa338e6ad7fc8c3aae1f66b640f0de2caa4a784",
+      "bytes": 39,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/Android.mk",
+      "sha256": "d6e10efaf8df9635308f32b1e930cda02631cc0afac3230e4cd1c52227e584a2",
+      "bytes": 1132,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/Application.mk",
+      "sha256": "69bdd18fee1f54b8c81873e43a0585de62a6a5af22bc52f5be89954912e8b046",
+      "bytes": 21,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/build.gradle",
+      "sha256": "277f3e84efbcd05a27dab87124f911f6c5d7cb6c25a148a135a74a7e53f74059",
+      "bytes": 6548,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": [
+        "called"
+      ]
+    },
+    {
+      "path": "app/hidden-api/.gitignore",
+      "sha256": "5c3174b74edc6f2b9e0743594b8bd3c7f31e4f4405758cc9872b3fe1de1d28b4",
+      "bytes": 6,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/hidden-api/build.gradle",
+      "sha256": "0d80e0646bc3802c67c435985eb1499f09642ce951f6a04987da84674e55750d",
+      "bytes": 303,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/hidden-api/consumer-rules.pro",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/hidden-api/proguard-rules.pro",
+      "sha256": "56fd960cf225f6ca40f982b13a5dbb0d8bc3dfde13ff76422825c6070d0a1890",
+      "bytes": 750,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": [
+        "name",
+        "fqcn"
+      ]
+    },
+    {
+      "path": "app/hidden-api/src/main/java/android/app/IActivityManager.java",
+      "sha256": "fba2852e9fdea09011fdfb6cb267d20f4a9927bff55ad9916e77df42f6c4fca5",
+      "bytes": 618,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.os.Binder;",
+        "android.os.IBinder;",
+        "android.os.IInterface;",
+        "android.os.RemoteException;",
+        "java.util.List;"
+      ],
+      "symbols": [
+        "IActivityManager",
+        "Stub"
+      ]
+    },
+    {
+      "path": "app/hidden-api/src/main/java/android/app/IProcessObserver.java",
+      "sha256": "30e03d150a3e207a05933daed3fe8651594cf92e09d4f367489310d2f7b4d981",
+      "bytes": 468,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.os.Binder;"
+      ],
+      "symbols": [
+        "IProcessObserver",
+        "Stub"
+      ]
+    },
+    {
+      "path": "app/hidden-api/src/main/java/android/os/ServiceManager.java",
+      "sha256": "5650013310b5dd18dce76ef517250088ee3975910f0c8abbffccf25522fa734e",
+      "bytes": 705,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": [
+        "ServiceManager"
+      ]
+    },
+    {
+      "path": "app/hidden-api/src/main/java/android/os/SystemProperties.java",
+      "sha256": "5b520c08d304b366e73892b69f666064f80ba21d9d42f0114201fd84e4ba6b35",
+      "bytes": 161,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": [
+        "SystemProperties"
+      ]
+    },
+    {
+      "path": "app/hidden-api/src/main/java/android/view/IWindowManager.java",
+      "sha256": "997ac1015a21d1f757ddb846db5bd3e9fce774e83f7387ee95de43f4b3e0bef7",
+      "bytes": 222,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.os.IInterface;"
+      ],
+      "symbols": [
+        "IWindowManager"
+      ]
+    },
+    {
+      "path": "app/hidden-api/src/main/java/android/view/WindowManagerGlobal.java",
+      "sha256": "5df45f755de8c6de3b7454f5b6650e2c1c711d6746a620be8f3017fbb4f9d115",
+      "bytes": 172,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": [
+        "WindowManagerGlobal"
+      ]
+    },
+    {
+      "path": "app/proguard-rules.pro",
+      "sha256": "adf9aedfad0628637c5b6b690393a12392479f3bd761512eb7cd4fb808e28ece",
+      "bytes": 494,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": [
+        "xtr",
+        "xtr"
+      ]
+    },
+    {
+      "path": "app/src/main/AndroidManifest.xml",
+      "sha256": "de03876c14ced18e1afc01830e54a8e8d7904108ca3699f38f8148376d0934ad",
+      "bytes": 4096,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/aidl/xtr/keymapper/ActivityObserver.aidl",
+      "sha256": "a836f59ce954a49c18d650da27fa39f384627e306986ed36f0082198d7cb9a02",
+      "bytes": 209,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": [
+        "ActivityObserver"
+      ]
+    },
+    {
+      "path": "app/src/main/aidl/xtr/keymapper/IRemoteService.aidl",
+      "sha256": "b12578cc29b81d5c03be1786c59a89dd20730d4b499cf74d0397f17c7c3d6e0f",
+      "bytes": 1012,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "xtr.keymapper.IRemoteServiceCallback;",
+        "xtr.keymapper.OnKeyEventListener;",
+        "xtr.keymapper.ActivityObserver;",
+        "xtr.keymapper.keymap.KeymapConfig;",
+        "xtr.keymapper.keymap.KeymapProfile;"
+      ],
+      "symbols": [
+        "IRemoteService"
+      ]
+    },
+    {
+      "path": "app/src/main/aidl/xtr/keymapper/IRemoteServiceCallback.aidl",
+      "sha256": "d6db3df04f58ca1a2ce6b63bfb2e8bc6ff6b6f779aebdeab8b0fd8e9ab8fcc43",
+      "bytes": 425,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "xtr.keymapper.keymap.KeymapConfig;",
+        "xtr.keymapper.keymap.KeymapProfile;"
+      ],
+      "symbols": [
+        "IRemoteServiceCallback"
+      ]
+    },
+    {
+      "path": "app/src/main/aidl/xtr/keymapper/OnKeyEventListener.aidl",
+      "sha256": "a69cdf41be41a6f0bb207ba886e7397c9fac35c8d32ef2657b098b579714cab2",
+      "bytes": 91,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": [
+        "OnKeyEventListener"
+      ]
+    },
+    {
+      "path": "app/src/main/aidl/xtr/keymapper/keymap/KeymapConfig.aidl",
+      "sha256": "0231f2813cf8dad302e67a7ba05562c3aaf078d7a5ebf84e5676944f8047af24",
+      "bytes": 55,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/aidl/xtr/keymapper/keymap/KeymapProfile.aidl",
+      "sha256": "eb33bc7c663f6e2dcae5a29fd6aef1ca5aaca78ec9f3a23a7b883bc3f95c22d9",
+      "bytes": 56,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/cpp/controller_device.c",
+      "sha256": "e1898610e1e74cb45c7f8098c310dfce7cdbda5f7d12e6776a6d723d3e76ef2b",
+      "bytes": 2557,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/cpp/evdev_common.cpp",
+      "sha256": "ff31de880bcf5fa344a991f01c754f438bdbe36d381f1a9dc0075febc01c248f",
+      "bytes": 3655,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/cpp/evdev_common.h",
+      "sha256": "51a4f78209c0c84a79d4b0845e0fc927ba648e898067b32df43bd92d8b641763",
+      "bytes": 424,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/cpp/getevent.c",
+      "sha256": "11584b0f102da7e47271a9e76293ef19f605b05a2056d91ea20693037333a072",
+      "bytes": 102,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/cpp/mouse_cursor.cpp",
+      "sha256": "08e4205f869e5fd37f4299d461432c7ba93258f7079f3bd72d638d96e9049e4f",
+      "bytes": 2684,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/cpp/mouse_cursor.h",
+      "sha256": "69e5117fb41dfec1477bd2ae6448cec16e4a3ed975d6880dc62a233e18806949",
+      "bytes": 43,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/cpp/mouse_read.c",
+      "sha256": "6f8069861a6b5b9208a9157d6acada59fd8443ef4e88a0ae1471fd9d45275092",
+      "bytes": 7516,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/cpp/touchpad_direct.cpp",
+      "sha256": "79401ffeea2c4aced705834e0e125623bd25da5bbc64b5c319577be3077ad209",
+      "bytes": 3567,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/cpp/touchpad_relative.cpp",
+      "sha256": "8d9dc34fa52a0a58dd16c86c18d33a9c5757724463b3bf6dae8965bdfdc37124",
+      "bytes": 3644,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/java/com/genymobile/scrcpy/Point.java",
+      "sha256": "9deda8b7fb70e0a1ca89b59cb6f1afea0cc0dca52d9e3e9ec898151cf000874a",
+      "bytes": 801,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "java.util.Objects;"
+      ],
+      "symbols": [
+        "Point"
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/genymobile/scrcpy/Pointer.java",
+      "sha256": "9a1825ecf7a10e28cbb62bda045732e6684bf69a5879758a07a9fe190465499d",
+      "bytes": 1036,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": [
+        "Pointer"
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/genymobile/scrcpy/PointersState.java",
+      "sha256": "85b2cf7f6b78f84bc8f194400b9aba3c12b188a5767a7d5406033e62d836f46f",
+      "bytes": 2884,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.view.MotionEvent;",
+        "java.util.ArrayList;",
+        "java.util.List;"
+      ],
+      "symbols": [
+        "PointersState"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/InputEventCodes.java",
+      "sha256": "a70ac315cabf10935158d2db2d93250317300590415053d3587575bc95c3f13d",
+      "bytes": 403,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": [
+        "InputEventCodes"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/Server.java",
+      "sha256": "8a41310ebe7bd1c01c3273394aa5c357df3e608bbedbcf90422ffbcd12145cd6",
+      "bytes": 2810,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Context;",
+        "android.content.pm.ApplicationInfo;",
+        "android.content.pm.PackageManager;",
+        "android.os.Build;",
+        "android.util.Log;",
+        "androidx.annotation.NonNull;",
+        "java.io.File;",
+        "java.io.FileReader;",
+        "java.io.FileWriter;",
+        "java.io.IOException;",
+        "java.nio.CharBuffer;",
+        "xtr.keymapper.server.RemoteServiceShell;"
+      ],
+      "symbols": [
+        "Server"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/TouchPointer.kt",
+      "sha256": "8d122832dd969e19ce03cc95ed944a95f5fb553043be9b637988506fec19aeb5",
+      "bytes": 20412,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.app.Notification",
+        "android.app.NotificationManager",
+        "android.app.PendingIntent",
+        "android.app.Service",
+        "android.content.Context",
+        "android.content.SharedPreferences",
+        "android.hardware.input.InputManager",
+        "android.content.Intent",
+        "android.content.pm.ServiceInfo",
+        "android.graphics.Point",
+        "android.hardware.display.DisplayManager",
+        "android.hardware.display.DisplayManager.DisplayListener",
+        "android.os.Binder",
+        "android.os.Build",
+        "android.os.Handler",
+        "android.os.IBinder",
+        "android.os.Looper",
+        "android.os.RemoteException",
+        "android.util.Log",
+        "android.view.ContextThemeWrapper",
+        "android.view.Display",
+        "android.view.LayoutInflater",
+        "android.view.View",
+        "android.view.WindowManager",
+        "android.widget.Toast",
+        "androidx.annotation.UiThread",
+        "androidx.appcompat.app.AlertDialog",
+        "androidx.core.app.NotificationChannelCompat",
+        "androidx.core.app.NotificationCompat",
+        "androidx.core.app.NotificationManagerCompat",
+        "xtr.keymapper.databinding.CursorBinding",
+        "xtr.keymapper.editor.EditorActivity",
+        "xtr.keymapper.editor.EditorService",
+        "xtr.keymapper.editor.ShowKeymapService",
+        "xtr.keymapper.keymap.KeymapConfig",
+        "xtr.keymapper.keymap.KeymapProfile",
+        "xtr.keymapper.keymap.KeymapProfiles",
+        "xtr.keymapper.profiles.ProfileSelector",
+        "xtr.keymapper.profiles.AutomaticProfileResolver",
+        "xtr.keymapper.profiles.ForegroundProfileSession",
+        "xtr.keymapper.devices.*",
+        "xtr.keymapper.server.RemoteServiceHelper"
+      ],
+      "symbols": [
+        "TouchPointer",
+        "MainActivityCallback",
+        "TouchPointerBinder"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/Utils.java",
+      "sha256": "3526deab9987f50d98853cb3dd4ced9976460db6e5234b3eb7a782b9980c3dd4",
+      "bytes": 1964,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.graphics.PixelFormat;",
+        "android.os.Build;",
+        "android.view.WindowManager;",
+        "java.io.BufferedReader;",
+        "java.io.DataOutputStream;",
+        "java.io.IOException;",
+        "java.io.InputStreamReader;"
+      ],
+      "symbols": [
+        "Utils"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/activity/DisplaySelectorActivity.kt",
+      "sha256": "2ae4ddc46a2a05dd2448c8af508aa1ad83b8d978f566c552784766664607e6a0",
+      "bytes": 7792,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.app.Activity",
+        "android.content.Context",
+        "android.content.Intent",
+        "android.hardware.display.DisplayManager",
+        "android.os.Bundle",
+        "android.view.Display",
+        "androidx.activity.ComponentActivity",
+        "androidx.activity.compose.setContent",
+        "androidx.activity.result.ActivityResultLauncher",
+        "androidx.activity.result.contract.ActivityResultContracts",
+        "androidx.appcompat.app.AppCompatActivity",
+        "androidx.compose.foundation.layout.Arrangement",
+        "androidx.compose.foundation.layout.Column",
+        "androidx.compose.foundation.layout.PaddingValues",
+        "androidx.compose.foundation.layout.Row",
+        "androidx.compose.foundation.layout.Spacer",
+        "androidx.compose.foundation.layout.fillMaxSize",
+        "androidx.compose.foundation.layout.fillMaxWidth",
+        "androidx.compose.foundation.layout.height",
+        "androidx.compose.foundation.layout.padding",
+        "androidx.compose.foundation.layout.width",
+        "androidx.compose.foundation.lazy.LazyColumn",
+        "androidx.compose.foundation.lazy.items",
+        "androidx.compose.foundation.selection.selectable",
+        "androidx.compose.material3.Button",
+        "androidx.compose.material3.Card",
+        "androidx.compose.material3.CardDefaults",
+        "androidx.compose.material3.MaterialTheme",
+        "androidx.compose.material3.RadioButton",
+        "androidx.compose.material3.Surface",
+        "androidx.compose.material3.Text",
+        "androidx.compose.material3.TextButton",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.runtime.getValue",
+        "androidx.compose.runtime.mutableIntStateOf",
+        "androidx.compose.runtime.remember",
+        "androidx.compose.runtime.setValue",
+        "androidx.compose.ui.Alignment",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.platform.LocalContext",
+        "androidx.compose.ui.res.stringResource",
+        "androidx.compose.ui.unit.dp",
+        "xtr.keymapper.R",
+        "xtr.keymapper.activity.ui.theme.XtMapperTheme"
+      ],
+      "symbols": [
+        "DisplaySelectorActivity",
+        "DisplaySelector"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/activity/ImportExportActivity.java",
+      "sha256": "af0ed4cf140790e8431893447c16970f72884f3c5836da05929e9941fb9394a2",
+      "bytes": 9124,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Context;",
+        "android.content.Intent;",
+        "android.content.pm.PackageManager;",
+        "android.graphics.drawable.Drawable;",
+        "android.net.Uri;",
+        "android.os.Bundle;",
+        "android.view.LayoutInflater;",
+        "android.view.ViewGroup;",
+        "androidx.annotation.NonNull;",
+        "androidx.appcompat.app.AppCompatActivity;",
+        "androidx.appcompat.content.res.AppCompatResources;",
+        "androidx.recyclerview.widget.RecyclerView;",
+        "java.io.ByteArrayOutputStream;",
+        "java.io.IOException;",
+        "java.io.InputStream;",
+        "java.io.OutputStream;",
+        "java.util.ArrayList;",
+        "java.util.HashSet;",
+        "java.util.Set;",
+        "java.util.zip.ZipEntry;",
+        "java.util.zip.ZipOutputStream;",
+        "xtr.keymapper.R;",
+        "xtr.keymapper.databinding.ActivityImportExportBinding;",
+        "xtr.keymapper.databinding.ProfileRowItem2Binding;",
+        "xtr.keymapper.keymap.KeymapProfile;",
+        "xtr.keymapper.keymap.KeymapProfiles;"
+      ],
+      "symbols": [
+        "ImportExportActivity",
+        "ProfilesViewAdapter",
+        "ViewHolder",
+        "RecyclerData"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/activity/InfoActivity.java",
+      "sha256": "f3a84c5a6aecbe0d94b6ea4015c5ed99a545a34f95538698fd9ed8c347494461",
+      "bytes": 2226,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.net.Uri;",
+        "android.os.Bundle;",
+        "android.webkit.WebResourceRequest;",
+        "android.webkit.WebResourceResponse;",
+        "android.webkit.WebSettings;",
+        "android.webkit.WebView;",
+        "androidx.annotation.NonNull;",
+        "androidx.annotation.Nullable;",
+        "androidx.appcompat.app.AppCompatActivity;",
+        "androidx.webkit.WebViewAssetLoader;",
+        "androidx.webkit.WebViewClientCompat;",
+        "xtr.keymapper.R;"
+      ],
+      "symbols": [
+        "InfoActivity"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/activity/MainActivity.java",
+      "sha256": "a409d2bf9b5e877bdc075893282a836f8a74fe46f38e0ffe575d55f78c10c338",
+      "bytes": 16687,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "static android.Manifest.permission.POST_NOTIFICATIONS;",
+        "static android.content.pm.PackageManager.PERMISSION_GRANTED;",
+        "android.content.ComponentName;",
+        "android.content.Context;",
+        "android.content.DialogInterface;",
+        "android.content.Intent;",
+        "android.content.ServiceConnection;",
+        "android.hardware.display.DisplayManager;",
+        "android.os.Build;",
+        "android.os.Bundle;",
+        "android.os.IBinder;",
+        "android.os.RemoteException;",
+        "android.provider.Settings;",
+        "android.util.Log;",
+        "android.widget.Toast;",
+        "androidx.annotation.Nullable;",
+        "androidx.annotation.StringRes;",
+        "androidx.appcompat.app.AppCompatActivity;",
+        "androidx.core.content.ContextCompat;",
+        "com.google.android.material.dialog.MaterialAlertDialogBuilder;",
+        "com.topjohnwu.superuser.Shell;",
+        "kotlin.Unit;",
+        "rikka.shizuku.Shizuku;",
+        "xtr.keymapper.BuildConfig;",
+        "xtr.keymapper.IRemoteService;",
+        "xtr.keymapper.R;",
+        "xtr.keymapper.Server;",
+        "xtr.keymapper.TouchPointer;",
+        "xtr.keymapper.editor.EditorActivity;",
+        "xtr.keymapper.editor.EditorUI;",
+        "xtr.keymapper.keymap.KeymapConfig;",
+        "xtr.keymapper.server.RemoteServiceHelper;",
+        "xtr.keymapper.GameKeyMapperBridge;"
+      ],
+      "symbols": [
+        "MainActivity"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/activity/ui/theme/Theme.kt",
+      "sha256": "f3e23dbe7b2f9102d7e9561b8079f642901c3d79cff28b382b9be3d7ffa6508d",
+      "bytes": 1007,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.os.Build",
+        "androidx.compose.foundation.isSystemInDarkTheme",
+        "androidx.compose.material3.MaterialTheme",
+        "androidx.compose.material3.dynamicDarkColorScheme",
+        "androidx.compose.material3.dynamicLightColorScheme",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.ui.platform.LocalContext"
+      ],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/activity/ui/theme/Type.kt",
+      "sha256": "29c8cf09a8ed4ba53d00351a35cc7a9c08f17444604fc666f5788b82b802d4cc",
+      "bytes": 991,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "androidx.compose.material3.Typography",
+        "androidx.compose.ui.text.TextStyle",
+        "androidx.compose.ui.text.font.FontFamily",
+        "androidx.compose.ui.text.font.FontWeight",
+        "androidx.compose.ui.unit.sp"
+      ],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/controller/ControllerAimHandler.java",
+      "sha256": "b5c12a99870d700bf6c941c31b33d25692064a56f71c478667ee8b13ebd6b816",
+      "bytes": 4151,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "java.util.LinkedHashMap;",
+        "java.util.List;",
+        "java.util.Map;",
+        "xtr.keymapper.keymap.element.AimKey;",
+        "xtr.keymapper.mouse.HeldAimHandler.TouchSink;"
+      ],
+      "symbols": [
+        "ControllerAimHandler",
+        "State"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/controller/ControllerBindings.java",
+      "sha256": "4a99c893c453a9baa953eddac80839d348ca0702e96630d3b5d881f3ec7d0176",
+      "bytes": 2862,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "java.util.Map;"
+      ],
+      "symbols": [
+        "ControllerBindings"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/controller/ControllerCameraHandler.java",
+      "sha256": "91ea438e18601b572e692c80c36519d6fc9237817d0e45921e012ee556a008c7",
+      "bytes": 1977,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "xtr.keymapper.keymap.element.Camera;",
+        "xtr.keymapper.mouse.HeldAimHandler.TouchSink;"
+      ],
+      "symbols": [
+        "ControllerCameraHandler"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/controller/ControllerChordHandler.java",
+      "sha256": "a7445d7585a4bf60bbae11f9d153db2921ebce9aa31a6566d6a4ff0f189964a2",
+      "bytes": 1997,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "java.util.HashMap;",
+        "java.util.HashSet;",
+        "java.util.List;",
+        "java.util.Map;",
+        "java.util.Set;",
+        "xtr.keymapper.keymap.element.ControllerChord;",
+        "xtr.keymapper.mouse.HeldAimHandler.TouchSink;"
+      ],
+      "symbols": [
+        "ControllerChordHandler"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/controller/ControllerDeviceMonitor.java",
+      "sha256": "c2e3f913cf87f5691c62d853c1d618720e4603a4a8ccde5f2d9ef740a5f74394",
+      "bytes": 10978,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.os.Handler;",
+        "android.os.Looper;",
+        "android.util.Log;",
+        "java.io.File;",
+        "java.util.HashMap;",
+        "java.util.HashSet;",
+        "java.util.Map;",
+        "java.util.Set;",
+        "xtr.keymapper.server.IInputInterface;",
+        "java.util.function.Supplier;"
+      ],
+      "symbols": [
+        "ControllerDeviceMonitor",
+        "NativeProbe",
+        "NodeDiscovery",
+        "Device"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/controller/ControllerDpad.java",
+      "sha256": "b82518055df5f87410c2e90c796cfac9f7c46bb77c64f9009c74e81940509907",
+      "bytes": 940,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "java.util.function.BiConsumer;"
+      ],
+      "symbols": [
+        "ControllerDpad"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/devices/DeviceMappingStore.kt",
+      "sha256": "e84cf86937391a666fc5363fb060b60b79a0c25671b5a18e119d2bfc3c98c238",
+      "bytes": 3813,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Context",
+        "org.json.JSONArray",
+        "org.json.JSONObject",
+        "java.util.UUID"
+      ],
+      "symbols": [
+        "DeviceMappingStore"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/devices/DeviceModels.kt",
+      "sha256": "7ec906cbfb8f1c55e9ca0f10bb6ce1cdf72145ac5bd5f0b2643a9e4755c71b4d",
+      "bytes": 5234,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.view.InputDevice",
+        "java.util.Locale"
+      ],
+      "symbols": [
+        "HardwareDevice",
+        "class",
+        "evidence",
+        "bits",
+        "InterfaceEvidence",
+        "DeviceClassification",
+        "bits",
+        "LogicalDevice",
+        "DeviceMember",
+        "DeviceGroup",
+        "ProfileBinding",
+        "DeviceGroupResolver"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/devices/InputDeviceDiscovery.kt",
+      "sha256": "a52adffd7856d6103aad6c41ad9bf0660c3960921900127c62fecf67d2558458",
+      "bytes": 965,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.view.InputDevice",
+        "android.os.Build"
+      ],
+      "symbols": [
+        "InputDeviceDiscovery"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/dpad/DpadHandler.java",
+      "sha256": "5264f77298f5fbb3690244fa8ce422af68892f9c4a2f052606f4a005d2fa25f5",
+      "bytes": 2756,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.os.Handler;",
+        "android.os.SystemClock;",
+        "xtr.keymapper.keymap.element.Dpad;",
+        "xtr.keymapper.server.IInputInterface;",
+        "static xtr.keymapper.server.InputService.*;"
+      ],
+      "symbols": [
+        "DpadHandler"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/dpad/DpadKeyCodes.java",
+      "sha256": "77182ec6a46684aee64126cf7aae66740d38a15eb51835fc4c9b93a016654ba2",
+      "bytes": 2302,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.os.Parcel;",
+        "android.os.Parcelable;",
+        "androidx.annotation.NonNull;",
+        "xtr.keymapper.databinding.DpadBinding;"
+      ],
+      "symbols": [
+        "DpadKeyCodes"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/editor/CaptureInterruptionGuard.kt",
+      "sha256": "715968a77df79fbcbd2246c070354d7e97e6f20abf3a3daf1e9792bf961af402",
+      "bytes": 4114,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.BroadcastReceiver",
+        "android.content.Context",
+        "android.content.Intent",
+        "android.content.IntentFilter",
+        "android.hardware.input.InputManager",
+        "android.os.Handler",
+        "android.provider.Settings",
+        "android.view.InputDevice",
+        "android.view.View",
+        "androidx.core.content.ContextCompat",
+        "xtr.keymapper.IRemoteService"
+      ],
+      "symbols": [
+        "CaptureInterruptionGuard"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/editor/CapturedTarget.kt",
+      "sha256": "299324693b44c4806d896ef2580eb79830e636f233018b6a032fce284d5b3626",
+      "bytes": 5583,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Context",
+        "org.json.JSONArray",
+        "org.json.JSONObject",
+        "xtr.keymapper.controller.ControllerBindings"
+      ],
+      "symbols": [
+        "CapturedTarget",
+        "CapturedTargetStore"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/editor/ControllerChordEditor.kt",
+      "sha256": "2698fe99adc86eaf300e75113312ac75fd2c7f04d89a1e0394806e756f433e5a",
+      "bytes": 4084,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "androidx.compose.foundation.layout.*",
+        "androidx.compose.foundation.rememberScrollState",
+        "androidx.compose.foundation.verticalScroll",
+        "androidx.compose.material3.*",
+        "androidx.compose.runtime.*",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.unit.dp",
+        "xtr.keymapper.controller.ControllerBindings"
+      ],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/editor/ControllerPresentation.kt",
+      "sha256": "c858826edd8bf0132167c46e51a394bff0bc133c7d25bc8aad1bf10fec19e0cc",
+      "bytes": 1580,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": [
+        "ControllerControl",
+        "ControllerPresentation"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/editor/CoordinateCaptureSession.kt",
+      "sha256": "a5c1266aef8fad93f9a04a4a33d5171ecfc4488f7ad2a0951e0720c54dc1da15",
+      "bytes": 2257,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": [
+        "CoordinateCaptureSession",
+        "Selection"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/editor/CoordinateCaptureUi.kt",
+      "sha256": "758855f3f1addb0dcb35d4df75665891fa5353433ba4b4c018a07932a0fddc43",
+      "bytes": 15996,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.ClipData",
+        "android.content.ClipboardManager",
+        "android.content.Context",
+        "androidx.compose.foundation.Canvas",
+        "androidx.compose.foundation.gestures.awaitEachGesture",
+        "androidx.compose.foundation.gestures.awaitFirstDown",
+        "androidx.compose.foundation.gestures.detectDragGestures",
+        "androidx.compose.foundation.layout.*",
+        "androidx.compose.foundation.rememberScrollState",
+        "androidx.compose.foundation.verticalScroll",
+        "androidx.compose.material3.*",
+        "androidx.compose.runtime.*",
+        "androidx.compose.ui.Alignment",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.geometry.Offset",
+        "androidx.compose.ui.graphics.Color",
+        "androidx.compose.ui.input.pointer.pointerInput",
+        "androidx.compose.ui.layout.onSizeChanged",
+        "androidx.compose.ui.platform.LocalContext",
+        "androidx.compose.ui.platform.LocalFocusManager",
+        "androidx.compose.ui.platform.LocalSoftwareKeyboardController",
+        "androidx.compose.ui.platform.testTag",
+        "androidx.compose.ui.semantics.contentDescription",
+        "androidx.compose.ui.semantics.semantics",
+        "androidx.compose.ui.unit.IntOffset",
+        "androidx.compose.ui.unit.IntSize",
+        "androidx.compose.ui.unit.dp",
+        "java.util.UUID",
+        "kotlin.math.roundToInt"
+      ],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/editor/EditorActivity.java",
+      "sha256": "e8f1bd2e84724d201bea3de163af80aa3188d467df1ae9040e420d92a465cf1e",
+      "bytes": 4801,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.app.Activity;",
+        "android.os.Build;",
+        "android.os.Bundle;",
+        "android.os.RemoteException;",
+        "android.provider.Settings;",
+        "android.util.Log;",
+        "android.view.WindowManager;",
+        "androidx.appcompat.app.AlertDialog;",
+        "androidx.core.view.WindowCompat;",
+        "androidx.core.view.WindowInsetsCompat;",
+        "androidx.core.view.WindowInsetsControllerCompat;",
+        "com.google.android.material.dialog.MaterialAlertDialogBuilder;",
+        "xtr.keymapper.IRemoteService;",
+        "xtr.keymapper.R;",
+        "xtr.keymapper.activity.MainActivity;",
+        "xtr.keymapper.keymap.KeymapConfig;",
+        "xtr.keymapper.server.RemoteServiceHelper;"
+      ],
+      "symbols": [
+        "EditorActivity"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/editor/EditorCallback.java",
+      "sha256": "4f7b366e7d8c8214f9dd8921ebdf6b9a2b656d27cceb0e49ca9de440cb7bfff2",
+      "bytes": 135,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": [
+        "EditorCallback"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/editor/EditorService.java",
+      "sha256": "c9667d18025d8b68f4ec49cb335132a60fe97d8afb70d35b3fae32430c880adf",
+      "bytes": 2055,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Intent;",
+        "android.os.RemoteException;",
+        "android.util.Log;",
+        "androidx.appcompat.view.ContextThemeWrapper;",
+        "xtr.keymapper.R;",
+        "xtr.keymapper.server.RemoteServiceHelper;"
+      ],
+      "symbols": [
+        "EditorService"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/editor/EditorSessionGuard.kt",
+      "sha256": "b43f6611a22a77699a8f2281d2d21ccaaa9cb44f25e10a85c86812a9a1b4f2f4",
+      "bytes": 814,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": [
+        "EditorSessionGuard"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/editor/EditorUI.kt",
+      "sha256": "fe95f476b7901c4812783dabee09eae7c253ed1a463ac73d42bd0dbb334cb01c",
+      "bytes": 31818,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.app.Activity",
+        "android.content.ClipData",
+        "android.content.ClipboardManager",
+        "android.content.Context",
+        "android.content.Intent",
+        "android.graphics.PixelFormat",
+        "android.os.Build",
+        "android.os.Handler",
+        "android.os.Looper",
+        "android.os.RemoteException",
+        "android.view.KeyEvent",
+        "android.view.LayoutInflater",
+        "android.view.View",
+        "android.view.View.OnLayoutChangeListener",
+        "android.view.ViewGroup",
+        "android.view.WindowInsetsController",
+        "android.view.WindowManager",
+        "android.widget.Toast",
+        "android.widget.FrameLayout",
+        "androidx.compose.runtime.getValue",
+        "androidx.compose.runtime.setValue",
+        "androidx.compose.ui.platform.ComposeView",
+        "androidx.core.view.WindowInsetsCompat",
+        "androidx.lifecycle.Lifecycle",
+        "androidx.lifecycle.LifecycleOwner",
+        "androidx.lifecycle.LifecycleRegistry",
+        "androidx.lifecycle.setViewTreeLifecycleOwner",
+        "androidx.savedstate.SavedStateRegistry",
+        "androidx.savedstate.SavedStateRegistryController",
+        "androidx.savedstate.SavedStateRegistryOwner",
+        "androidx.savedstate.setViewTreeSavedStateRegistryOwner",
+        "xtr.keymapper.IRemoteService",
+        "xtr.keymapper.OnKeyEventListener",
+        "xtr.keymapper.R",
+        "xtr.keymapper.Utils",
+        "xtr.keymapper.activity.MainActivity",
+        "xtr.keymapper.editor.component.Camera",
+        "xtr.keymapper.editor.component.Crosshair",
+        "xtr.keymapper.editor.component.MouseWalk",
+        "xtr.keymapper.editor.component.RightClick",
+        "xtr.keymapper.keymap.KeymapConfig",
+        "xtr.keymapper.keymap.KeymapProfile",
+        "xtr.keymapper.keymap.ProfileConfiguration",
+        "xtr.keymapper.keymap.KeymapProfiles",
+        "xtr.keymapper.macro.MacroIdUtils",
+        "xtr.keymapper.macro.MacroStatus",
+        "xtr.keymapper.macro.MacroView",
+        "xtr.keymapper.macro.MacroView.OnFinishListener",
+        "xtr.keymapper.server.RemoteServiceHelper"
+      ],
+      "symbols": [
+        "EditorUI",
+        "KeyInFocusListener"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/editor/EditorUiComponent.java",
+      "sha256": "703cfc5a0c11350949315d2417732f3801a504965910bb89d23a304896f84381",
+      "bytes": 730,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Context;",
+        "android.view.LayoutInflater;"
+      ],
+      "symbols": [
+        "EditorUiComponent"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/editor/EditorUiComponentCallback.java",
+      "sha256": "44cd29727a758b6216991f5a45f2ad9f755f1781320ac0cb79d5c98b31e91133",
+      "bytes": 437,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.view.View;",
+        "android.view.ViewGroup;",
+        "xtr.keymapper.keymap.KeymapProfile;"
+      ],
+      "symbols": [
+        "EditorUiComponentCallback"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/editor/EditorUiComponentList.kt",
+      "sha256": "c9c48ea193de5c8e31cc4600fc5b622445efd8af3c5b3671443a6cf500754c27",
+      "bytes": 2989,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Context",
+        "androidx.annotation.MenuRes",
+        "xtr.keymapper.R",
+        "xtr.keymapper.editor.component.Camera",
+        "xtr.keymapper.editor.component.Crosshair",
+        "xtr.keymapper.editor.component.Dpad",
+        "xtr.keymapper.editor.component.Key",
+        "xtr.keymapper.editor.component.MouseWalk",
+        "xtr.keymapper.editor.component.RightClick",
+        "xtr.keymapper.editor.component.SwipeKey",
+        "java.util.function.Consumer"
+      ],
+      "symbols": [
+        "EditorUiComponentList",
+        "Factory"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/editor/MacroDialog.java",
+      "sha256": "871dbcab82aaebe8a42f3e2b41bba6b63865850c7a6d700a47b274cea8cd45db",
+      "bytes": 7821,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Context;",
+        "android.content.SharedPreferences;",
+        "android.graphics.PixelFormat;",
+        "android.os.Build;",
+        "android.os.Handler;",
+        "android.os.Looper;",
+        "android.view.LayoutInflater;",
+        "android.view.View;",
+        "android.view.ViewGroup;",
+        "android.view.WindowManager;",
+        "android.widget.EditText;",
+        "android.widget.TextView;",
+        "androidx.annotation.NonNull;",
+        "androidx.appcompat.app.AlertDialog;",
+        "androidx.recyclerview.widget.LinearLayoutManager;",
+        "androidx.recyclerview.widget.RecyclerView;",
+        "com.google.android.material.dialog.MaterialAlertDialogBuilder;",
+        "com.google.android.material.floatingactionbutton.FloatingActionButton;",
+        "java.util.ArrayList;",
+        "java.util.HashMap;",
+        "java.util.List;",
+        "java.util.Set;",
+        "xtr.keymapper.R;",
+        "xtr.keymapper.databinding.MacroDialogLayoutBinding;",
+        "xtr.keymapper.databinding.MacroListItemBinding;",
+        "xtr.keymapper.databinding.TextFieldBinding;",
+        "xtr.keymapper.keymap.KeymapProfile;",
+        "xtr.keymapper.macro.Macro;",
+        "xtr.keymapper.macro.MacroSharedPreferences;"
+      ],
+      "symbols": [
+        "MacroDialog",
+        "RecyclerViewAdapter",
+        "ViewHolder"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/editor/SettingsOverlay.java",
+      "sha256": "0b3a4a37de9e5e76fcaf782e6569c9421e7ec02736e052996fb6b724eb02cd0b",
+      "bytes": 17142,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Context;",
+        "android.os.Build;",
+        "android.view.KeyEvent;",
+        "android.view.LayoutInflater;",
+        "android.view.Menu;",
+        "android.view.MenuItem;",
+        "android.view.View;",
+        "android.view.ViewGroup;",
+        "android.view.WindowManager;",
+        "android.widget.EditText;",
+        "android.widget.LinearLayout;",
+        "android.widget.PopupMenu;",
+        "androidx.annotation.IdRes;",
+        "androidx.annotation.NonNull;",
+        "androidx.appcompat.app.AlertDialog;",
+        "androidx.core.view.MenuItemCompat;",
+        "androidx.core.view.ViewCompat;",
+        "androidx.core.view.WindowInsetsCompat;",
+        "com.google.android.material.button.MaterialButton;",
+        "com.google.android.material.button.MaterialButtonToggleGroup;",
+        "com.google.android.material.dialog.MaterialAlertDialogBuilder;",
+        "java.util.Map;",
+        "java.util.function.Function;",
+        "java.util.stream.Collectors;",
+        "java.util.stream.IntStream;",
+        "xtr.keymapper.R;",
+        "xtr.keymapper.databinding.KeymapEditorItemBinding;",
+        "xtr.keymapper.databinding.KeymapEditorLayoutBinding;",
+        "xtr.keymapper.databinding.SettingsBinding;",
+        "xtr.keymapper.keymap.KeymapConfig;"
+      ],
+      "symbols": [
+        "SettingsOverlay",
+        "OnCardItemSelectedListener"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/editor/ShortcutKeyListener.kt",
+      "sha256": "7a88fe0545876d8ed939c1b5b85e8411be28f60a4111a181a0ce9dbd110388be",
+      "bytes": 1286,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.view.InputDevice",
+        "android.view.KeyEvent",
+        "android.view.MotionEvent",
+        "android.view.View",
+        "android.widget.EditText"
+      ],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/editor/ShowKeymapService.java",
+      "sha256": "b97244d5cba3daa3003a20c25ed80ef823590dbac1c0da52d52636fcf105c39e",
+      "bytes": 1644,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.app.Service;",
+        "android.content.Context;",
+        "android.content.Intent;",
+        "android.os.IBinder;",
+        "androidx.appcompat.view.ContextThemeWrapper;",
+        "xtr.keymapper.R;",
+        "xtr.keymapper.keymap.KeymapConfig;"
+      ],
+      "symbols": [
+        "ShowKeymapService"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/editor/VisualControllerEditor.kt",
+      "sha256": "698ad340610326c7d55a1e31f036fe0bb20088ef575cae90362e54d43d4938a2",
+      "bytes": 24188,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "androidx.compose.foundation.Canvas",
+        "androidx.compose.foundation.horizontalScroll",
+        "androidx.compose.foundation.gestures.detectDragGestures",
+        "androidx.compose.foundation.gestures.detectTapGestures",
+        "androidx.compose.foundation.layout.*",
+        "androidx.compose.foundation.rememberScrollState",
+        "androidx.compose.foundation.verticalScroll",
+        "androidx.compose.material3.*",
+        "androidx.compose.runtime.*",
+        "androidx.compose.ui.Alignment",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.geometry.Offset",
+        "androidx.compose.ui.graphics.Color",
+        "androidx.compose.ui.input.pointer.pointerInput",
+        "androidx.compose.ui.layout.onSizeChanged",
+        "androidx.compose.ui.semantics.semantics",
+        "androidx.compose.ui.semantics.contentDescription",
+        "androidx.compose.ui.semantics.stateDescription",
+        "androidx.compose.ui.platform.testTag",
+        "androidx.compose.ui.platform.LocalFocusManager",
+        "androidx.compose.ui.platform.LocalSoftwareKeyboardController",
+        "androidx.compose.ui.unit.IntSize",
+        "androidx.compose.ui.unit.dp",
+        "xtr.keymapper.ProfileMappingSummary",
+        "xtr.keymapper.controller.ControllerBindings"
+      ],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/editor/VisualMappingSession.kt",
+      "sha256": "478993a60a2aaeb9ec0435816b87f29e21810485c13f09a2c6acccd582c250cb",
+      "bytes": 6932,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Context",
+        "xtr.keymapper.controller.ControllerBindings",
+        "xtr.keymapper.keymap.KeymapProfiles",
+        "xtr.keymapper.keymap.ProfileConfiguration"
+      ],
+      "symbols": [
+        "VisualMappingSession",
+        "TargetPlane"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/editor/component/AimKey.java",
+      "sha256": "415859b0f7ec0573a733929f5b0330a801655638bfb2ecfccb455d8a6c939a07",
+      "bytes": 1193,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Context;",
+        "xtr.keymapper.editor.EditorUiComponent;",
+        "xtr.keymapper.editor.EditorUiComponentCallback;",
+        "xtr.keymapper.floatingkeys.MovableFloatingActionKey;"
+      ],
+      "symbols": [
+        "AimKey"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/editor/component/Camera.java",
+      "sha256": "0eb200b79904bd534aced9975dab477e170fc4d518dc02fca3a02611a3220d4f",
+      "bytes": 4059,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Context;",
+        "android.os.Build;",
+        "android.view.View;",
+        "android.view.WindowManager;",
+        "androidx.appcompat.app.AlertDialog;",
+        "xtr.keymapper.R;",
+        "xtr.keymapper.databinding.CameraBinding;",
+        "xtr.keymapper.databinding.CameraConfigBinding;",
+        "xtr.keymapper.editor.EditorUiComponent;",
+        "xtr.keymapper.editor.EditorUiComponentCallback;",
+        "xtr.keymapper.editor.ShortcutKeyListenerKt;",
+        "xtr.keymapper.keymap.KeymapProfile;"
+      ],
+      "symbols": [
+        "Camera"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/editor/component/ControllerChord.java",
+      "sha256": "b34fa007a44de78a53303da043a1649f9bc81c19756fafb6664375cd8687b2e4",
+      "bytes": 1946,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Context;",
+        "xtr.keymapper.editor.EditorUiComponent;",
+        "xtr.keymapper.editor.EditorUiComponentCallback;",
+        "xtr.keymapper.floatingkeys.MovableFloatingActionKey;"
+      ],
+      "symbols": [
+        "ControllerChord"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/editor/component/Crosshair.java",
+      "sha256": "3dec02a92c89a61b4c475136f1ac40fb19871124429ce515f799b9594c51e742",
+      "bytes": 9099,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.annotation.SuppressLint;",
+        "android.content.Context;",
+        "android.os.Build;",
+        "android.os.Handler;",
+        "android.os.Looper;",
+        "android.view.MotionEvent;",
+        "android.view.View;",
+        "android.view.ViewGroup;",
+        "android.view.WindowManager;",
+        "androidx.appcompat.app.AlertDialog;",
+        "com.google.android.material.dialog.MaterialAlertDialogBuilder;",
+        "xtr.keymapper.R;",
+        "xtr.keymapper.databinding.CrosshairBinding;",
+        "xtr.keymapper.databinding.MouseAimConfigBinding;",
+        "xtr.keymapper.databinding.ResizableBinding;",
+        "xtr.keymapper.editor.EditorUI;",
+        "xtr.keymapper.editor.EditorUiComponent;",
+        "xtr.keymapper.editor.EditorUiComponentCallback;",
+        "xtr.keymapper.floatingkeys.MovableFloatingActionKey;",
+        "xtr.keymapper.floatingkeys.MovableFrameLayout;",
+        "xtr.keymapper.keymap.KeymapConfig;",
+        "xtr.keymapper.keymap.KeymapProfile;",
+        "xtr.keymapper.keymap.element.MouseAimConfig;"
+      ],
+      "symbols": [
+        "Crosshair",
+        "ResizableArea"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/editor/component/Dpad.java",
+      "sha256": "e6c51a5d5425cbc3f2e5fd5486363e109142c220b1b1c1d12d60a1e4e442158c",
+      "bytes": 7290,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.annotation.SuppressLint;",
+        "android.content.Context;",
+        "android.os.Build;",
+        "android.view.MotionEvent;",
+        "android.view.View;",
+        "android.view.WindowManager;",
+        "android.widget.TextView;",
+        "androidx.appcompat.app.AlertDialog;",
+        "com.google.android.material.dialog.MaterialAlertDialogBuilder;",
+        "java.util.function.Consumer;",
+        "xtr.keymapper.databinding.DpadArrowsBinding;",
+        "xtr.keymapper.databinding.DpadBinding;",
+        "xtr.keymapper.dpad.DpadKeyCodes;",
+        "xtr.keymapper.editor.EditorUI;",
+        "xtr.keymapper.editor.EditorUiComponent;",
+        "xtr.keymapper.editor.EditorUiComponentCallback;",
+        "xtr.keymapper.floatingkeys.MovableFrameLayout;"
+      ],
+      "symbols": [
+        "Dpad",
+        "ResizeableDpadView"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/editor/component/Key.java",
+      "sha256": "b037eb93efb4a108347146cd5e148707b97779378214bdf5922843061e591a26",
+      "bytes": 3263,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Context;",
+        "android.view.View;",
+        "xtr.keymapper.editor.EditorUiComponent;",
+        "xtr.keymapper.editor.EditorUiComponentCallback;",
+        "xtr.keymapper.floatingkeys.MovableFloatingActionKey;",
+        "xtr.keymapper.keymap.KeymapConfig;"
+      ],
+      "symbols": [
+        "Key"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/editor/component/LeftClick.java",
+      "sha256": "ed1123adecf2205dbc76198cb6437753a14c643785314b169c941ee8ee46dcac",
+      "bytes": 912,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Context;",
+        "xtr.keymapper.editor.EditorUiComponent;",
+        "xtr.keymapper.editor.EditorUiComponentCallback;",
+        "xtr.keymapper.floatingkeys.MovableFloatingActionKey;",
+        "xtr.keymapper.keymap.element.Key;"
+      ],
+      "symbols": [
+        "LeftClick"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/editor/component/MouseWalk.java",
+      "sha256": "4ae75a618ac8d6c109baf54ffee31b0553e2428f1a43f5c6eca919dbcfa7e862",
+      "bytes": 4067,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.annotation.SuppressLint;",
+        "android.content.Context;",
+        "android.view.MotionEvent;",
+        "android.view.View;",
+        "xtr.keymapper.databinding.MouseWalkBinding;",
+        "xtr.keymapper.editor.EditorUI;",
+        "xtr.keymapper.editor.EditorUiComponent;",
+        "xtr.keymapper.editor.EditorUiComponentCallback;",
+        "xtr.keymapper.floatingkeys.MovableFrameLayout;"
+      ],
+      "symbols": [
+        "MouseWalk",
+        "ResizeableDpadView"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/editor/component/RightClick.java",
+      "sha256": "354dd260b3beca725d56a658d95beb0bbfff37d0c18080bccb9acf1d79afd672",
+      "bytes": 1369,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "static xtr.keymapper.keymap.KeymapProfiles.MOUSE_RIGHT;",
+        "android.content.Context;",
+        "xtr.keymapper.R;",
+        "xtr.keymapper.editor.EditorUiComponent;",
+        "xtr.keymapper.editor.EditorUiComponentCallback;",
+        "xtr.keymapper.floatingkeys.MovableFloatingActionKey;",
+        "xtr.keymapper.keymap.element.Key;"
+      ],
+      "symbols": [
+        "RightClick"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/editor/component/SwipeKey.java",
+      "sha256": "d68ba27a9cd7e5fb03ff66fad81d5e3a158cda70cb97d60aa1e5ad3c02190cad",
+      "bytes": 5391,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Context;",
+        "android.view.LayoutInflater;",
+        "android.view.ViewGroup;",
+        "com.google.android.material.button.MaterialButton;",
+        "xtr.keymapper.databinding.SwipeKeyBinding;",
+        "xtr.keymapper.editor.EditorUiComponent;",
+        "xtr.keymapper.editor.EditorUiComponentCallback;",
+        "xtr.keymapper.floatingkeys.MovableFloatingActionKey;",
+        "xtr.keymapper.keymap.KeymapConfig;",
+        "xtr.keymapper.swipekey.SwipeKeyOverlay;"
+      ],
+      "symbols": [
+        "SwipeKey",
+        "SwipeKeyView",
+        "SwipeKeyCallback"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/editor/ui/ImportExportDialog.kt",
+      "sha256": "a157e691acebe7c2214258a31e655e240ee0255f8536f3ee3e0b465ef446a493",
+      "bytes": 10051,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Context",
+        "android.content.Intent",
+        "android.app.Activity",
+        "androidx.compose.foundation.layout.Arrangement",
+        "androidx.compose.foundation.layout.Box",
+        "androidx.compose.foundation.layout.Column",
+        "androidx.compose.foundation.layout.Row",
+        "androidx.compose.foundation.layout.Spacer",
+        "androidx.compose.foundation.layout.fillMaxSize",
+        "androidx.compose.foundation.layout.fillMaxWidth",
+        "androidx.compose.foundation.layout.padding",
+        "androidx.compose.foundation.layout.width",
+        "androidx.compose.foundation.rememberScrollState",
+        "androidx.compose.foundation.shape.RoundedCornerShape",
+        "androidx.compose.material3.OutlinedTextField",
+        "androidx.compose.foundation.layout.imePadding",
+        "androidx.compose.foundation.layout.safeDrawingPadding",
+        "androidx.compose.foundation.layout.heightIn",
+        "androidx.compose.foundation.verticalScroll",
+        "androidx.compose.material.icons.Icons",
+        "androidx.compose.material.icons.filled.FileDownload",
+        "androidx.compose.material.icons.filled.FileUpload",
+        "androidx.compose.material.icons.filled.Share",
+        "androidx.compose.material3.Button",
+        "androidx.compose.material3.Card",
+        "androidx.compose.material3.CardDefaults",
+        "androidx.compose.material3.Icon",
+        "androidx.compose.material3.IconButton",
+        "androidx.compose.material3.MaterialTheme",
+        "androidx.compose.material3.OutlinedButton",
+        "androidx.compose.material3.Text",
+        "androidx.compose.material3.TextButton",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.runtime.getValue",
+        "androidx.compose.runtime.mutableStateOf",
+        "androidx.compose.runtime.remember",
+        "androidx.compose.runtime.setValue",
+        "androidx.compose.ui.Alignment",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.platform.LocalContext",
+        "androidx.compose.ui.text.font.FontFamily",
+        "androidx.compose.ui.tooling.preview.Preview",
+        "androidx.compose.ui.unit.dp",
+        "androidx.compose.ui.window.Dialog",
+        "androidx.compose.ui.window.DialogProperties"
+      ],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/floatingkeys/FloatingActionKey.java",
+      "sha256": "f34dd88a51ab516c4a31a0390b7942340a6f58184ec90303f1251bdb0318daaa",
+      "bytes": 3069,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Context;",
+        "android.content.res.ColorStateList;",
+        "android.graphics.Bitmap;",
+        "android.graphics.Canvas;",
+        "android.graphics.Color;",
+        "android.graphics.Paint;",
+        "android.util.AttributeSet;",
+        "androidx.appcompat.content.res.AppCompatResources;",
+        "com.google.android.material.floatingactionbutton.FloatingActionButton;",
+        "com.google.android.material.shape.RelativeCornerSize;",
+        "com.google.android.material.shape.RoundedCornerTreatment;",
+        "com.google.android.material.shape.ShapeAppearanceModel;",
+        "xtr.keymapper.R;",
+        "java.util.Random;"
+      ],
+      "symbols": [
+        "FloatingActionKey"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/floatingkeys/MovableFloatingActionKey.java",
+      "sha256": "c69ff44fca9880e6cb091a759bc5bb9edfb13dc38a3d5aa1d116b9c98d220de1",
+      "bytes": 5321,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Context;",
+        "android.view.LayoutInflater;",
+        "android.view.MotionEvent;",
+        "android.view.View;",
+        "android.view.ViewGroup;",
+        "android.widget.FrameLayout;",
+        "android.widget.TextView;",
+        "androidx.annotation.Nullable;",
+        "androidx.annotation.StringRes;",
+        "com.google.android.material.button.MaterialButton;",
+        "xtr.keymapper.databinding.FloatingKeyBinding;"
+      ],
+      "symbols": [
+        "MovableFloatingActionKey",
+        "OnKeyRemoved",
+        "OnXyChangeListener"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/floatingkeys/MovableFrameLayout.java",
+      "sha256": "9df7cade619d5d0d673ce916e81cac68e979e044c344fcfcee99421b8b1e9e41",
+      "bytes": 2548,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Context;",
+        "android.util.AttributeSet;",
+        "android.view.MotionEvent;",
+        "android.view.View;",
+        "android.view.ViewGroup;",
+        "android.widget.FrameLayout;"
+      ],
+      "symbols": [
+        "MovableFrameLayout"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/keymap/KeymapConfig.java",
+      "sha256": "7b72b2761e862a9bc337b51f1a43e31f4e21042f677e2bd6347df04780d5a817",
+      "bytes": 8946,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "static android.content.Context.MODE_PRIVATE;",
+        "android.content.Context;",
+        "android.content.SharedPreferences;",
+        "android.os.Parcel;",
+        "android.os.Parcelable;"
+      ],
+      "symbols": [
+        "KeymapConfig"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/keymap/KeymapProfile.java",
+      "sha256": "e9938cd8be952a277b3e0b12a2bc1bcca8ce31dacd42e456423c7a9b6fb947f7",
+      "bytes": 5801,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Context;",
+        "android.os.Parcel;",
+        "android.os.Parcelable;",
+        "java.util.ArrayList;",
+        "java.util.HashMap;",
+        "java.util.Map;",
+        "java.util.function.Consumer;",
+        "xtr.keymapper.BuildConfig;",
+        "xtr.keymapper.keymap.element.Camera;",
+        "xtr.keymapper.keymap.element.AimKey;",
+        "xtr.keymapper.keymap.element.Dpad;",
+        "xtr.keymapper.keymap.element.Key;",
+        "xtr.keymapper.keymap.element.MouseWalk;",
+        "xtr.keymapper.macro.Macro;",
+        "xtr.keymapper.macro.MacroSharedPreferences;",
+        "xtr.keymapper.keymap.element.MouseAimConfig;",
+        "xtr.keymapper.keymap.element.SwipeKey;"
+      ],
+      "symbols": [
+        "KeymapProfile"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/keymap/KeymapProfileElement.java",
+      "sha256": "fa32c9dfe53ef944e92c80563aaa6209674b773c6fef066609d433b72112cc90",
+      "bytes": 230,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.os.Parcelable;"
+      ],
+      "symbols": [
+        "KeymapProfileElement"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/keymap/KeymapProfiles.java",
+      "sha256": "f0b1cc78bdcb3bcd83179ae1e0267bfec8e624b4ec9013b0e3a9ae0c161ea75a",
+      "bytes": 9104,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "static android.content.Context.MODE_PRIVATE;",
+        "android.content.Context;",
+        "android.content.SharedPreferences;",
+        "java.util.ArrayList;",
+        "java.util.HashMap;",
+        "java.util.HashSet;",
+        "java.util.Map;",
+        "java.util.Set;",
+        "java.util.function.BiConsumer;",
+        "xtr.keymapper.keymap.element.Camera;",
+        "xtr.keymapper.keymap.element.AimKey;",
+        "xtr.keymapper.keymap.element.Dpad;",
+        "xtr.keymapper.keymap.element.Key;",
+        "xtr.keymapper.keymap.element.MouseWalk;",
+        "xtr.keymapper.macro.Macro;",
+        "xtr.keymapper.macro.MacroIdUtils;",
+        "xtr.keymapper.keymap.element.MouseAimConfig;",
+        "xtr.keymapper.keymap.element.SwipeKey;"
+      ],
+      "symbols": [
+        "KeymapProfiles"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/keymap/ProfileConfiguration.java",
+      "sha256": "9b43ac3545f3621b3e2b54c6d7b05af0541ca375b120e44ab669141c28f96659",
+      "bytes": 10708,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "java.util.LinkedHashSet;",
+        "java.util.Set;"
+      ],
+      "symbols": [
+        "ProfileConfiguration"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/keymap/ProfileStorageTransactions.java",
+      "sha256": "86a4c0f8ea8f62cf14537143e19721439639feb89a7195f5a1744b72fc89c43c",
+      "bytes": 3599,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.SharedPreferences;",
+        "java.util.Collections;",
+        "java.util.HashMap;",
+        "java.util.HashSet;",
+        "java.util.Map;",
+        "java.util.Set;",
+        "xtr.keymapper.structured.StructuredProfiles;"
+      ],
+      "symbols": [
+        "ProfileStorageTransactions"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/keymap/ProfileZipImporter.java",
+      "sha256": "efa147e0ab8055e2f2d44bf4afe39cea8714b3361407b76aab55b21fc70ba1e2",
+      "bytes": 5532,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.SharedPreferences;",
+        "java.io.*;",
+        "java.nio.ByteBuffer;",
+        "java.nio.charset.StandardCharsets;",
+        "java.util.*;",
+        "java.util.zip.*;",
+        "xtr.keymapper.structured.ProfileCodec;"
+      ],
+      "symbols": [
+        "ProfileZipImporter"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/keymap/element/AimKey.java",
+      "sha256": "d3251fdddbc980be2e027ae219e7018e2f785f72166fbb23b5fb289da45f82ee",
+      "bytes": 2418,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.os.Parcel;",
+        "xtr.keymapper.keymap.KeymapProfileElement;"
+      ],
+      "symbols": [
+        "AimKey"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/keymap/element/Camera.java",
+      "sha256": "6fd44d72ea39cf683d1e691ef1a085d0435995b3d353d4723b86bc84497be638",
+      "bytes": 2850,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.os.Parcel;",
+        "androidx.annotation.NonNull;",
+        "xtr.keymapper.keymap.KeymapProfileElement;"
+      ],
+      "symbols": [
+        "Camera"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/keymap/element/ControllerChord.java",
+      "sha256": "af02b47c6a0869003f496bfd3cede16f0c992fa7e7f7006bfc3e5113caaab1b8",
+      "bytes": 1766,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.os.Parcel;",
+        "xtr.keymapper.controller.ControllerBindings;",
+        "xtr.keymapper.keymap.KeymapProfileElement;"
+      ],
+      "symbols": [
+        "ControllerChord"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/keymap/element/Dpad.java",
+      "sha256": "ca6c056ba14a74b51589eff45f78358f3a4dfaaf5db4f6997a3003184cb1fb08",
+      "bytes": 3703,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.os.Parcel;",
+        "androidx.annotation.NonNull;",
+        "xtr.keymapper.dpad.DpadKeyCodes;",
+        "xtr.keymapper.floatingkeys.MovableFrameLayout;",
+        "xtr.keymapper.keymap.KeymapProfileElement;"
+      ],
+      "symbols": [
+        "Dpad"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/keymap/element/Key.java",
+      "sha256": "7bd85802c7545f2e060dd60e291b2fc6f0f6f2b95dc93211d07bbfff9940ce69",
+      "bytes": 1841,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.os.Parcel;",
+        "androidx.annotation.NonNull;",
+        "xtr.keymapper.keymap.KeymapProfileElement;"
+      ],
+      "symbols": [
+        "Key"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/keymap/element/MouseAimConfig.java",
+      "sha256": "f2a59b3ecd1b8a45284eaa7821db2a6bd1c8851df89875dbd52804bab1f0169a",
+      "bytes": 4292,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.os.Parcel;",
+        "androidx.annotation.NonNull;",
+        "xtr.keymapper.floatingkeys.MovableFloatingActionKey;",
+        "xtr.keymapper.floatingkeys.MovableFrameLayout;",
+        "xtr.keymapper.keymap.KeymapProfileElement;"
+      ],
+      "symbols": [
+        "MouseAimConfig"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/keymap/element/MouseWalk.java",
+      "sha256": "ab5a14b409a9f39b168babbbada8443b36145deae17911e3052195ffbe5b8908",
+      "bytes": 1698,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.os.Parcel;",
+        "androidx.annotation.NonNull;",
+        "xtr.keymapper.floatingkeys.MovableFrameLayout;",
+        "xtr.keymapper.keymap.KeymapProfileElement;"
+      ],
+      "symbols": [
+        "MouseWalk"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/keymap/element/SwipeKey.java",
+      "sha256": "8a10b9a8c0050f7071bf59a31e5f65f15386f92d7e916affcc08b33500f5e33f",
+      "bytes": 1845,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.os.Parcel;",
+        "androidx.annotation.NonNull;",
+        "xtr.keymapper.keymap.KeymapProfileElement;"
+      ],
+      "symbols": [
+        "SwipeKey"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/macro/Macro.java",
+      "sha256": "18fbb021083307fa0534c48e81a7c4a6e621e4c6739c2dc0c4a414b903b622d9",
+      "bytes": 3377,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.os.Parcel;",
+        "android.os.Parcelable;",
+        "androidx.annotation.NonNull;",
+        "xtr.keymapper.server.IInputInterface;",
+        "xtr.keymapper.server.InputService;"
+      ],
+      "symbols": [
+        "Macro",
+        "Event"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/macro/MacroIdUtils.java",
+      "sha256": "aa881d0c9893eac953c4a86dd7bac6b7fe965e8fa9c0e4c62ade3caaf590859d",
+      "bytes": 411,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "java.util.ArrayList;",
+        "xtr.keymapper.keymap.KeymapProfile;"
+      ],
+      "symbols": [
+        "MacroIdUtils"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/macro/MacroSharedPreferences.java",
+      "sha256": "e128d3bc21cef98a63dbd7b4808fcf4b466dc640e72b9a6ec33fcf881e48f8df",
+      "bytes": 2516,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Context;",
+        "android.content.SharedPreferences;",
+        "androidx.annotation.NonNull;",
+        "java.util.Set;"
+      ],
+      "symbols": [
+        "MacroSharedPreferences"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/macro/MacroStatus.java",
+      "sha256": "f3312501f5ab3eaaf172f1d1db5174ec30304404ee37611c3bf631b6ec024caf",
+      "bytes": 2971,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Context;",
+        "android.os.Handler;",
+        "android.os.Looper;",
+        "android.os.SystemClock;",
+        "android.view.LayoutInflater;",
+        "android.view.ViewGroup;",
+        "android.view.accessibility.AccessibilityManager;",
+        "androidx.annotation.UiContext;",
+        "xtr.keymapper.databinding.MacroStatusLayoutBinding;"
+      ],
+      "symbols": [
+        "MacroStatus",
+        "TimeUpdateRunnable"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/macro/MacroView.java",
+      "sha256": "9ba331ed17f00fc285e5c8224025aea47e1e2c6635a2de4cf5a683e7614dfb4c",
+      "bytes": 3463,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Context;",
+        "android.graphics.BlurMaskFilter;",
+        "android.graphics.Canvas;",
+        "android.graphics.Color;",
+        "android.graphics.Paint;",
+        "android.graphics.Path;",
+        "android.view.InputDevice;",
+        "android.view.KeyEvent;",
+        "android.view.MotionEvent;",
+        "android.view.View;",
+        "androidx.annotation.NonNull;"
+      ],
+      "symbols": [
+        "MacroView",
+        "OnFinishListener"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/mouse/HeldAimHandler.java",
+      "sha256": "171f55a9d5f9f5ede5f565723d8b4fe9f66b911264847db20144befb272d413b",
+      "bytes": 3265,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "java.util.ArrayList;",
+        "java.util.LinkedHashMap;",
+        "java.util.List;",
+        "java.util.Map;",
+        "xtr.keymapper.keymap.element.AimKey;"
+      ],
+      "symbols": [
+        "HeldAimHandler",
+        "TouchSink",
+        "State"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/mouse/MouseAimHandler.java",
+      "sha256": "6174a71b66db22a198badaa0ea428f17fe659323755df5391be20791e648c643",
+      "bytes": 7324,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "static xtr.keymapper.InputEventCodes.BTN_EXTRA;",
+        "static xtr.keymapper.InputEventCodes.BTN_MIDDLE;",
+        "static xtr.keymapper.InputEventCodes.BTN_MOUSE;",
+        "static xtr.keymapper.InputEventCodes.BTN_RIGHT;",
+        "static xtr.keymapper.InputEventCodes.BTN_SIDE;",
+        "static xtr.keymapper.InputEventCodes.REL_X;",
+        "static xtr.keymapper.InputEventCodes.REL_Y;",
+        "static xtr.keymapper.server.InputService.DOWN;",
+        "static xtr.keymapper.server.InputService.MOVE;",
+        "static xtr.keymapper.server.InputService.UP;",
+        "android.graphics.RectF;",
+        "android.os.Handler;",
+        "android.os.Looper;",
+        "xtr.keymapper.keymap.element.Camera;",
+        "xtr.keymapper.keymap.element.MouseAimConfig;",
+        "xtr.keymapper.server.IInputInterface;",
+        "xtr.keymapper.server.pid.PointerId;"
+      ],
+      "symbols": [
+        "MouseAimHandler",
+        "OnButtonClickListener"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/mouse/MousePinchZoom.java",
+      "sha256": "980be442e6765b4c1181a03d0b6c8c95b8d3b6debafd7aa2e8f4a27c7a13da6f",
+      "bytes": 2914,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "static xtr.keymapper.InputEventCodes.BTN_MOUSE;",
+        "static xtr.keymapper.InputEventCodes.REL_X;",
+        "static xtr.keymapper.InputEventCodes.REL_Y;",
+        "static xtr.keymapper.server.InputService.DOWN;",
+        "static xtr.keymapper.server.InputService.MOVE;",
+        "static xtr.keymapper.server.InputService.UP;",
+        "xtr.keymapper.server.IInputInterface;",
+        "xtr.keymapper.server.pid.PointerId;"
+      ],
+      "symbols": [
+        "MousePinchZoom"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/mouse/MouseWalkHandler.kt",
+      "sha256": "ed0f8d65064a48612a2e3427933efbf522a6896a44fa8029a3156d79ae756015",
+      "bytes": 1498,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "xtr.keymapper.keymap.element.MouseWalk",
+        "xtr.keymapper.server.IInputInterface",
+        "xtr.keymapper.server.InputService",
+        "xtr.keymapper.server.pid.PointerId",
+        "kotlin.math.hypot"
+      ],
+      "symbols": [
+        "MouseWalkHandler"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/mouse/MouseWheelZoom.java",
+      "sha256": "3f2040e18eb80c8e5996e8bc99a8d2892aff921e63bd9ba9c1654c4ca3e5dd87",
+      "bytes": 2010,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "static xtr.keymapper.mouse.MousePinchZoom.pointerId1;",
+        "static xtr.keymapper.mouse.MousePinchZoom.pointerId2;",
+        "static xtr.keymapper.server.InputService.DOWN;",
+        "static xtr.keymapper.server.InputService.MOVE;",
+        "static xtr.keymapper.server.InputService.UP;",
+        "android.os.Handler;",
+        "android.os.HandlerThread;",
+        "android.os.RemoteException;",
+        "android.util.Log;",
+        "xtr.keymapper.server.IInputInterface;",
+        "xtr.keymapper.server.RemoteService;"
+      ],
+      "symbols": [
+        "MouseWheelZoom"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/profiles/AutomaticProfileResolver.kt",
+      "sha256": "80d5f255fc2da0412f443e89dd87383ea5522d6ebdf9a7f7c262d2fa8c792d77",
+      "bytes": 2547,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "xtr.keymapper.devices.*",
+        "xtr.keymapper.keymap.KeymapProfile"
+      ],
+      "symbols": [
+        "AutomaticProfileResolver",
+        "Decision",
+        "Unconfigured",
+        "Activate",
+        "Disabled",
+        "SelectExisting",
+        "ForegroundProfileSession",
+        "Request"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/profiles/ProfileDialogOperation.java",
+      "sha256": "ca15ed79d3548e8c364977cbbc68bdb3d43655c8300d1dcee445f634864f01d4",
+      "bytes": 728,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "java.util.function.BooleanSupplier;",
+        "java.util.function.Consumer;"
+      ],
+      "symbols": [
+        "ProfileDialogOperation",
+        "Outcome"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/profiles/ProfileSelector.java",
+      "sha256": "15e9daaafee907a9c9f8ac098ca61229277900bce305b0083d96de7d47a82679",
+      "bytes": 10562,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.app.Activity;",
+        "android.app.Application;",
+        "android.content.Context;",
+        "android.content.ContextWrapper;",
+        "android.os.Bundle;",
+        "android.content.pm.PackageManager;",
+        "android.graphics.drawable.Drawable;",
+        "android.os.Build;",
+        "android.provider.Settings;",
+        "android.view.LayoutInflater;",
+        "android.view.WindowManager;",
+        "androidx.annotation.UiContext;",
+        "androidx.appcompat.app.AlertDialog;",
+        "com.google.android.material.dialog.MaterialAlertDialogBuilder;",
+        "java.util.ArrayList;",
+        "java.util.function.BooleanSupplier;",
+        "xtr.keymapper.R;",
+        "xtr.keymapper.databinding.AppViewBinding;",
+        "xtr.keymapper.databinding.TextFieldBinding;",
+        "xtr.keymapper.keymap.KeymapProfiles;"
+      ],
+      "symbols": [
+        "ProfileSelector",
+        "OnProfileSelectedListener",
+        "OnAppSelectedListener",
+        "OnProfileDialogResultListener"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/profiles/ProfilesApps.java",
+      "sha256": "8fc46273f272b19f1457c93b97c84a55aad384fae59f77f1cf5c75a98b06b2c6",
+      "bytes": 6062,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Context;",
+        "android.content.Intent;",
+        "android.content.pm.PackageManager;",
+        "android.content.pm.ResolveInfo;",
+        "android.graphics.drawable.Drawable;",
+        "android.os.Handler;",
+        "android.os.Looper;",
+        "android.view.LayoutInflater;",
+        "android.view.View;",
+        "android.view.ViewGroup;",
+        "androidx.annotation.NonNull;",
+        "androidx.annotation.UiThread;",
+        "androidx.appcompat.app.AlertDialog;",
+        "androidx.recyclerview.widget.RecyclerView;",
+        "com.google.android.material.dialog.MaterialAlertDialogBuilder;",
+        "java.util.ArrayList;",
+        "java.util.List;",
+        "xtr.keymapper.R;",
+        "xtr.keymapper.databinding.AppViewBinding;",
+        "xtr.keymapper.databinding.FragmentProfilesAppsBinding;"
+      ],
+      "symbols": [
+        "ProfilesApps",
+        "OnAppsLoadedListener",
+        "AppsGridAdapter",
+        "RecyclerViewHolder",
+        "RecyclerData"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/server/ActivityObserverService.java",
+      "sha256": "a510de1500a415f7a9cccf33b852f140a5cd2d043d94275e0d91ef9f3b5c0246",
+      "bytes": 1973,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "static android.content.Context.ACTIVITY_SERVICE;",
+        "android.app.ActivityManager;",
+        "android.app.IActivityManager;",
+        "android.os.Handler;",
+        "android.os.HandlerThread;",
+        "android.os.RemoteException;",
+        "android.os.ServiceManager;",
+        "android.util.Log;",
+        "java.util.List;",
+        "xtr.keymapper.ActivityObserver;"
+      ],
+      "symbols": [
+        "ActivityObserverService"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/server/IInputInterface.java",
+      "sha256": "22f4e97d4430c7f25a1c9744332bd7a27b7e38b934745e6f38dd71f6c8fd4727",
+      "bytes": 990,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "xtr.keymapper.IRemoteServiceCallback;",
+        "xtr.keymapper.keymap.KeymapConfig;",
+        "xtr.keymapper.keymap.KeymapProfile;",
+        "xtr.keymapper.server.event.KeyEventHandler;",
+        "xtr.keymapper.server.event.MouseEventHandler;"
+      ],
+      "symbols": [
+        "IInputInterface"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/server/Input.java",
+      "sha256": "c7e5f85bfb08d0ba3a0eacaf5f470ec386ac7336bb1eae42378fda4a62dab436",
+      "bytes": 14380,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.hardware.input.InputManager;",
+        "android.os.Build;",
+        "android.os.Handler;",
+        "android.os.HandlerThread;",
+        "android.os.SystemClock;",
+        "android.util.Log;",
+        "android.view.InputDevice;",
+        "android.view.InputEvent;",
+        "android.view.MotionEvent;",
+        "com.genymobile.scrcpy.Point;",
+        "com.genymobile.scrcpy.Pointer;",
+        "com.genymobile.scrcpy.PointersState;",
+        "java.lang.reflect.InvocationTargetException;",
+        "java.lang.reflect.Method;",
+        "xtr.keymapper.server.event.MouseEventHandler;"
+      ],
+      "symbols": [
+        "Input",
+        "ScrollEvent",
+        "SmoothScrollThread"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/server/InputDiagnostics.java",
+      "sha256": "93df6a64dd02db5458556bc384b8bc9748379fbdb0b69505618a89fd3e8aa96d",
+      "bytes": 2330,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.util.Log;",
+        "android.view.MotionEvent;",
+        "java.lang.reflect.Method;",
+        "xtr.keymapper.BuildConfig;"
+      ],
+      "symbols": [
+        "InputDiagnostics"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/server/InputService.java",
+      "sha256": "ab78942983e2313ec27e3f32e34e3fa8b4b9c41b4f21c203ef0d4baafb9f09b0",
+      "bytes": 12628,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "static xtr.keymapper.InputEventCodes.BTN_MIDDLE;",
+        "static xtr.keymapper.InputEventCodes.BTN_MOUSE;",
+        "static xtr.keymapper.InputEventCodes.BTN_RIGHT;",
+        "static xtr.keymapper.InputEventCodes.REL_WHEEL;",
+        "static xtr.keymapper.InputEventCodes.REL_X;",
+        "static xtr.keymapper.InputEventCodes.REL_Y;",
+        "android.os.Handler;",
+        "android.os.Looper;",
+        "android.os.RemoteException;",
+        "android.util.Log;",
+        "android.view.MotionEvent;",
+        "android.view.View;",
+        "xtr.keymapper.IRemoteServiceCallback;",
+        "xtr.keymapper.keymap.KeymapConfig;",
+        "xtr.keymapper.keymap.KeymapProfile;",
+        "xtr.keymapper.server.event.KeyEventHandler;",
+        "xtr.keymapper.server.event.MouseEventHandler;"
+      ],
+      "symbols": [
+        "InputService"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/server/RemoteService.java",
+      "sha256": "e0e6c0c6b7872768f57629be85f675e876f24d0cfdad8a93e23449ba8a25ebc3",
+      "bytes": 16307,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.app.ApplicationErrorReport;",
+        "android.content.ComponentName;",
+        "android.content.Context;",
+        "android.content.Intent;",
+        "android.content.pm.ApplicationInfo;",
+        "android.content.pm.PackageManager;",
+        "android.hardware.display.DisplayManager;",
+        "android.os.Binder;",
+        "android.os.Build;",
+        "android.os.Handler;",
+        "android.os.IBinder;",
+        "android.os.Looper;",
+        "android.os.RemoteException;",
+        "android.util.Log;",
+        "android.view.Display;",
+        "android.view.LayoutInflater;",
+        "android.view.View;",
+        "android.view.WindowManager;",
+        "java.io.BufferedReader;",
+        "java.io.IOException;",
+        "java.io.InputStreamReader;",
+        "java.lang.reflect.InvocationTargetException;",
+        "java.lang.reflect.Method;",
+        "xtr.keymapper.ActivityObserver;",
+        "xtr.keymapper.BuildConfig;",
+        "xtr.keymapper.IRemoteService;",
+        "xtr.keymapper.IRemoteServiceCallback;",
+        "xtr.keymapper.OnKeyEventListener;",
+        "xtr.keymapper.R;",
+        "xtr.keymapper.Utils;",
+        "xtr.keymapper.activity.MainActivity;",
+        "xtr.keymapper.databinding.CursorBinding;",
+        "xtr.keymapper.keymap.KeymapConfig;",
+        "xtr.keymapper.keymap.KeymapProfile;",
+        "xtr.keymapper.server.event.KeyEventHandler;"
+      ],
+      "symbols": [
+        "RemoteService"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/server/RemoteServiceHelper.java",
+      "sha256": "2950d98d4bac54b84195fdda88ab5e42f72725951d3aaf55d79eae47deb79963",
+      "bytes": 5996,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.ComponentName;",
+        "android.content.Context;",
+        "android.content.Intent;",
+        "android.content.ServiceConnection;",
+        "android.content.pm.ApplicationInfo;",
+        "android.content.pm.PackageManager;",
+        "android.os.IBinder;",
+        "android.os.RemoteException;",
+        "android.os.ServiceManager;",
+        "android.util.Log;",
+        "com.topjohnwu.superuser.Shell;",
+        "com.topjohnwu.superuser.ipc.RootService;",
+        "rikka.shizuku.Shizuku;",
+        "xtr.keymapper.BuildConfig;",
+        "xtr.keymapper.IRemoteService;"
+      ],
+      "symbols": [
+        "RemoteServiceHelper",
+        "RootRemoteServiceCallback",
+        "RemoteServiceConnection"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/server/RemoteServiceShell.java",
+      "sha256": "21818fbcdb2329e741cd3a620638f065be804cda45307936fb63fdfed2bd1cab",
+      "bytes": 4551,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.annotation.SuppressLint;",
+        "android.content.ComponentName;",
+        "android.content.Context;",
+        "android.content.ContextWrapper;",
+        "android.content.pm.PackageManager;",
+        "android.os.Build;",
+        "android.os.Looper;",
+        "android.os.ServiceManager;",
+        "android.os.SystemProperties;",
+        "android.util.Log;",
+        "java.lang.reflect.Method;",
+        "xtr.keymapper.BuildConfig;",
+        "xtr.keymapper.activity.MainActivity;"
+      ],
+      "symbols": [
+        "RemoteServiceShell"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/server/RootRemoteService.java",
+      "sha256": "4cc41c51e47d3626e4892e6d72e49baa51d6327bfbe849674544987709abe7f0",
+      "bytes": 922,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Intent;",
+        "android.os.IBinder;",
+        "android.os.Process;",
+        "androidx.annotation.NonNull;",
+        "com.topjohnwu.superuser.ipc.RootService;"
+      ],
+      "symbols": [
+        "RootRemoteService",
+        "is"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/server/RuntimeRequestGate.java",
+      "sha256": "92224060f7360ec005255a3321d5fb78809ff4aa477f053c3642d1990c8487df",
+      "bytes": 3371,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": [
+        "RuntimeRequestGate",
+        "Frame"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/server/event/KeyEventHandler.java",
+      "sha256": "91cd4f8313384cf3d1b5b9645da1b4c24d37b068462589cc31ac03cfc7bce661",
+      "bytes": 8519,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "static xtr.keymapper.keymap.KeymapConfig.KEY_ALT;",
+        "static xtr.keymapper.keymap.KeymapConfig.KEY_CTRL;",
+        "static xtr.keymapper.keymap.KeymapProfile.MAX_DPADS;",
+        "static xtr.keymapper.server.InputService.DOWN;",
+        "static xtr.keymapper.server.InputService.UP;",
+        "static xtr.keymapper.server.pid.PointerId.dpadpid1;",
+        "android.os.Handler;",
+        "android.os.HandlerThread;",
+        "android.os.RemoteException;",
+        "java.util.ArrayList;",
+        "java.util.Map;",
+        "xtr.keymapper.Utils;",
+        "xtr.keymapper.dpad.DpadHandler;",
+        "xtr.keymapper.keymap.KeymapConfig;",
+        "xtr.keymapper.keymap.KeymapProfile;",
+        "xtr.keymapper.keymap.element.Camera;",
+        "xtr.keymapper.keymap.element.Key;",
+        "xtr.keymapper.macro.Macro;",
+        "xtr.keymapper.server.IInputInterface;",
+        "xtr.keymapper.server.pid.PidProvider;",
+        "xtr.keymapper.keymap.element.SwipeKey;",
+        "xtr.keymapper.swipekey.SwipeKeyHandler;"
+      ],
+      "symbols": [
+        "KeyEventHandler",
+        "KeyEvent"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/server/event/MouseEventHandler.java",
+      "sha256": "fa97fd0c3950cf07778e3b5836eaca5eb26a5456754de615d11ddf8e091ac8e6",
+      "bytes": 13126,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "static xtr.keymapper.InputEventCodes.BTN_EXTRA;",
+        "static xtr.keymapper.InputEventCodes.BTN_MIDDLE;",
+        "static xtr.keymapper.InputEventCodes.BTN_MOUSE;",
+        "static xtr.keymapper.InputEventCodes.BTN_RIGHT;",
+        "static xtr.keymapper.InputEventCodes.BTN_SIDE;",
+        "static xtr.keymapper.InputEventCodes.REL_WHEEL;",
+        "static xtr.keymapper.InputEventCodes.REL_X;",
+        "static xtr.keymapper.InputEventCodes.REL_Y;",
+        "static xtr.keymapper.server.InputService.MOVE;",
+        "android.os.RemoteException;",
+        "android.util.Log;",
+        "java.util.Objects;",
+        "xtr.keymapper.keymap.KeymapConfig;",
+        "xtr.keymapper.mouse.MouseAimHandler;",
+        "xtr.keymapper.mouse.HeldAimHandler;",
+        "xtr.keymapper.mouse.MousePinchZoom;",
+        "xtr.keymapper.mouse.MouseWalkHandler;",
+        "xtr.keymapper.mouse.MouseWheelZoom;",
+        "xtr.keymapper.keymap.KeymapProfile;",
+        "xtr.keymapper.keymap.element.Key;",
+        "xtr.keymapper.server.IInputInterface;",
+        "xtr.keymapper.server.RemoteService;",
+        "xtr.keymapper.server.pid.PointerId;"
+      ],
+      "symbols": [
+        "MouseEventHandler"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/server/event/RepeatKeyHandler.java",
+      "sha256": "4d49967bf87920eb770f5d61626bdb01c26b3080e5f19cac9e4a13138af7b480",
+      "bytes": 1908,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.os.Handler;",
+        "java.util.HashMap;",
+        "java.util.Map;",
+        "xtr.keymapper.keymap.element.Key;",
+        "xtr.keymapper.mouse.HeldAimHandler.TouchSink;"
+      ],
+      "symbols": [
+        "RepeatKeyHandler",
+        "Pulse"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/server/pid/PidProvider.java",
+      "sha256": "300f571b00c363751d197d18b2dbd7283d3f9e752a2f576389ccd1db7a31d4ca",
+      "bytes": 504,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "androidx.collection.SimpleArrayMap;"
+      ],
+      "symbols": [
+        "PidProvider"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/server/pid/PointerId.java",
+      "sha256": "f4fb326ea414aa21441bdb0ff4e1e4252fa1634de5914cde8e36bf59c83bb0bd",
+      "bytes": 300,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": [
+        "PointerId"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/service/InputListenerService.java",
+      "sha256": "d2fb14c7c956e9a289e10c24aaeb836190133e8e3e97350715fb1d7cad23e780",
+      "bytes": 855,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.inputmethodservice.InputMethodService;",
+        "android.view.inputmethod.EditorInfo;",
+        "xtr.keymapper.server.RemoteServiceHelper;"
+      ],
+      "symbols": [
+        "InputListenerService"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/structured/ProfileCodec.kt",
+      "sha256": "12e6b8c516e7a34aaf661bf137a7f5e784847c7501563f48b89cbe40a3e1f3a2",
+      "bytes": 14054,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "org.json.JSONObject",
+        "org.yaml.snakeyaml.Yaml",
+        "org.yaml.snakeyaml.LoaderOptions",
+        "org.yaml.snakeyaml.DumperOptions",
+        "org.yaml.snakeyaml.constructor.SafeConstructor",
+        "org.yaml.snakeyaml.nodes.*",
+        "java.io.InputStream",
+        "xtr.keymapper.controller.ControllerBindings"
+      ],
+      "symbols": [
+        "ProfileCodec",
+        "StrictJson"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/structured/ProfileDocument.kt",
+      "sha256": "69daa6ef74e9836e22ee68b14709c60c5c9536cb6cd64a0dc4abce7ec482679a",
+      "bytes": 6549,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "xtr.keymapper.keymap.ProfileConfiguration",
+        "xtr.keymapper.controller.ControllerBindings"
+      ],
+      "symbols": [
+        "ProfileHeader",
+        "ProfileBinding",
+        "ProfileDocument",
+        "MappingFields",
+        "Layout"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/structured/StructuredProfileActivity.kt",
+      "sha256": "59e2b8794770561d762343610de407ad733e72cb14b92d66ceae1488aebe30d3",
+      "bytes": 7647,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.app.Activity",
+        "android.content.Intent",
+        "android.os.Bundle",
+        "androidx.activity.ComponentActivity",
+        "androidx.activity.compose.setContent",
+        "androidx.compose.foundation.layout.*",
+        "androidx.compose.foundation.rememberScrollState",
+        "androidx.compose.foundation.verticalScroll",
+        "androidx.compose.material3.*",
+        "androidx.compose.runtime.*",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.unit.dp",
+        "xtr.keymapper.keymap.KeymapProfiles",
+        "java.util.concurrent.Executors"
+      ],
+      "symbols": [
+        "StructuredProfileActivity"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/structured/StructuredProfiles.kt",
+      "sha256": "a09ce951c611b3227589fb44d468bc4bf1f25d1d0c11809f5d7f608282c49c13",
+      "bytes": 5935,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Context",
+        "android.util.Base64",
+        "xtr.keymapper.keymap.ProfileConfiguration",
+        "xtr.keymapper.keymap.KeymapProfiles"
+      ],
+      "symbols": [
+        "StructuredProfiles"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/swipekey/SwipeKeyHandler.java",
+      "sha256": "390bcc7f648b8ebdce3c20f47bccc661298de34b8bed8285235db8165cc1b113",
+      "bytes": 2064,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "static xtr.keymapper.server.InputService.DOWN;",
+        "static xtr.keymapper.server.InputService.MOVE;",
+        "android.os.Handler;",
+        "xtr.keymapper.keymap.element.SwipeKey;",
+        "xtr.keymapper.server.IInputInterface;",
+        "xtr.keymapper.server.event.KeyEventHandler.KeyEvent;",
+        "xtr.keymapper.server.pid.PidProvider;"
+      ],
+      "symbols": [
+        "SwipeKeyHandler",
+        "SwipeEvent"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/swipekey/SwipeKeyOverlay.java",
+      "sha256": "eb04c01e6c9ae0022ae6c7e9bf5b4a18172415582ee68fba0ca49c675789749d",
+      "bytes": 1963,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Context;",
+        "android.graphics.Canvas;",
+        "android.graphics.Color;",
+        "android.graphics.DashPathEffect;",
+        "android.graphics.Paint;",
+        "android.util.AttributeSet;",
+        "android.view.View;",
+        "androidx.annotation.UiContext;",
+        "androidx.annotation.UiThread;",
+        "com.google.android.material.button.MaterialButton;"
+      ],
+      "symbols": [
+        "SwipeKeyOverlay"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/ui/DeviceGroupManager.kt",
+      "sha256": "69c77bfb9fd4b9d277aae1e4da6258e50af005bc58e212dfb8a93ebcf6f39174",
+      "bytes": 8769,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "androidx.compose.foundation.layout.*",
+        "androidx.compose.foundation.rememberScrollState",
+        "androidx.compose.foundation.verticalScroll",
+        "androidx.compose.material3.*",
+        "androidx.compose.runtime.*",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.platform.LocalContext",
+        "androidx.compose.ui.unit.dp",
+        "xtr.keymapper.devices.*",
+        "xtr.keymapper.keymap.KeymapProfiles"
+      ],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/ui/GameKeyMapper.kt",
+      "sha256": "d82efb3b84102c683e80534718ee36160dd8410103642fd3073e754179e22da4",
+      "bytes": 42032,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.app.Activity",
+        "android.graphics.drawable.Drawable",
+        "androidx.compose.foundation.*",
+        "androidx.compose.foundation.layout.*",
+        "androidx.compose.foundation.lazy.LazyColumn",
+        "androidx.compose.foundation.shape.CircleShape",
+        "androidx.compose.foundation.shape.RoundedCornerShape",
+        "androidx.compose.material3.*",
+        "androidx.compose.runtime.*",
+        "androidx.compose.ui.platform.ComposeView",
+        "androidx.compose.ui.platform.testTag",
+        "androidx.compose.ui.Alignment",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.graphics.Color",
+        "androidx.compose.ui.graphics.asImageBitmap",
+        "androidx.compose.ui.graphics.vector.ImageVector",
+        "androidx.compose.ui.text.font.FontWeight",
+        "androidx.compose.ui.text.style.TextOverflow",
+        "androidx.compose.ui.tooling.preview.Preview",
+        "androidx.compose.ui.unit.dp",
+        "androidx.compose.ui.unit.sp",
+        "androidx.compose.foundation.lazy.LazyListScope",
+        "xtr.keymapper.activity.MainActivity",
+        "android.content.pm.PackageManager",
+        "android.provider.Settings",
+        "android.hardware.input.InputManager",
+        "android.os.Handler",
+        "android.os.Looper",
+        "xtr.keymapper.devices.*",
+        "androidx.annotation.DrawableRes",
+        "androidx.compose.ui.res.painterResource",
+        "androidx.compose.ui.res.stringResource",
+        "androidx.core.graphics.drawable.toBitmap",
+        "androidx.compose.material.icons.Icons",
+        "androidx.compose.material.icons.filled.*",
+        "xtr.keymapper.keymap.KeymapProfiles"
+      ],
+      "symbols": [
+        "KeymapperTheme",
+        "GameProfile",
+        "AppState",
+        "GameKeyMapperBridge"
+      ]
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/ui/ProfileDetailsDialog.kt",
+      "sha256": "76ac522657e7f4aa7cebaff1db6032b2100f394d497391354cd9dfec9bccd31e",
+      "bytes": 5960,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "androidx.compose.foundation.Image",
+        "androidx.compose.foundation.layout.*",
+        "androidx.compose.ui.graphics.asImageBitmap",
+        "androidx.core.graphics.drawable.toBitmap",
+        "androidx.compose.foundation.lazy.LazyColumn",
+        "androidx.compose.foundation.lazy.items",
+        "androidx.compose.material.icons.Icons",
+        "androidx.compose.material.icons.filled.Close",
+        "androidx.compose.material.icons.filled.Gamepad",
+        "androidx.compose.material3.*",
+        "androidx.compose.runtime.*",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.platform.testTag",
+        "androidx.compose.ui.unit.dp",
+        "androidx.compose.ui.window.Dialog",
+        "androidx.compose.ui.window.DialogProperties"
+      ],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/java/xtr/keymapper/ui/ProfileMappingSummary.kt",
+      "sha256": "e755ab25188a74cf4fe3e5693eb8d97d5ec8cfe1e802af99be4a77aefbce0cf8",
+      "bytes": 7348,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Context",
+        "xtr.keymapper.controller.ControllerBindings",
+        "xtr.keymapper.devices.*",
+        "xtr.keymapper.keymap.KeymapProfile",
+        "xtr.keymapper.keymap.KeymapProfiles",
+        "xtr.keymapper.keymap.ProfileConfiguration"
+      ],
+      "symbols": [
+        "MappingRow",
+        "ProfileMappingSummary",
+        "SavedProfileDetails",
+        "ProfileDetailsReader"
+      ]
+    },
+    {
+      "path": "app/src/main/res/drawable/baseline_360_24.xml",
+      "sha256": "49259a97fdf5159f29d3b71285444b7ad45ef3337cecd5d748f3e1c08055e8dc",
+      "bytes": 523,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/drawable/crosshair.png",
+      "sha256": "8f40d3c8fec080666e45f3e736a019cf61ecb82ecf4a0ea7aca98123d6541344",
+      "bytes": 5828,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/drawable/dpad.png",
+      "sha256": "5a866ab1f47d98bbb4524ba5f7a7eaca710feada2ee6336d75a334199215d1a1",
+      "bytes": 9793,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/drawable/ic_baseline_add_24.xml",
+      "sha256": "ae8205dd404d307ee7f15906e86053009b2ef32211ceb8da6b76981a26e1a14e",
+      "bytes": 315,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/drawable/ic_baseline_done_36.xml",
+      "sha256": "2463a4a88c607c0fa094c5d915b1dd2211a78cddbfb19ba74639b7243df6aca4",
+      "bytes": 331,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/drawable/ic_baseline_help_outline_24.xml",
+      "sha256": "d37b548a98a30d1feb8afec0f090f962b9b6c465a5a9f7a1fcf7e698f3295a29",
+      "bytes": 588,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/drawable/ic_baseline_keyboard_arrow_down_24.xml",
+      "sha256": "8d1d1a52dc281cc4dd9a1bd43f7805a1595e01a276ae666074a48c4b99170b18",
+      "bytes": 339,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/drawable/ic_baseline_keyboard_arrow_left_24.xml",
+      "sha256": "c00561ea91e546d9e366267af25e374eedd016257f96f6d2c8c2f4300975ad5b",
+      "bytes": 338,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/drawable/ic_baseline_keyboard_arrow_right_24.xml",
+      "sha256": "01057884f7fe9cfc2384dd8c71ddda79afd9b4a0b7b69a02fc0a79e0d2765bf6",
+      "bytes": 337,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/drawable/ic_baseline_keyboard_arrow_up_24.xml",
+      "sha256": "3fd48d5ebdcbe286886c473f73c1e57208088452a8a973e3099fb02178256779",
+      "bytes": 328,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/drawable/ic_baseline_mouse_36.xml",
+      "sha256": "c58065928b8026998486008521b2cd2141f38e9544614ddb5b8939c16a16da15",
+      "bytes": 412,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/drawable/ic_baseline_settings_24.xml",
+      "sha256": "038443c36a162a176a54f27c3c4660641925762228c38e9e871f85ab6f1fce9e",
+      "bytes": 1184,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/drawable/ic_baseline_speed_24.xml",
+      "sha256": "1d50dfc2c5283b039eb3af4475cb9cadfdc5695d66c69f054dc5d483a7cb1dd0",
+      "bytes": 519,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/drawable/ic_baseline_touch_app_24.xml",
+      "sha256": "8d7b5862875523a98928f8cf86689c758cbd33b4ae8e68bcf3ed0364bc9534c3",
+      "bytes": 762,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/drawable/ic_baseline_zoom_out_map_24.xml",
+      "sha256": "f9a195401e589f36b908cbdf50550965ca9c98be55f4a754379db7d73cbd3c58",
+      "bytes": 522,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/drawable/ic_create_white_36dp.xml",
+      "sha256": "9f960c48a9ced3b22a438453bf3ed25bc109b8698d6c314e610e80e3c0ba7328",
+      "bytes": 455,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/drawable/ic_pointer_arrow.xml",
+      "sha256": "b6d82fb56b685136b3dfd15b8a64ff9162febf232bc3ae072bc68cc0e3650efc",
+      "bytes": 685,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/drawable/ic_start_button.xml",
+      "sha256": "9530170087bf83631979a1e1e2a27c4d31f42b5cf8577e0b781fdf9027472b9b",
+      "bytes": 294,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/drawable/key.png",
+      "sha256": "84428e4568fc5313b5c442e9c5e1b1abcd642b55b66d9b3c0ae3bb2eb9306602",
+      "bytes": 13391,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/drawable/newkey.png",
+      "sha256": "533bcb1b038eb29e48994af9134763af6f7e3ce74962f8273d20b488d4bfc428",
+      "bytes": 9122,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/drawable/pointer_arrow.png",
+      "sha256": "6b7322c1bae7d028d4f75ff3b93e409645ca672730309fa2eade7f500091c4c6",
+      "bytes": 1080,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/drawable/resize_handle.xml",
+      "sha256": "b441879fb94bb3a15c594c707bc52fb38628c2e1fbcc1c01021ac92b4c85ce43",
+      "bytes": 314,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/layout-land/activity_import_export.xml",
+      "sha256": "b25ba90b2f2fb076e4cc58904a32f2ebcaeed6cd2dd6350bcd9f3c949cfa7e02",
+      "bytes": 5924,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/layout-land/app_view.xml",
+      "sha256": "2e880d0f06f2646e25a166536e0d1bef3c2408d0719df20026e85c04c60bfd21",
+      "bytes": 764,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/layout/activity_import_export.xml",
+      "sha256": "17d0ffb12c3ffe23b322397fa0bdc3b3c0ddb5087eefc6ccf8eaad26cb1be814",
+      "bytes": 5302,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/layout/activity_info.xml",
+      "sha256": "c9ea627404661df4dfc5c3728e2fd6f32932c96ee62f6d132ef4de243593d28c",
+      "bytes": 361,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/layout/app_view.xml",
+      "sha256": "899fd5f6088d31173baba350017848b1218359df2d7cecb3c20ed527023b0b99",
+      "bytes": 872,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/layout/camera.xml",
+      "sha256": "57ce78c8fb86c41c49e21614cc75616223b86a9070cf73f0726fb10c661bbccc",
+      "bytes": 2785,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/layout/camera_config.xml",
+      "sha256": "40cb6d187d101f2b2e02cbd5f833fc610423a5fe016f593fdd8b3c9e826342a2",
+      "bytes": 2276,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/layout/crosshair.xml",
+      "sha256": "eb9b9f9f71c8f6afec71caf2250c909fe0ccb8659084e4a613748ea565ac6414",
+      "bytes": 3459,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/layout/cursor.xml",
+      "sha256": "8c65fc40bbc7c399d320f66334128e5c97fba9858eff466c4947971bc3206e7a",
+      "bytes": 392,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/layout/dpad.xml",
+      "sha256": "060363420f96de0e877efe4101b666b6d4211c283aa7b196700dc9f5e0a24fe1",
+      "bytes": 4372,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/layout/dpad_arrows.xml",
+      "sha256": "10fac1cdbcb015146ba047e307618f632e1d97203a0765e6c98f58ed98399207",
+      "bytes": 4108,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/layout/floating_key.xml",
+      "sha256": "205a108ba1f693ccb6c36c47da1299a4fed21af5fe210afb1c74f33bedc2ba3f",
+      "bytes": 1406,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/layout/fragment_profiles_apps.xml",
+      "sha256": "6ce84aff5ed51cdd729d494125e22e8b385ae6c7dd903b84e07e60500eb737df",
+      "bytes": 868,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/layout/fragment_profiles_view.xml",
+      "sha256": "9b1f7d5a13596c04e27d62df08a8b8e7093c392f53e88bbf0d99873e49d99043",
+      "bytes": 905,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/layout/keymap_editor_item.xml",
+      "sha256": "a7b86f0422b26edb34b23782a3dc57ebe011004e42022a56fcee4d1354d45c07",
+      "bytes": 454,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/layout/keymap_editor_layout.xml",
+      "sha256": "e200f79951c5814048e5f52a4528f00a6d39f0173980f488a0f74512cf1203e8",
+      "bytes": 24287,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/layout/loading.xml",
+      "sha256": "4f4910a366431a2523d2479494ca912f7137d99625840ed05338ac3b21385925",
+      "bytes": 697,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/layout/macro_dialog_layout.xml",
+      "sha256": "d44753d2710d2f38d5d3ad2b93c2c2f3bd33bef7823805759c81d3313ab7a280",
+      "bytes": 1340,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/layout/macro_list_item.xml",
+      "sha256": "498986516d90b7f394dcce4b215c9ef3ab2f804852f23fe78f3f2e2ae2de2ecb",
+      "bytes": 2586,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/layout/macro_status_layout.xml",
+      "sha256": "84db1b6380e9c662670ea3dfd3cd264c54639b68dbd863468fe155fd7a6c39a4",
+      "bytes": 2432,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/layout/mouse_aim_config.xml",
+      "sha256": "fd2c9ca039e373314f1743920cc63a8c7e5770046493913d6c343c702a4515f0",
+      "bytes": 2223,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/layout/mouse_walk.xml",
+      "sha256": "9f5ccbe41b7f4a8629f1b9bb8ecc503d54522daf95c69bd86038551c1b2038d9",
+      "bytes": 2693,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/layout/profile_row_item.xml",
+      "sha256": "e81fb05736dc9c3c4824389ea150271d5601bb214f4ef0245d7d0300d53084a3",
+      "bytes": 4039,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/layout/profile_row_item2.xml",
+      "sha256": "725bfab1653d76e52c04ee19aec57ff020115a76cc9ffd858c497d224205d1a5",
+      "bytes": 2038,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/layout/resizable.xml",
+      "sha256": "21c2649d38eb6273ef42c32b06594af244247002a54a25c91389d1c84101606e",
+      "bytes": 1338,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/layout/settings.xml",
+      "sha256": "2d4d4b09f301bdb5e7e68560db95d08ec0a2a3da8661a256b3bc777fa838266d",
+      "bytes": 2199,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/layout/swipe_key.xml",
+      "sha256": "faf5b5b5592f416c4c65aaf4eb8073739426f86a8c1530557a72086612ec2b1a",
+      "bytes": 447,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/layout/text_field.xml",
+      "sha256": "c627e0eeb996b9eb71f1319032de657fdb90891df7986add4d460e86f247de89",
+      "bytes": 697,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/menu/bottom_navigation_menu.xml",
+      "sha256": "107723a7da19910e315dd12b1a52ac8929d1a14132e3bbe7f397a826229f1218",
+      "bytes": 613,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/menu/keymap_editor_menu.xml",
+      "sha256": "7ba5dea8e56b9bb8d0833989de444f2b70889d17deebe1db7f2d94990d378345",
+      "bytes": 1775,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml",
+      "sha256": "f940d9f5418cb3ccfe2e8d5777362317db43290bd16a0202b0b4fb856da9d74b",
+      "bytes": 334,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/mipmap-hdpi/ic_launcher_background.png",
+      "sha256": "64db07229066faa64b65c87997f9b69ac694b1879cb159589a5a35a3f8041988",
+      "bytes": 7180,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/mipmap-hdpi/ic_launcher_foreground.png",
+      "sha256": "7be5a49aac24bbe023f7c7d673a284b08cc993dc5088edd093f5244c71c55acd",
+      "bytes": 2055,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/mipmap-mdpi/ic_launcher_background.png",
+      "sha256": "50cb3609b6c14e0b3a26e2edaa3d657030c74f5d42d33e678d6affd69bed27ba",
+      "bytes": 3050,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/mipmap-mdpi/ic_launcher_foreground.png",
+      "sha256": "86e6d94293b35245c9fbb20e0869ba75ce0adb7c2d303205a5040347d09d3788",
+      "bytes": 1312,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/mipmap-xhdpi/ic_launcher_background.png",
+      "sha256": "8c3dce06b1a977fca855d44cabb271648eb8114e9d459572947576062200cda9",
+      "bytes": 12692,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.png",
+      "sha256": "fafa8bae4aab4c5bab8b95f920fd9e740db4531e62f848a3cbf242827e9e6058",
+      "bytes": 2944,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/mipmap-xxhdpi/ic_launcher_background.png",
+      "sha256": "f8ca2091315301dea826135a35e4948c32b18647da4af274d0476e0a315bcaea",
+      "bytes": 21581,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.png",
+      "sha256": "eca7a70f1b204c3f959a35539b63ea98a54ad01d39689ba138616b06d783e43e",
+      "bytes": 5127,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/mipmap-xxxhdpi/ic_launcher_background.png",
+      "sha256": "45a2f7594fee86ec355b1b3bb793f4dd1c3360080af6390746534253a83ff251",
+      "bytes": 36767,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png",
+      "sha256": "b9400687987e6bdd3f4b3a65d5a983ccb3a104dea316fb8b569b06f711e5e249",
+      "bytes": 7783,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/values-ar/strings.xml",
+      "sha256": "1a8c5390b4dca5c7cfc85c1d7283b861c499179b429c2e32834c711f96a0a111",
+      "bytes": 8029,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/values-es/strings.xml",
+      "sha256": "3d2aa051ab9e54867f043ca9f748071f999297098c0ca6b84e6d26027487efa3",
+      "bytes": 7062,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/values-fr/strings.xml",
+      "sha256": "3728a6ce99f27a5f5084dfc1e913eced12034fee70499deab8c25b50070e2658",
+      "bytes": 7255,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/values-pa/strings.xml",
+      "sha256": "482abf9c9677b03f69ca09a31b1539da1b9709610e0f21bdd07b5ab6b8b6f339",
+      "bytes": 9508,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/values-pt/strings.xml",
+      "sha256": "3f0565000cf98711793f741e67474e4b6952e776cfe3ca7ff94b59107078e750",
+      "bytes": 6963,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/values-ru/strings.xml",
+      "sha256": "5236d19a5ee6457d3432b4ab19f77e4f0ac7e2dd17fcc50b8a680c2b03d4ddd6",
+      "bytes": 9086,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/values-zh-rCN/strings.xml",
+      "sha256": "4f9fe26daad2addd9cd606db6509e041cc1cad3b6844132db09a47dfefb05272",
+      "bytes": 6326,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/values/arrays.xml",
+      "sha256": "d49ba3b3545cf8879232ff895c4734d836cd3a46e3a4d95a2a91b30ad1375918",
+      "bytes": 547,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/values/colors.xml",
+      "sha256": "137a0f7d6d759c9f5e0061993182e126c0a2cff68877d5003e4efc6e86d32c49",
+      "bytes": 325,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/values/dimens.xml",
+      "sha256": "6f904b455c03f853667ed34834d65845b2902301bbf93fe615d449d61e2c6394",
+      "bytes": 35,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/values/strings.xml",
+      "sha256": "bac799638ed1b98d54c0944152f3b0f19830d7bb449f95b64d7bacd05e4e7347",
+      "bytes": 6456,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/values/styles.xml",
+      "sha256": "ad21187266391b95549a0adcb6b2c07a66ab738e346e8bbe9974088386fbe446",
+      "bytes": 174,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/values/themes.xml",
+      "sha256": "7ecdc2ab79f8c55f4a8933e2abaaca19c4f2508f25ab1c56e1c2d98e651d5c7b",
+      "bytes": 685,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/res/xml/method.xml",
+      "sha256": "11fdd986ee7be3709e405ea3f7b30f56beb8b8ff7f22e6a54a0aa2dc2d7ab458",
+      "bytes": 459,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/devices/DeviceGroupResolverTest.kt",
+      "sha256": "588a71e4cc8a91624cfe7251adbf06690a1124869244dee591ed2eaefcc5bafc",
+      "bytes": 11801,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.view.InputDevice",
+        "org.junit.Assert.*",
+        "org.junit.Test"
+      ],
+      "symbols": [
+        "DeviceGroupResolverTest"
+      ]
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/editor/CaptureLifecycleSafetyTest.kt",
+      "sha256": "ba4ae22f33baf34420ed23b759a1b212c00cc614a13af68262243845c1d0eb16",
+      "bytes": 9083,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.ComponentName",
+        "android.content.Context",
+        "android.content.Intent",
+        "android.hardware.input.InputManager",
+        "android.os.Binder",
+        "android.os.Handler",
+        "android.os.Looper",
+        "android.os.RemoteException",
+        "android.view.InputDevice",
+        "android.view.View",
+        "java.lang.reflect.Proxy",
+        "java.time.Duration",
+        "org.junit.Assert.*",
+        "org.junit.Test",
+        "org.junit.runner.RunWith",
+        "org.robolectric.*",
+        "org.robolectric.annotation.Config",
+        "org.robolectric.shadows.ShadowInputDevice",
+        "org.robolectric.shadows.ShadowSettings",
+        "org.robolectric.util.ReflectionHelpers",
+        "org.robolectric.util.ReflectionHelpers.ClassParameter",
+        "xtr.keymapper.IRemoteService",
+        "xtr.keymapper.keymap.KeymapConfig",
+        "xtr.keymapper.server.RemoteServiceHelper"
+      ],
+      "symbols": [
+        "CaptureLifecycleSafetyTest"
+      ]
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/editor/CapturedTargetStoreSafetyTest.kt",
+      "sha256": "60c7e44782f42dbac63a8fe7ac4bc86af89e9336e84d48ba7da005a1bffe398c",
+      "bytes": 5614,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.ContextWrapper",
+        "android.content.SharedPreferences",
+        "java.lang.reflect.Proxy",
+        "java.util.concurrent.CountDownLatch",
+        "java.util.concurrent.CopyOnWriteArrayList",
+        "org.junit.Assert.*",
+        "org.junit.Test",
+        "org.junit.runner.RunWith",
+        "org.robolectric.RobolectricTestRunner",
+        "org.robolectric.RuntimeEnvironment",
+        "org.robolectric.annotation.Config"
+      ],
+      "symbols": [
+        "CapturedTargetStoreSafetyTest",
+        "Faults"
+      ]
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/editor/CoordinateCaptureLifecycleTest.kt",
+      "sha256": "7f6317938a779f3229a3c690f8b9052512037172bd3915b482f34497118f5f65",
+      "bytes": 4470,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Intent",
+        "android.os.Binder",
+        "android.os.Looper",
+        "org.junit.Assert.*",
+        "org.junit.Test",
+        "org.junit.runner.RunWith",
+        "org.robolectric.*",
+        "org.robolectric.annotation.Config",
+        "org.robolectric.util.ReflectionHelpers",
+        "xtr.keymapper.IRemoteService",
+        "xtr.keymapper.keymap.KeymapConfig",
+        "xtr.keymapper.keymap.KeymapProfiles",
+        "xtr.keymapper.server.RemoteServiceHelper",
+        "java.lang.reflect.Proxy"
+      ],
+      "symbols": [
+        "CoordinateCaptureLifecycleTest"
+      ]
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/editor/CoordinateCaptureTest.kt",
+      "sha256": "d9f35c8657e90e5d4d7fdd2ea56fb82103f9b1db8428ad3d7c1d7d0faedfde8d",
+      "bytes": 8393,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "org.junit.Assert.*",
+        "org.junit.Test",
+        "org.junit.runner.RunWith",
+        "org.robolectric.RobolectricTestRunner",
+        "org.robolectric.RuntimeEnvironment",
+        "org.robolectric.annotation.Config",
+        "org.json.JSONObject",
+        "xtr.keymapper.keymap.KeymapProfiles",
+        "xtr.keymapper.ProfileMappingSummary"
+      ],
+      "symbols": [
+        "CoordinateCaptureTest"
+      ]
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/editor/CoordinateCaptureUiTest.kt",
+      "sha256": "6edb5180ffcee99fda1c3e8960bac782eee57ccca83b55bf3a1b933d49847756",
+      "bytes": 3771,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "androidx.compose.ui.geometry.Offset",
+        "androidx.compose.ui.graphics.asAndroidBitmap",
+        "androidx.compose.ui.test.*",
+        "androidx.compose.ui.test.junit4.createComposeRule",
+        "org.junit.*",
+        "org.junit.runner.RunWith",
+        "org.robolectric.RobolectricTestRunner",
+        "org.robolectric.annotation.Config"
+      ],
+      "symbols": [
+        "CoordinateCaptureUiTest"
+      ]
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/editor/EditorSessionGuardTest.kt",
+      "sha256": "08ccf695e0f2f074ced26c4866151185b62037a76eed92f3165d4e3a2cefc586",
+      "bytes": 938,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "org.junit.Assert.*",
+        "org.junit.Test"
+      ],
+      "symbols": [
+        "EditorSessionGuardTest"
+      ]
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/editor/VisualControllerUiTest.kt",
+      "sha256": "b0f0e35cbd20de2283cb4df9356d201a7caafb60f0c201ce91b8d5bdf23f8eb2",
+      "bytes": 5878,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "androidx.compose.ui.geometry.Offset",
+        "androidx.compose.ui.graphics.asAndroidBitmap",
+        "androidx.compose.ui.test.*",
+        "androidx.compose.ui.test.junit4.createComposeRule",
+        "org.junit.*",
+        "org.junit.runner.RunWith",
+        "org.robolectric.RobolectricTestRunner",
+        "org.robolectric.annotation.Config"
+      ],
+      "symbols": [
+        "VisualControllerUiTest"
+      ]
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/editor/VisualEditorLifecycleTest.kt",
+      "sha256": "22da193a261fa1344a3a4bd1270511f27b580476ba3cb8e0dcc5a80ca0c94776",
+      "bytes": 2541,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Intent",
+        "android.os.Binder",
+        "android.os.Looper",
+        "org.junit.Assert.*",
+        "org.junit.Test",
+        "org.junit.runner.RunWith",
+        "org.robolectric.*",
+        "org.robolectric.annotation.Config",
+        "org.robolectric.util.ReflectionHelpers",
+        "xtr.keymapper.IRemoteService",
+        "xtr.keymapper.keymap.KeymapConfig",
+        "xtr.keymapper.keymap.KeymapProfiles",
+        "xtr.keymapper.server.RemoteServiceHelper",
+        "java.lang.reflect.Proxy"
+      ],
+      "symbols": [
+        "VisualEditorLifecycleTest"
+      ]
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/editor/VisualMappingSessionTest.kt",
+      "sha256": "2f2c22633b24446d11359c34179765cb9c1c36ccae3ce58daed1abc541a64399",
+      "bytes": 7578,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "org.junit.Assert.*",
+        "org.junit.Test",
+        "org.junit.runner.RunWith",
+        "org.robolectric.RobolectricTestRunner",
+        "org.robolectric.RuntimeEnvironment",
+        "org.robolectric.annotation.Config",
+        "xtr.keymapper.keymap.*",
+        "xtr.keymapper.devices.*"
+      ],
+      "symbols": [
+        "VisualMappingSessionTest"
+      ]
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/keymap/ProfileConfigurationTest.java",
+      "sha256": "542d0c8b2e6dd1211b33746ea5514d33e2259742be04afdcc2c77b9f90055b7d",
+      "bytes": 7221,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "org.junit.Test;",
+        "static org.junit.Assert.*;"
+      ],
+      "symbols": [
+        "ProfileConfigurationTest"
+      ]
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/keymap/ProfileStorageTransactionsTest.kt",
+      "sha256": "a8319738c7e0c031226eee8bbf46b517bd2c49ea93b955a567d16da0a6ed6bdb",
+      "bytes": 4734,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.SharedPreferences",
+        "org.junit.Assert.*",
+        "org.junit.Test",
+        "org.junit.runner.RunWith",
+        "org.robolectric.RobolectricTestRunner",
+        "org.robolectric.RuntimeEnvironment",
+        "org.robolectric.annotation.Config",
+        "java.lang.reflect.Proxy",
+        "xtr.keymapper.structured.StructuredProfiles"
+      ],
+      "symbols": [
+        "ProfileStorageTransactionsTest"
+      ]
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/keymap/ProfileZipImporterTest.kt",
+      "sha256": "719d1582a6da823f9b1946456ae789fed4bf7f66877b9a51e89427904c524cef",
+      "bytes": 10732,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "org.junit.Assert.*",
+        "org.junit.Test",
+        "org.junit.runner.RunWith",
+        "org.robolectric.RobolectricTestRunner",
+        "org.robolectric.RuntimeEnvironment",
+        "org.robolectric.annotation.Config",
+        "java.io.*",
+        "java.util.zip.*",
+        "xtr.keymapper.structured.*"
+      ],
+      "symbols": [
+        "ProfileZipImporterTest"
+      ]
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/profiles/AutomaticProfileResolverTest.kt",
+      "sha256": "e9e0302fe0ae4e9feb73db04aeb04b44f1dbe1d5c05c9baa7498b04f6f4d29e3",
+      "bytes": 3644,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "org.junit.Assert.*",
+        "org.junit.Test",
+        "xtr.keymapper.devices.*",
+        "xtr.keymapper.keymap.KeymapProfile"
+      ],
+      "symbols": [
+        "AutomaticProfileResolverTest"
+      ]
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/profiles/ForegroundProfileWorkflowTest.kt",
+      "sha256": "d4a7d84c332d6cda2cd408ef7d1a0a07dba430e09dd6137f12b7ff403b8209c7",
+      "bytes": 8005,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.Context",
+        "android.hardware.input.InputManager",
+        "android.os.Binder",
+        "android.os.Looper",
+        "android.view.InputDevice",
+        "org.junit.After",
+        "org.junit.Before",
+        "org.junit.Test",
+        "org.junit.Assert.*",
+        "org.junit.runner.RunWith",
+        "org.robolectric.Robolectric",
+        "org.robolectric.RobolectricTestRunner",
+        "org.robolectric.RuntimeEnvironment",
+        "org.robolectric.Shadows.shadowOf",
+        "org.robolectric.annotation.Config",
+        "org.robolectric.shadows.ShadowDialog",
+        "org.robolectric.shadows.ShadowInputDevice",
+        "org.robolectric.util.ReflectionHelpers",
+        "xtr.keymapper.ActivityObserver",
+        "xtr.keymapper.IRemoteService",
+        "xtr.keymapper.TouchPointer",
+        "xtr.keymapper.devices.*",
+        "xtr.keymapper.keymap.*",
+        "xtr.keymapper.server.RemoteServiceHelper",
+        "java.lang.reflect.Proxy"
+      ],
+      "symbols": [
+        "ForegroundProfileWorkflowTest"
+      ]
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/profiles/ProfileDialogOperationTest.java",
+      "sha256": "a4fa185b7c3a01979ce3efdceb5e935247b50d06df01d23f9906c7f076c842b5",
+      "bytes": 1219,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "org.junit.Test;",
+        "java.util.ArrayList;",
+        "static org.junit.Assert.*;",
+        "static xtr.keymapper.profiles.ProfileDialogOperation.Outcome.*;"
+      ],
+      "symbols": [
+        "ProfileDialogOperationTest"
+      ]
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/profiles/ProfileSelectorTest.java",
+      "sha256": "c533988cbb52ccb8708dab58b6377bab97b8e819209d5d2bff0b670abbfbd4b8",
+      "bytes": 9203,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.app.Activity;",
+        "android.content.Context;",
+        "android.os.Looper;",
+        "android.widget.EditText;",
+        "androidx.appcompat.app.AlertDialog;",
+        "androidx.appcompat.view.ContextThemeWrapper;",
+        "org.junit.Before;",
+        "org.junit.Test;",
+        "org.junit.runner.RunWith;",
+        "org.robolectric.Robolectric;",
+        "org.robolectric.RobolectricTestRunner;",
+        "org.robolectric.RuntimeEnvironment;",
+        "org.robolectric.Shadows;",
+        "org.robolectric.annotation.Config;",
+        "org.robolectric.shadows.ShadowDialog;",
+        "java.util.ArrayList;",
+        "java.util.List;",
+        "xtr.keymapper.R;",
+        "xtr.keymapper.devices.DeviceMappingStore;",
+        "xtr.keymapper.keymap.KeymapProfiles;",
+        "static org.junit.Assert.*;"
+      ],
+      "symbols": [
+        "ProfileSelectorTest"
+      ]
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/server/ConcurrentControllerInputTest.java",
+      "sha256": "a1a7f463fe6730945a4671287c5ea6fba801a63c7f281d13361ff25011f03587",
+      "bytes": 11958,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.os.Handler;",
+        "android.os.Looper;",
+        "android.view.InputEvent;",
+        "android.view.MotionEvent;",
+        "java.lang.reflect.Proxy;",
+        "java.nio.file.Files;",
+        "java.nio.file.Path;",
+        "java.time.Duration;",
+        "java.util.*;",
+        "org.junit.Test;",
+        "org.junit.runner.RunWith;",
+        "org.robolectric.RobolectricTestRunner;",
+        "org.robolectric.Shadows;",
+        "org.robolectric.annotation.Config;",
+        "org.robolectric.util.ReflectionHelpers;",
+        "xtr.keymapper.IRemoteServiceCallback;",
+        "xtr.keymapper.controller.ControllerDeviceMonitor;",
+        "xtr.keymapper.keymap.*;",
+        "xtr.keymapper.server.event.RepeatKeyHandler;",
+        "static org.junit.Assert.*;"
+      ],
+      "symbols": [
+        "ConcurrentControllerInputTest",
+        "Recorder",
+        "Harness"
+      ]
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/server/ControllerChordTest.java",
+      "sha256": "638dd53a5542af128479e8e2d477b70b4fa7fdb76e04bc533f6f75a299ab66a4",
+      "bytes": 12436,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.os.Looper;",
+        "android.os.Parcel;",
+        "java.lang.reflect.Proxy;",
+        "java.time.Duration;",
+        "java.util.*;",
+        "org.junit.Test;",
+        "org.junit.runner.RunWith;",
+        "org.robolectric.RobolectricTestRunner;",
+        "org.robolectric.Shadows;",
+        "org.robolectric.annotation.Config;",
+        "xtr.keymapper.controller.*;",
+        "xtr.keymapper.keymap.*;",
+        "xtr.keymapper.server.event.*;",
+        "static org.junit.Assert.*;"
+      ],
+      "symbols": [
+        "ControllerChordTest",
+        "Rig"
+      ]
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/server/ControllerRuntimeTest.java",
+      "sha256": "7b528fb0518f154ddd569d95ac0a5cb5368f1c9aaf7e7ba4eadfeb5b79085dae",
+      "bytes": 23611,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.os.Looper;",
+        "android.os.Parcel;",
+        "java.lang.reflect.Proxy;",
+        "java.time.Duration;",
+        "java.util.*;",
+        "org.junit.Test;",
+        "org.junit.runner.RunWith;",
+        "org.robolectric.RobolectricTestRunner;",
+        "org.robolectric.Shadows;",
+        "org.robolectric.annotation.Config;",
+        "xtr.keymapper.controller.*;",
+        "xtr.keymapper.keymap.*;",
+        "xtr.keymapper.keymap.element.AimKey;",
+        "xtr.keymapper.server.event.*;",
+        "static org.junit.Assert.*;"
+      ],
+      "symbols": [
+        "ControllerRuntimeTest"
+      ]
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/server/CursorStartupTest.kt",
+      "sha256": "d1787862ab1d72138f27de612105d963dfa1b92ce3345dbff97bcd22d7dd62e0",
+      "bytes": 2026,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.os.Looper",
+        "org.junit.Assert.*",
+        "org.junit.Test",
+        "org.junit.runner.RunWith",
+        "org.robolectric.Robolectric",
+        "org.robolectric.RobolectricTestRunner",
+        "org.robolectric.Shadows.shadowOf",
+        "org.robolectric.annotation.Config",
+        "xtr.keymapper.IRemoteService",
+        "xtr.keymapper.TouchPointer",
+        "xtr.keymapper.keymap.KeymapConfig",
+        "java.lang.reflect.Proxy"
+      ],
+      "symbols": [
+        "CursorStartupTest"
+      ]
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/server/FixedAnchorEditorTest.java",
+      "sha256": "c52e91368ba37a2b5c415bb99b383c8034be4457e783e2974bf8ebbe603c7c7a",
+      "bytes": 3366,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.view.ContextThemeWrapper;",
+        "android.widget.FrameLayout;",
+        "java.lang.reflect.Proxy;",
+        "org.junit.Test;",
+        "org.junit.runner.RunWith;",
+        "org.robolectric.RobolectricTestRunner;",
+        "org.robolectric.RuntimeEnvironment;",
+        "org.robolectric.annotation.Config;",
+        "xtr.keymapper.R;",
+        "xtr.keymapper.editor.EditorUiComponentCallback;",
+        "xtr.keymapper.keymap.ProfileConfiguration;",
+        "static org.junit.Assert.*;"
+      ],
+      "symbols": [
+        "FixedAnchorEditorTest"
+      ]
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/server/MappingRuntimeTest.java",
+      "sha256": "9f9948487af4e04106692e0dd6cb629b8de788acc981ca6b9fb3d92dd78d8550",
+      "bytes": 27027,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.os.Handler;",
+        "android.os.Looper;",
+        "android.os.Parcel;",
+        "android.view.InputEvent;",
+        "android.view.MotionEvent;",
+        "java.lang.reflect.Proxy;",
+        "java.time.Duration;",
+        "java.util.ArrayList;",
+        "java.util.List;",
+        "org.junit.Before;",
+        "org.junit.Test;",
+        "org.junit.runner.RunWith;",
+        "org.robolectric.RobolectricTestRunner;",
+        "org.robolectric.annotation.Config;",
+        "org.robolectric.Shadows;",
+        "xtr.keymapper.IRemoteServiceCallback;",
+        "xtr.keymapper.dpad.DpadHandler;",
+        "xtr.keymapper.keymap.*;",
+        "xtr.keymapper.mouse.HeldAimHandler;",
+        "xtr.keymapper.server.event.*;",
+        "static org.junit.Assert.*;",
+        "static xtr.keymapper.InputEventCodes.*;"
+      ],
+      "symbols": [
+        "MappingRuntimeTest",
+        "Recorder",
+        "FakeInput"
+      ]
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/server/Phase1GameplayTest.java",
+      "sha256": "1bcc56cfd9cc5da4836d6dfabf4dba82c1bcb40bcea2c7f8f5a943ccb3ad282b",
+      "bytes": 11338,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.os.Handler;",
+        "android.os.Looper;",
+        "android.view.InputEvent;",
+        "android.view.MotionEvent;",
+        "java.lang.reflect.Proxy;",
+        "java.time.Duration;",
+        "java.util.*;",
+        "org.junit.Test;",
+        "org.junit.runner.RunWith;",
+        "org.robolectric.RobolectricTestRunner;",
+        "org.robolectric.Shadows;",
+        "org.robolectric.annotation.Config;",
+        "xtr.keymapper.IRemoteServiceCallback;",
+        "xtr.keymapper.controller.ControllerDeviceMonitor;",
+        "xtr.keymapper.keymap.*;",
+        "static org.junit.Assert.*;"
+      ],
+      "symbols": [
+        "Phase1GameplayTest",
+        "Capture",
+        "Rig"
+      ]
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/server/RemoteServiceCallbackTest.kt",
+      "sha256": "bdb0290db6ffc281bcdd39a79356ecb3d3df5585f4618e3622649e7688ab67fa",
+      "bytes": 4900,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.content.ComponentName",
+        "android.content.Context",
+        "android.content.Intent",
+        "android.os.Binder",
+        "android.os.RemoteException",
+        "java.lang.reflect.Proxy",
+        "org.junit.Assert.*",
+        "org.junit.Test",
+        "org.junit.runner.RunWith",
+        "org.robolectric.RobolectricTestRunner",
+        "org.robolectric.Robolectric",
+        "org.robolectric.RuntimeEnvironment",
+        "org.robolectric.annotation.Config",
+        "org.robolectric.annotation.Implementation",
+        "org.robolectric.annotation.Implements",
+        "xtr.keymapper.IRemoteService",
+        "xtr.keymapper.editor.EditorActivity",
+        "xtr.keymapper.editor.EditorService",
+        "xtr.keymapper.keymap.KeymapConfig"
+      ],
+      "symbols": [
+        "CallbackAcquisitionShadow",
+        "Captured",
+        "RemoteServiceCallbackTest",
+        "through"
+      ]
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/server/RuntimeLifecycleBarrierTest.java",
+      "sha256": "cdce3225ba8fe5b3151b2b934884ff5f618420bc71881dbdb29d19d0fae4c8b9",
+      "bytes": 6013,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "org.junit.Test;",
+        "java.util.concurrent.*;",
+        "java.util.concurrent.atomic.AtomicInteger;",
+        "static org.junit.Assert.*;"
+      ],
+      "symbols": [
+        "RuntimeLifecycleBarrierTest"
+      ]
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/server/RuntimeOwnershipTest.java",
+      "sha256": "2c9ea3bb0e329ed29eee945a26f05213f31959fe654d5f1b781e484efab29e56",
+      "bytes": 5347,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "org.junit.Test;",
+        "java.util.ArrayList;",
+        "java.util.List;",
+        "static org.junit.Assert.*;"
+      ],
+      "symbols": [
+        "RuntimeOwnershipTest",
+        "Runtime"
+      ]
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/server/RuntimeRequestGateTest.java",
+      "sha256": "a5af68ce131da8fc2b0001216a24221447947aa9f35e123054eb6ea49d74960c",
+      "bytes": 3004,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "org.junit.Test;",
+        "java.util.ArrayList;",
+        "static org.junit.Assert.*;"
+      ],
+      "symbols": [
+        "RuntimeRequestGateTest"
+      ]
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/structured/ProfileCodecTest.kt",
+      "sha256": "758570255b6de9d59334f94b3f15198978a65bbd957771c189bbd1138133019d",
+      "bytes": 8077,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "org.junit.Assert.*",
+        "org.junit.Test",
+        "org.junit.runner.RunWith",
+        "org.robolectric.RobolectricTestRunner",
+        "org.robolectric.RuntimeEnvironment",
+        "org.robolectric.annotation.Config",
+        "org.json.JSONObject",
+        "xtr.keymapper.keymap.*",
+        "xtr.keymapper.editor.VisualMappingSession"
+      ],
+      "symbols": [
+        "ProfileCodecTest"
+      ]
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/structured/StructuredUiLifecycleTest.kt",
+      "sha256": "ee3eaaf40d400054be15ea9d3ad7ffa0bdc82946d8d2334618bf95b7227e1646",
+      "bytes": 2222,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "android.app.Activity",
+        "android.content.Intent",
+        "org.junit.Test",
+        "org.junit.Assert.*",
+        "org.junit.runner.RunWith",
+        "org.robolectric.*",
+        "org.robolectric.annotation.Config",
+        "xtr.keymapper.keymap.KeymapProfiles",
+        "xtr.keymapper.devices.*"
+      ],
+      "symbols": [
+        "StructuredUiLifecycleTest"
+      ]
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/ui/ProfileDetailsUiTest.kt",
+      "sha256": "28bc2382345444dd1aa97b5c2ef3d38422bc37a58ff8f59f2adcbb807afac75f",
+      "bytes": 5249,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "androidx.compose.material3.MaterialTheme",
+        "androidx.compose.ui.test.*",
+        "androidx.compose.ui.graphics.asAndroidBitmap",
+        "androidx.compose.ui.test.junit4.createComposeRule",
+        "org.junit.*",
+        "org.junit.runner.RunWith",
+        "org.robolectric.RobolectricTestRunner",
+        "org.robolectric.annotation.Config"
+      ],
+      "symbols": [
+        "ProfileDetailsUiTest"
+      ]
+    },
+    {
+      "path": "app/src/test/java/xtr/keymapper/ui/ProfileMappingSummaryTest.kt",
+      "sha256": "4cd78fa8f7ccf0842e126f95a33598ed93a35603eb24b679f928d97e09d0fd23",
+      "bytes": 4586,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "org.junit.Assert.*",
+        "org.junit.Test",
+        "org.junit.runner.RunWith",
+        "org.robolectric.RobolectricTestRunner",
+        "org.robolectric.RuntimeEnvironment",
+        "org.robolectric.annotation.Config",
+        "xtr.keymapper.keymap.*",
+        "xtr.keymapper.devices.*"
+      ],
+      "symbols": [
+        "ProfileMappingSummaryTest"
+      ]
+    },
+    {
+      "path": "app/src/test/native/controller_probe_test.c",
+      "sha256": "e2d1085b63e46bce3070da1d4bdb0fbca496d1c8283bd6e1881329604ca4d8b0",
+      "bytes": 3562,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/test/native/mouse_reader_test.c",
+      "sha256": "0f5e38b262c43a19d9057c5cf78dc9420d141f09abc1361b5e4feb9d76438c02",
+      "bytes": 5979,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/test/native/run-controller-probe-tests.sh",
+      "sha256": "97a34e7356c6913d611a10f6c107dd1fe555f1a8d8ef7bdfaea44e4cd0b37e15",
+      "bytes": 455,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "app/src/test/native/run-mouse-reader-tests.sh",
+      "sha256": "eb22b54c54655bfb4e27000da05476e489b0c37f363f9a4e9bd244c0a9bea3f5",
+      "bytes": 447,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "build.gradle",
+      "sha256": "fa0628811a204fa0b3c7ec28069d16714ce0500c2104ec1179caf6f56e91348e",
+      "bytes": 303,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "docs/CONTROLLER-PROFILES.md",
+      "sha256": "3dcc062736299a9ae9bdb1121b585111db543ebe072edce4d1dcefa02f4c3d1e",
+      "bytes": 8451,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "docs/DEVLOG.md",
+      "sha256": "5e367756aeedacb5114149de83fae000cb5ca58f053a5304106a79ee1f21b527",
+      "bytes": 14904,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "docs/MATE9.md",
+      "sha256": "9d905d05ba24e11d1fd691d6c4c08396ad26bab1311267dd4cb5793a066d4542",
+      "bytes": 819,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "docs/PROFILE-AIM.md",
+      "sha256": "cd2e84a9818a05034e9e6c4174035bf4bd97a680fb638e54540e7b55b9f7d64e",
+      "bytes": 3993,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "sha256": "77feb4f97ab7d5f65c038af24796d35a0b97f4a53c7750cd83e5a132256123b3",
+      "bytes": 2823,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "docs/S10E.md",
+      "sha256": "1ae4585c2d549c09124f0ddbca1673fb05f2370eeb459252a3c7ff6920d5bd44",
+      "bytes": 2566,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "docs/automatic-profiles.md",
+      "sha256": "2fc020a567734d148a195b33caa69d622003ae05f08be5c09385b03453f87940",
+      "bytes": 12260,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "docs/branding-preparation.md",
+      "sha256": "11950919a3dc7b62595af05f8fbb0e4b8a16e92233cd82e4bb4f16aa53afbc5b",
+      "bytes": 7337,
+      "spdx": [],
+      "copyright": [
+        "| Upstream | `Xtr126/XtMapper`, copyright Xtr126 and contributors | Retain attribution and GPLv3 |",
+        "Keep LICENSE (GPLv3), upstream copyright/credits and source availability. README already credits Xtr126/upstream contributors and distinguishes this community fork from the official upstream project. Keep those paragraphs intact. Record third-party artwork authors, license grants and modification permission before shipping. Dependency notices and unresolved licenses require review alongside artwork attribution. A new product name does not remove copyleft obligations or grant rights to vendor/game trademarks."
+      ],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "docs/coordinate-capture.md",
+      "sha256": "ef9ab5f484bcf868a898b55c5c7b5f305dc9bc55f8a28b2cbb2049d958f41ed2",
+      "bytes": 13492,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "docs/engineering-quality.md",
+      "sha256": "026cc7cdea96ad83804a37e6019032f4532474b7d34186691fca05d3aa7f8fd9",
+      "bytes": 5317,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "docs/phase1-anchor-followup.md",
+      "sha256": "326524833bf647d1b6a82f2dfe5d85da108684ff660f44158db2e100fbf9badc",
+      "bytes": 11539,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "docs/phase1-gameplay-stability.md",
+      "sha256": "7be5f2e336d9186e330c3035afd87a51f9dc626c0333724a1bd755b2ee4f5fd3",
+      "bytes": 6970,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "docs/phase1-profile-mappings.md",
+      "sha256": "5e0bd9faf1aeb47593d92b1d17b729716dfffa7f027c58596395c6fc1495878c",
+      "bytes": 4579,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": [
+        "with"
+      ]
+    },
+    {
+      "path": "docs/pr34-repair-validation.md",
+      "sha256": "e9d63b70b8129aa92f98331bdf84749f7fc0e1a9dede3b19d094f60dc2fd858c",
+      "bytes": 3820,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "docs/profile-details.md",
+      "sha256": "4f7c22f56437a44b8e34cb8303785863a1a9ebbc03e0faad6a7222db5dda0e6f",
+      "bytes": 3017,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "docs/structured-profiles.md",
+      "sha256": "0a974ac9335789f387ddb07954b84329a5fa4a9e0771073a440e308acd2dff28",
+      "bytes": 5792,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": [
+        "construction"
+      ]
+    },
+    {
+      "path": "docs/ui-previews/controller-editor.png",
+      "sha256": "3a1e5df123bf7ad4160148aa198509b9afd1e2cd6ab760d429bde6e334eeda26",
+      "bytes": 43264,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "docs/ui-previews/profile-details.png",
+      "sha256": "df0e8781d69fb67c6659d1f400398d1e6a84b847507f287bd4afd525c578c9d3",
+      "bytes": 48172,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "docs/visual-controller-editor.md",
+      "sha256": "d951cc7a8d07656f12cfa5c086bc7032654ce9f8e5d2980dfa47cdf0ea47a94e",
+      "bytes": 8845,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "docs/zip-import-security.md",
+      "sha256": "7164e51b90aafe5b79972dc49533cf63298e962a5a6bbe55ff20096247e546ab",
+      "bytes": 3826,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "fastlane/metadata/android/en-US/changelogs/11.txt",
+      "sha256": "eb7ad3b5007b1033b3d4ce243ad98fe3d8613c2f8df88ffda3b333c083486278",
+      "bytes": 132,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "fastlane/metadata/android/en-US/changelogs/22.txt",
+      "sha256": "fab4eb31f27ddb03d28a5d0290070bb86ea10828648cbded156460cf12886d0b",
+      "bytes": 189,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "fastlane/metadata/android/en-US/full_description.txt",
+      "sha256": "9f94f4385b05e8484879693ed5b7dad8aed7f5247ab45d266488ed8d3795a044",
+      "bytes": 425,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "fastlane/metadata/android/en-US/images/featureGraphic.png",
+      "sha256": "5856d870e24a76c8d20e5a3107410c9d2ed078e2b0fa07f4ad7c513313112afd",
+      "bytes": 252944,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "fastlane/metadata/android/en-US/images/icon.png",
+      "sha256": "4fe0ac6bbf62a16904014f65ba364a4c94f5e8d7acbe3a214ca5a48b6a0f1eec",
+      "bytes": 10921,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "fastlane/metadata/android/en-US/images/phoneScreenshots/1.png",
+      "sha256": "838b5ef69fd566871cc7fef9923b6993f31bc79cea23cc2e1eb4b9c19f6b52f0",
+      "bytes": 151369,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "fastlane/metadata/android/en-US/images/phoneScreenshots/2.png",
+      "sha256": "5491e98dd9f2a4a2e59e910c034bda7d8ac0116dc1334afad89b639bd5d7de97",
+      "bytes": 240135,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "fastlane/metadata/android/en-US/images/phoneScreenshots/3.png",
+      "sha256": "9c5025541da546278bc7b6c6cb335a32a94bf7287b1d69a3e4ffd31cd90bb5ac",
+      "bytes": 191445,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "fastlane/metadata/android/en-US/images/phoneScreenshots/4.png",
+      "sha256": "f28eb0518a3d96acd14d35b534dc3bd362c2b6ede03901d250e72a02804c710d",
+      "bytes": 165284,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "fastlane/metadata/android/en-US/images/phoneScreenshots/5.png",
+      "sha256": "51d23acf78b45ef2c7885c42a2c448c688b0cbd509fc4e951c598461dc962608",
+      "bytes": 158001,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "fastlane/metadata/android/en-US/images/phoneScreenshots/6.png",
+      "sha256": "bcb38766d5582e87915f3ebd02cc14c98e8fff3ded96602dc7080fb8af05acb1",
+      "bytes": 150174,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "fastlane/metadata/android/en-US/images/phoneScreenshots/7.png",
+      "sha256": "d58e6259bafe54e5985892e66e78a7ecbf23145588a76c15de8f3d18b20d1aff",
+      "bytes": 181897,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "fastlane/metadata/android/en-US/short_description.txt",
+      "sha256": "0b5eabcbf59bb46b302bae76400ae8c8b65d02ac9d1aed995d6ef9b9b958f7fc",
+      "bytes": 41,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "gradle.properties",
+      "sha256": "5db9c08e03a7d7e51b41d75b5002cfa8722e1587e3d5d36dbdfea09efe4a6f23",
+      "bytes": 1392,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": [
+        "so",
+        "includes",
+        "for"
+      ]
+    },
+    {
+      "path": "gradle/gradle-daemon-jvm.properties",
+      "sha256": "79e740c9425ee46476ae432a61894c8be526c9062cadeea02949b57ee6690d3b",
+      "bytes": 1164,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "gradle/wrapper/gradle-wrapper.jar",
+      "sha256": "e996d452d2645e70c01c11143ca2d3742734a28da2bf61f25c82bdc288c9e637",
+      "bytes": 59203,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "gradle/wrapper/gradle-wrapper.properties",
+      "sha256": "d8bfc5d38a726e7ecb4830c8503cafd0080a27527c073c2a64ed335df5773d90",
+      "bytes": 252,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "gradlew",
+      "sha256": "63135287117a1e6d12c84580f1f49c61d1ba02218ecd28660605e97f976e7d65",
+      "bytes": 5766,
+      "spdx": [],
+      "copyright": [
+        "# Copyright 2015 the original author or authors."
+      ],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "gradlew.bat",
+      "sha256": "c46a27c79007746de5922b17abb6230d64ad8b1ba3ad1585ee5c6543c2a9b129",
+      "bytes": 2674,
+      "spdx": [],
+      "copyright": [
+        "@rem Copyright 2015 the original author or authors."
+      ],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "keystore.properties",
+      "sha256": "2ca6c711371f9adeac6054e753d088b29278ea5560cd73df74da6ed5e03e09a6",
+      "bytes": 96,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "profiles/mlbb/samsung-s10e/GAMESIR-G8.md",
+      "sha256": "30ebbac0b003c995f464cda8cce2ce2ca8070e8dbbc401cf4c2dbd9bb5a4d51d",
+      "bytes": 14867,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "profiles/mlbb/samsung-s10e/README.md",
+      "sha256": "8120b0ca97b9230aa4d6b757a5f534e20f0890c59c52ad40dcd67e3af9e5de85",
+      "bytes": 7220,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "profiles/mlbb/samsung-s10e/generate-gamesir-profile.py",
+      "sha256": "1f98fa6d958d5a0de4064fd6fd031373662744c519869e25a4cff48355b08d88",
+      "bytes": 11154,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "argparse",
+        "json",
+        "math"
+      ],
+      "symbols": []
+    },
+    {
+      "path": "profiles/mlbb/samsung-s10e/mlbb-gamesir-g8-phase2-select-chords.txt",
+      "sha256": "adc9fe35883c4ab1814f00a21877f0bf9b11b3cb6cffb6026d5d9d0269ef1b66",
+      "bytes": 524,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "profiles/mlbb/samsung-s10e/mlbb-gamesir-g8-phase2.txt",
+      "sha256": "610085fc6fa11efc28ba96700d2aa07f2904a0b2fb43859d0b876383d69a914d",
+      "bytes": 436,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "profiles/mlbb/samsung-s10e/mlbb-gamesir-g8-v0.1.txt",
+      "sha256": "4d7197b85cdf92e28ebc847f6f4605fa7d9727aca5bd141b418463efda990cbe",
+      "bytes": 370,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "profiles/mlbb/samsung-s10e/mlbb-gamesir-g8-v0.2.txt",
+      "sha256": "495cbe5bcf7224eb0ec7bc8b520c76d40f1b9a4e5b48d1fe17616600ef62d121",
+      "bytes": 370,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "profiles/mlbb/samsung-s10e/mlbb-gamesir-g8-v0.3-anchors.json",
+      "sha256": "4b7d0f34035cadae9f83df89f4d8f64310d24686ce1407a9c2ca7f557646c7cf",
+      "bytes": 1142,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "profiles/mlbb/samsung-s10e/mlbb-gamesir-g8-v0.3-tuned.txt",
+      "sha256": "610085fc6fa11efc28ba96700d2aa07f2904a0b2fb43859d0b876383d69a914d",
+      "bytes": 436,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "profiles/mlbb/samsung-s10e/mlbb-gamesir-g8-v0.3.txt",
+      "sha256": "af6b2c2831e9da084d615caf99a073a46284b7e08906f301dbdc3c1a01efa2f9",
+      "bytes": 440,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "profiles/mlbb/samsung-s10e/mlbb-kbm-v0.1.txt",
+      "sha256": "247713c1832b5fa3386f8db09343cd7269b131f12ff2f352b39a9248b24421f6",
+      "bytes": 415,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "profiles/mlbb/samsung-s10e/test_generate_gamesir_profile.py",
+      "sha256": "3e808df0a24f44130cefecf1d1950f3cece2d2d0ef8c9d742c0170fdb5cc5102",
+      "bytes": 12455,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "importlib.util",
+        "unittest",
+        "tempfile",
+        "json"
+      ],
+      "symbols": [
+        "ProfileTest",
+        "RearLevelingTest",
+        "RecoveredV03Test",
+        "AimRadiusTest",
+        "Phase2Test"
+      ]
+    },
+    {
+      "path": "schema/v1/mlbb-example.json",
+      "sha256": "a00a06dc5188a98d4ec9c6d09c22349df30622362977b53c4d2a6587716ba293",
+      "bytes": 779,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "schema/v1/profile.schema.json",
+      "sha256": "0bc74987c878307c92219e499f16e9478c1cdc0e3c64a972d20a1013accb8b4a",
+      "bytes": 27580,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "settings.gradle",
+      "sha256": "270ad000f192d4ed7d4f81c953063266da49acea58f61065808aa10d99148fa3",
+      "bytes": 479,
+      "spdx": [],
+      "copyright": [],
+      "imports": [],
+      "symbols": []
+    },
+    {
+      "path": "tools/audit_dependencies.py",
+      "sha256": "d20d2cdfc646cbb8b4acb3befd2a313c245414d2b48b452eccf17d61ef4f96d5",
+      "bytes": 1766,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "json, sys, urllib.request"
+      ],
+      "symbols": []
+    },
+    {
+      "path": "tools/check_secrets.py",
+      "sha256": "343b908cb44065998aab05c220b079b85881013f196cda80c22fe1a96f20b841",
+      "bytes": 1213,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "re, subprocess, sys"
+      ],
+      "symbols": []
+    },
+    {
+      "path": "tools/profile_schema.py",
+      "sha256": "1f71cd776b161bc27965a8f90583aa9149c7595c8057c6d0d59af0497e9646da",
+      "bytes": 3576,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "json,re",
+        "sys"
+      ],
+      "symbols": []
+    },
+    {
+      "path": "tools/test_quality_tools.py",
+      "sha256": "0555d2ec6fdc83bd1b4d7c77dde928ceb2686aba678d851a494ccacca122fb5a",
+      "bytes": 1739,
+      "spdx": [],
+      "copyright": [],
+      "imports": [
+        "importlib.util",
+        "unittest"
+      ],
+      "symbols": [
+        "QualityTests"
+      ]
+    }
+  ]
+}
