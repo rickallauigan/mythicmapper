@@ -1,0 +1,10 @@
+{
+  "source": "User observations during real tester use",
+  "all_buttons_reported_working": true,
+  "rear_l4_highlights_l3_reported": true,
+  "rear_r4_highlights_r3_reported": true,
+  "stick_trigger_exercise_reported_completed": true,
+  "simultaneous_A_B_exercise_reported_completed": true,
+  "automated_all_buttons_certification": false,
+  "note": "Recorded telemetry independently confirms L3/R3 and a later A/B/trigger/stick exercise. Distinct physical rear actuators cannot be distinguished from identical Android codes."
+}

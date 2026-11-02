@@ -126,3 +126,31 @@ publish production releases. Private raw evidence remains ignored under
 `app/build/s10e-private/`; never commit it.
 
 Draft S10e validation PR: https://github.com/rickallauigan/mythicmapper/pull/12.
+
+
+## G8 Controller Tester — 2026-11-02
+
+Branch `feature/g8-controller-tester` is stacked on PR #12's
+`test/s10e-hardware-validation` at `f0132f9`; PR #12 remains unmerged.
+See `docs/validation/g8-tester/REPORT.md` for actual screenshots, sanitized hardware
+data, build identity, test results and remaining gates. The original supplied
+reference PNG is intentionally untracked and must not be copied into the APK.
+
+Implemented Compose Controller/Diagnostics tabs, original Canvas/SVG drawing,
+Android live key/stick/trigger feedback, capability-derived checklist, bounded log,
+sanitary export and root-enforced Binder diagnostic ownership. Existing Java/native
+mapping, profile storage and Rust reference-only boundary remain. The previous
+Runtime metrics UI remains linked from Home.
+
+271 Android tests, five Rust tests, native three suites, host/Kotlin JNI and debug
+build/lint/release-manifest boundary passed. Device ownership/start-resume rejection,
+rotation, normal exit and idle client-death cleanup passed. Physical captures include
+2,996 real Android events, full stick/trigger range, no held controls at end, zero
+overflows and zero mapper touch submissions. User reported other buttons working;
+retained telemetry does not independently certify every button. Rear L4/R4 report
+L3/R3 aliases, not independent states. Four app preference files are unchanged.
+
+Known: remaining debug rendering jank (separate synthetic replay 40.36% / p99 53ms),
+full physical button capture, disconnect with held controls and OS-reserved Home
+behavior. No gameplay validation, release budget or 60-FPS claim. Private raw logs
+remain ignored in `app/build/s10e-private/`. Never merge/publish automatically.

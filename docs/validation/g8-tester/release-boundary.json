@@ -1,0 +1,6 @@
+{
+  "production_tester_registered": true,
+  "debug_validation_instrumentation_in_release_manifest": false,
+  "debug_safe_surface_in_release_manifest": false,
+  "release_apk_built": false
+}

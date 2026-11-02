@@ -34,6 +34,8 @@ class HardwareValidationInstrumentation: Instrumentation() {
                 "overlay", "screen" -> report.put("result",overlay())
                 "reader_hold" -> report.put("result",readerHold())
                 "runtime" -> report.put("result",runtimeLifecycle())
+                "tester" -> report.put("result",tester())
+                "tester_render" -> report.put("result",testerRender())
                 else -> error("Unknown suite")
             }
             report.put("status","PASS")
@@ -43,6 +45,76 @@ class HardwareValidationInstrumentation: Instrumentation() {
         }
         val destination=File(targetContext.filesDir,"validation/$suite.json");destination.parentFile!!.mkdirs();destination.writeText(report.toString(2))
         finish(result,Bundle().apply{putString("validation",report.toString())})
+    }
+    private fun testerRender():JSONObject {
+        val activity=startActivitySync(Intent(targetContext,xtr.keymapper.tester.TesterActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) as xtr.keymapper.tester.TesterActivity
+        try {
+            repeat(300){if(activity.state.value.status!="Connected")SystemClock.sleep(20)}
+            check(activity.state.value.status=="Connected"){"Supported controller needed for representative rendering"}
+            fun command(text:String)=uiAutomation.executeShellCommand(text).use{android.os.ParcelFileDescriptor.AutoCloseInputStream(it).bufferedReader().use{r->r.readText()}}
+            val connected=CountDownLatch(1);var remote:xtr.keymapper.IRemoteService?=null
+            runOnMainSync{xtr.keymapper.server.RemoteServiceHelper.getInstance(targetContext){remote=it;connected.countDown()}}
+            check(connected.await(10,TimeUnit.SECONDS)&&remote!=null)
+            fun metrics()=JSONObject(remote!!.diagnostics())
+            val submissions=JSONArray(metrics().getString("samples_total")).getLong(2)
+            check(metrics().getBoolean("diagnostic_exclusive")&&!remote!!.isActive)
+            command("dumpsys gfxinfo ${targetContext.packageName} reset")
+            val done=CountDownLatch(1);val cpu=android.os.Process.getElapsedCpuTime();val start=SystemClock.uptimeMillis()
+            activity.benchmarkRendering{done.countDown()};check(done.await(15,TimeUnit.SECONDS));SystemClock.sleep(300)
+            val elapsed=SystemClock.uptimeMillis()-start;val cpuDelta=android.os.Process.getElapsedCpuTime()-cpu
+            val gfx=command("dumpsys gfxinfo ${targetContext.packageName}")
+            val lines=gfx.lineSequence().filter{it.startsWith("Total frames rendered:")||it.startsWith("Janky frames:")||it.matches(Regex("(?:50|90|95|99)th percentile:.*"))}.take(6).toList()
+            check(JSONArray(metrics().getString("samples_total")).getLong(2)==submissions)
+            return JSONObject().put("injection_submission_delta",0).put("source","Synthetic UI-state replay, visibly labeled; no controller event generation or hardware compatibility claim")
+                .put("states_submitted",240).put("elapsed_ms",elapsed).put("app_cpu_ms",cpuDelta).put("app_pss_kb",android.os.Debug.getPss()).put("gfx_summary",JSONArray(lines))
+        }finally{runOnMainSync{activity.finish()};SystemClock.sleep(500)}
+    }
+    private fun tester():JSONObject {
+        val activity=startActivitySync(Intent(targetContext,xtr.keymapper.tester.TesterActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) as xtr.keymapper.tester.TesterActivity
+        val ready=CountDownLatch(1);var remote:xtr.keymapper.IRemoteService?=null
+        runOnMainSync{xtr.keymapper.server.RemoteServiceHelper.getInstance(targetContext){remote=it;ready.countDown()}}
+        check(ready.await(15,TimeUnit.SECONDS)&&remote!=null)
+        val backend=remote!!
+        fun diagnostics()=JSONObject(backend.diagnostics())
+        fun submissionCount()=JSONArray(diagnostics().getString("samples_total")).getLong(2)
+        try {
+            repeat(150){if(!diagnostics().optBoolean("diagnostic_exclusive"))SystemClock.sleep(20)}
+            check(diagnostics().getBoolean("diagnostic_exclusive"))
+            check(!backend.isActive && backend.isMappingPaused)
+            val otherOwner=Binder();check(!backend.beginDiagnostics(otherOwner));backend.endDiagnostics(otherOwner)
+            SystemClock.sleep(50);check(diagnostics().getBoolean("diagnostic_exclusive"))
+            val before=submissionCount()
+            // Attempt a real production start/resume while the tester lease is held.
+            val profile=xtr.keymapper.keymap.ProfileConfiguration.parse("APPLICATION com.mobile.legends\nSCREENSIZE 1080 2280\nENABLED")
+            val config=xtr.keymapper.keymap.KeymapConfig(targetContext).apply{disableAutoProfiling=false}
+            val callback=object:xtr.keymapper.IRemoteServiceCallback.Stub(){
+                override fun launchEditor(){};override fun alertMouseAimActivated(){};override fun switchProfiles(){}
+                override fun enablePointer(){};override fun disablePointer(){};override fun setCursorX(x:Int){};override fun setCursorY(y:Int){}
+                override fun requestKeymapProfile()=profile;override fun requestKeymapConfig()=config
+            }
+            backend.startServer(profile,config,callback,1080,2280,0);backend.resumeMouse();SystemClock.sleep(200)
+            check(!backend.isActive && backend.isMappingPaused)
+            File(targetContext.filesDir,"validation/tester-ready.json").writeText("{\"ready\":true}")
+            val original=activity.requestedOrientation
+            val beforeEvents=activity.state.value.eventCount
+            val oldOrientation=activity.resources.configuration.orientation
+            runOnMainSync{activity.requestedOrientation=if(oldOrientation==android.content.res.Configuration.ORIENTATION_LANDSCAPE)android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT else android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE}
+            SystemClock.sleep(1000)
+            check(!activity.isDestroyed && activity.resources.configuration.orientation!=oldOrientation)
+            check(diagnostics().getBoolean("diagnostic_exclusive"))
+            runOnMainSync{activity.requestedOrientation=original};SystemClock.sleep(1000)
+            check(!activity.isDestroyed && activity.state.value.eventCount>=beforeEvents)
+            val state=activity.state.value
+            check(diagnostics().getBoolean("diagnostic_exclusive") && !backend.isActive)
+            check(submissionCount()==before){"Injection submission occurred during tester"}
+            val report=JSONObject().put("exclusive_root_lease",true).put("production_start_resume_blocked",true).put("injection_submission_delta",submissionCount()-before)
+                .put("observed_android_event_history",state.eventCount).put("passed_checks",JSONArray(state.checks.filter{it.passed}.map{it.label})).put("applicable_checks",state.checks.size)
+                .put("held_at_end",JSONArray(state.held.toList())).put("queue_overflows",state.dropped).put("source","Automated ownership/lifecycle only; no synthetic controller events generated").put("configuration_retained_activity_and_lease",true)
+            val times=state.receiptToProcessNs.toLongArray();if(times.isNotEmpty())report.put("receipt_to_reducer",stats(times))
+            val death=CountDownLatch(1);backend.asBinder().linkToDeath({death.countDown()},0)
+            runOnMainSync{activity.finish()};check(death.await(5,TimeUnit.SECONDS))
+            return report.put("root_exit_on_tester_exit",true).put("lease_released_on_exit",true).put("mapping_not_resumed",true)
+        }finally{runOnMainSync{activity.finish()};runCatching{backend.stopServer()};File(targetContext.filesDir,"validation/tester-ready.json").delete()}
     }
     private fun stats(values:LongArray):JSONObject {
         values.sort();return JSONObject().put("n",values.size).put("p50_ns",values[(values.size*.5).toInt()])

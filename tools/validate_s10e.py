@@ -3,7 +3,7 @@
 import argparse,json,subprocess,re,time
 from pathlib import Path
 p=argparse.ArgumentParser();p.add_argument('--serial',required=True);p.add_argument('--suites',nargs='+',default=['jni','profiles_prepare','profiles_verify','startup','injection','overlay']);args=p.parse_args()
-allowed={'jni','profiles_prepare','profiles_verify','startup','injection','overlay','screen','reader_hold','runtime'}
+allowed={'jni','profiles_prepare','profiles_verify','startup','injection','overlay','screen','reader_hold','runtime','tester','tester_render'}
 assert set(args.suites)<=allowed
 adb=['adb','-s',args.serial];package='io.github.rickallauigan.mythicmapper.debug'
 out=Path('docs/validation/s10e');out.mkdir(parents=True,exist_ok=True)
@@ -38,7 +38,7 @@ for suite in args.suites:
     if len(fields)==3 and fields[0]=='root' and re.fullmatch(re.escape(package)+r':root:\d+',fields[2]):candidates.append(int(fields[1]))
    assert len(candidates)==1,'Ambiguous root process; refusing termination'
    subprocess.run(adb+['shell',f"su -c 'kill -KILL {candidates[0]}'"],check=True)
-  process.wait(timeout=80)
+  process.wait(timeout=260 if suite=='tester' else 80)
  raw=subprocess.check_output(adb+['exec-out','run-as',package,'cat',f'files/validation/{suite}.json'],text=True)
  report=json.loads(raw);(out/(suite+'.json')).write_text(json.dumps(report,indent=2)+'\n')
  print(suite,report.get('status'))
