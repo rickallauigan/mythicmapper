@@ -8,6 +8,11 @@ import xtr.keymapper.mouse.HeldAimHandler.TouchSink;
 
 /** Absolute right-stick aiming. No mouse emulation and no left-stick touch conversion. */
 public final class ControllerAimHandler {
+    /** Keeps the shared math/aim class usable by plain-JVM JNI parity checks. */
+    public interface AnchorScheduler {
+        void after(Runnable task, int delayMs);
+        void cancel(Runnable task);
+    }
     public static final int FIRST_POINTER_ID = 50;
     private final List<AimKey> configs;
     private final TouchSink sink;
@@ -19,7 +24,7 @@ public final class ControllerAimHandler {
     public synchronized void focus(String code) { focus=code; }
     private static final class State {
         final AimKey config; final int pointer;
-        android.os.Handler scheduler;
+        AnchorScheduler scheduler;
         Runnable pendingAim;
         float x, y;
         State(AimKey config, int pointer) { this.config = config; this.pointer = pointer; x = config.x; y = config.y; }
@@ -47,10 +52,10 @@ public final class ControllerAimHandler {
     }
     /** Optional acquisition phase for release-fired repeated attacks. Axes still track
      * the latest physical stick, but the contact stays at its anchor until acquired. */
-    public synchronized boolean triggerAfterAnchor(String code, android.os.Handler scheduler, int delayMs) {
+    public synchronized boolean triggerAfterAnchor(String code, AnchorScheduler scheduler, int delayMs) {
         return trigger(code, 1, scheduler, delayMs);
     }
-    private boolean trigger(String code, int action, android.os.Handler scheduler, int delayMs) {
+    private boolean trigger(String code, int action, AnchorScheduler scheduler, int delayMs) {
         for (int i = 0; i < configs.size(); i++) {
             AimKey config = configs.get(i);
             if (!config.stick || !config.code.equals(code)) continue;
@@ -67,7 +72,7 @@ public final class ControllerAimHandler {
                             if (focus == null || focus.equals(code)) move(state);
                         }
                     };
-                    scheduler.postDelayed(state.pendingAim, delayMs);
+                    scheduler.after(state.pendingAim, delayMs);
                 } else if(focus==null||focus.equals(code))move(state);
             } else if (action == 0) {
                 State state = held.remove(code);
@@ -109,7 +114,7 @@ public final class ControllerAimHandler {
         held.clear(); focus=null; x = y = 0;
     }
     private void cancelPending(State state) {
-        if (state.pendingAim != null) state.scheduler.removeCallbacks(state.pendingAim);
+        if (state.pendingAim != null) state.scheduler.cancel(state.pendingAim);
         state.pendingAim = null;
     }
 }
