@@ -42,7 +42,6 @@ public class Server {
         final String className = RemoteServiceShell.class.getName();
         StringBuffer linesToWrite = new StringBuffer();
         linesToWrite.append("#!/system/bin/sh\n");
-        linesToWrite.append("pkill -f ").append(className).append("\n");
         linesToWrite.append("exec /system/bin/app_process");
         linesToWrite.append(" -Djava.library.path=\"").append(ai.nativeLibraryDir)  //path containing lib*.so
                 .append("\" -Djava.class.path=\"").append(ai.publicSourceDir) // Absolute path to apk in /data/app

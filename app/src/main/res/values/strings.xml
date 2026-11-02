@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">XtMapper</string>
+    <string name="app_name" translatable="false">MythicMapper</string>
     <string name="start">Start</string>
     <string name="stop">Stop</string>
     <string name="configure">Settings</string>

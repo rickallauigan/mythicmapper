@@ -19,7 +19,7 @@ import java.lang.reflect.Method;
 
 import xtr.keymapper.server.event.MouseEventHandler;
 
-public class Input {
+public class Input implements TouchBackend {
 
     static Method injectInputEventMethod;
     static Object inputManager;
@@ -32,6 +32,8 @@ public class Input {
     private final int displayId;
     private long lastTouchDown;
     private int pointerCount = 0;
+    private volatile boolean submissionFailed;
+    public boolean hasSubmissionFailure() { return submissionFailed; }
 
     private final SmoothScrollThread mScrollThread = new SmoothScrollThread();
 
@@ -239,6 +241,7 @@ public class Input {
     }
 
     private void injectInputEvent(MotionEvent motionEvent)  {
+        long submissionStart = System.nanoTime();
         try {
             InputDiagnostics.motion(motionEvent);
             // Set display ID for the motion event using reflection
@@ -247,10 +250,17 @@ public class Input {
             }
             // The second argument is injection MODE, not the target display.
             // Display routing is set on the event above; keep delivery asynchronous.
-            injectInputEventMethod.invoke(inputManager, motionEvent, 0);
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            Log.e(RemoteService.TAG, e.getMessage(), e);
+            Object result = injectInputEventMethod.invoke(inputManager, motionEvent, 0);
+            if (Boolean.FALSE.equals(result)) {
+                submissionFailed = true;
+                RuntimeMetrics.error("InputManager rejected asynchronous submission");
+            }
+        } catch (IllegalAccessException | InvocationTargetException | RuntimeException e) {
+            submissionFailed = true;
+            RuntimeMetrics.error(e.getClass().getSimpleName());
+            Log.e(RemoteService.TAG, "Touch submission failed", e);
         } finally {
+            RuntimeMetrics.record(2, System.nanoTime() - submissionStart);
             motionEvent.recycle();
         }
     }

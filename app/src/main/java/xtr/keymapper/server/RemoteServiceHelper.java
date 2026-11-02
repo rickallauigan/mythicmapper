@@ -86,7 +86,7 @@ public class RemoteServiceHelper {
 
     private static void getInstance(){
         if (service == null) {
-                service = IRemoteService.Stub.asInterface(ServiceManager.getService("xtmapper"));
+                service = IRemoteService.Stub.asInterface(ServiceManager.getService("mythicmapper"));
                 if (service != null) try {
                     service.asBinder().linkToDeath(() -> service = null, 0);
                 } catch (RemoteException ignored) {

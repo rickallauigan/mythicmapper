@@ -27,6 +27,7 @@ public class InputService implements IInputInterface {
     private KeymapConfig keymapConfig;
     private KeymapProfile keymapProfile;
     private final Input input;
+    private final TouchBackend touchBackend;
     private final java.util.Map<Integer, float[]> activeTouches = new java.util.HashMap<>();
     private volatile boolean acceptingTouches = true;
     private final int screenWidth, screenHeight;
@@ -49,8 +50,15 @@ public class InputService implements IInputInterface {
                         View cursorView,
                         boolean isWaylandClient,
                         int displayId) throws RemoteException {
+        this(profile, keymapConfig, mCallback, screenWidth, screenHeight, cursorView, isWaylandClient, displayId, null);
+    }
+
+    public InputService(KeymapProfile profile, KeymapConfig keymapConfig, IRemoteServiceCallback mCallback,
+                        int screenWidth, int screenHeight, View cursorView, boolean isWaylandClient,
+                        int displayId, TouchBackend backend) throws RemoteException {
         this.screenWidth = screenWidth; this.screenHeight = screenHeight;
         input = new Input(displayId);
+        touchBackend = backend == null ? input : backend;
         profile.scale(screenWidth, screenHeight);
         this.keymapProfile = profile;
         this.keymapConfig = keymapConfig;
@@ -94,18 +102,24 @@ public class InputService implements IInputInterface {
             if (action == UP) activeTouches.remove(pointerId);
             else activeTouches.put(pointerId, new float[]{x, y});
         }
+        RuntimeMetrics.touches(activeTouches.size());
         InputDiagnostics.touch(pointerId, action, activeTouches.size());
         switch (action) {
             case UP:
-                input.injectTouch(MotionEvent.ACTION_UP, pointerId, 0.0f, x, y);
+                touchBackend.injectTouch(MotionEvent.ACTION_UP, pointerId, 0.0f, x, y);
                 break;
             case DOWN:
-                input.injectTouch(MotionEvent.ACTION_DOWN, pointerId, 1.0f, x, y);
+                touchBackend.injectTouch(MotionEvent.ACTION_DOWN, pointerId, 1.0f, x, y);
                 break;
             case MOVE:
                 // MOVE updates a held finger; zero pressure incorrectly signals an unloaded contact.
-                input.injectTouch(MotionEvent.ACTION_MOVE, pointerId, 1.0f, x, y);
+                touchBackend.injectTouch(MotionEvent.ACTION_MOVE, pointerId, 1.0f, x, y);
                 break;
+        }
+        if (touchBackend.hasSubmissionFailure()) {
+            acceptingTouches = false;
+            stopEvents = true;
+            mHandler.post(this::stop); // release producers and attempt UP on the lifecycle looper
         }
     }
 
@@ -131,6 +145,7 @@ public class InputService implements IInputInterface {
 
     @Override
     public void pauseResumeKeymap() {
+        if (touchBackend.hasSubmissionFailure()) { stopEvents = true; stop(); return; }
         stopEvents = !stopEvents;
         if (stopEvents) stop();
         else {
@@ -251,8 +266,9 @@ public class InputService implements IInputInterface {
         synchronized (this) {
             acceptingTouches = false;
             // Includes fixed keys, D-pad, swipe/macro pointers and pending mode transitions.
-            activeTouches.forEach((id, point) -> input.injectTouch(MotionEvent.ACTION_UP, id, 0, point[0], point[1]));
+            activeTouches.forEach((id, point) -> touchBackend.injectTouch(MotionEvent.ACTION_UP, id, 0, point[0], point[1]));
             activeTouches.clear();
+            RuntimeMetrics.touches(0);
         }
     }
 

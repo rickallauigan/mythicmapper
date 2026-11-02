@@ -41,7 +41,7 @@ flowchart TD
 ```
 
 Controller capture is an external Android `getevent` text stream, NOT the native mouse
-reader. `getevent.c` interposes `setvbuf` behavior through LD_PRELOAD for flushing.
+reader. `getevent.c` runs a constructor calling `setlinebuf(stdout)` when preloaded, so getevent output is line-buffered.
 `RemoteService.start_getevent` splits lines, captures a runtime generation and posts
 per-line work onto the main looper. `handleInputFrame` rejects stale owners before dispatch.
 The dedicated JNI `mouse_read.c` reader handles REL mouse traffic and grabs only its
