@@ -3,6 +3,8 @@ package xtr.keymapper.tester
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
@@ -30,12 +32,19 @@ private val Line=Color(0xff38304e)
 private val Muted=Color(0xffb8b2ce)
 private val Green=Color(0xff64f28a)
 private fun accent(name:String)=when(name){"A"->Green;"B"->Color(0xffff5c69);"X"->Color(0xff50c6ff);"Y"->Color(0xffffdf52);else->Violet}
-private fun number(v:Float?)=v?.let{"%.2f".format(Locale.ROOT,it)}?:"—"
+private fun number(v:Float?)=if(TesterWork.baselineFormatting)v?.let{"%.2f".format(Locale.ROOT,it)}?:"—"else DiagnosticNumbers.fixed(v)
 
 @Composable fun TesterScreen(state:TesterState,onBack:()->Unit,onReset:()->Unit,onPause:()->Unit,onClear:()->Unit,
-    onCenter:()->Unit,onThresholds:(Thresholds)->Unit,onExport:()->Unit,onPageChanged:(Int)->Unit={},pageRequest:Int=-1){
+    onCenter:()->Unit,onThresholds:(Thresholds)->Unit,onExport:()->Unit,onPageChanged:(Int)->Unit={},pageRequest:Int=-1,onArmBenchmark:()->Unit={},onAliases:()->Unit={},onArmDisconnect:()->Unit={},liveState:State<TesterState>?=null,baselineRendering:Boolean=false){
+    val source=liveState?:rememberUpdatedState(state)
+    val chrome by remember(source){derivedStateOf{val s=source.value;TesterChrome(s.device,s.status,s.safety,s.thresholds,s.benchmarkPrompt,s.benchmarkRemaining)}}
+    SideEffect{TesterWork.hit(0)}
+    val pageScroll=rememberLazyListState()
+    val baselineScroll=rememberScrollState()
+    val baselineState=if(baselineRendering)source.value else null
     var page by rememberSaveableInt();var settings by remember{mutableStateOf(false)}
-    LaunchedEffect(pageRequest){if(pageRequest in 0..1)page=pageRequest}
+    LaunchedEffect(page){pageScroll.scrollToItem(0);baselineScroll.scrollTo(0)}
+    LaunchedEffect(pageRequest){if(pageRequest in 0..2)page=pageRequest}
     val colors=remember{darkColorScheme(primary=Violet,background=Ink,surface=CardInk,onSurface=Color(0xfff3efff),outline=Line)}
     MaterialTheme(colorScheme=colors){
         Surface(Modifier.fillMaxSize(),color=Ink){Column(Modifier.safeDrawingPadding()){
@@ -48,40 +57,57 @@ private fun number(v:Float?)=v?.let{"%.2f".format(Locale.ROOT,it)}?:"—"
                 IconButton(onClick={settings=true}){Icon(Icons.Outlined.Tune,"Test thresholds")}
             }
             HorizontalDivider(color=Line.copy(alpha=.5f))
-            Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(16.dp),verticalArrangement=Arrangement.spacedBy(12.dp)){
+            if(baselineState!=null)Column(Modifier.weight(1f).verticalScroll(baselineScroll).padding(16.dp),verticalArrangement=Arrangement.spacedBy(12.dp)){
+                if(chrome.benchmarkPrompt.isNotBlank())DiagnosticCard{Text(chrome.benchmarkPrompt,color=Violet,fontWeight=FontWeight.Bold);if(chrome.benchmarkRemaining>0)Text("${chrome.benchmarkRemaining} seconds remaining");Text("Physical protocol v1 · no touch injection",fontSize=12.sp,color=Muted)}
                 if(page==0){
                     Row(verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)){
-                        Text("GameSir G8 Galileo Tester",Modifier.weight(1f),fontSize=20.sp,fontWeight=FontWeight.Bold)
-                        Badge(state.status)
+                        Text("GameSir G8 Galileo Tester",Modifier.weight(1f),fontSize=20.sp,fontWeight=FontWeight.Bold);Badge(chrome.status)
                     }
                     Text("Live input · Diagnostics · No touch injection",color=Muted,fontSize=12.sp)
-                    ControllerDrawing(state.held,state.left,state.right)
-                    Column(verticalArrangement=Arrangement.spacedBy(5.dp)){
-                        for(row in listOf(listOf("A","B","X","Y","LB","RB","LT","RT"),listOf("↑","↓","←","→","L3","R3","View","Menu"))){
-                            Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(4.dp)){
-                                for(label in row) ButtonLamp(label,label in state.held,Modifier.weight(1f))
-                            }
-                        }
-                    }
+                    ControllerDrawing(baselineState.held,baselineState.left,baselineState.right)
+                    LiveButtons(source)
                     Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(10.dp)){
-                        StickCard("Left Stick (L)",state.left,state.thresholds.deadZone,Modifier.weight(1f))
-                        StickCard("Right Stick (R)",state.right,state.thresholds.deadZone,Modifier.weight(1f))
+                        StickCard("Left Stick (L)",baselineState.left,baselineState.thresholds.deadZone,Modifier.weight(1f));StickCard("Right Stick (R)",baselineState.right,baselineState.thresholds.deadZone,Modifier.weight(1f))
                     }
                     Row(horizontalArrangement=Arrangement.spacedBy(10.dp)){
-                        TriggerCard("LT",state.device?.ranges?.find{it.code==state.device.lt},state.raw[state.device?.lt],"LT" in (state.device?.keys?:emptySet()),"LT" in state.held,Modifier.weight(1f));TriggerCard("RT",state.device?.ranges?.find{it.code==state.device.rt},state.raw[state.device?.rt],"RT" in (state.device?.keys?:emptySet()),"RT" in state.held,Modifier.weight(1f))
+                        LiveTrigger(source,"LT",Modifier.weight(1f));LiveTrigger(source,"RT",Modifier.weight(1f))
                     }
                     Text("L4 / R4 mirror their programmed buttons. If assigned to L3 / R3, the same indicators light. Identical Android codes cannot be distinguished.",color=Muted,fontSize=11.sp)
-                    Text(state.safety,color=if(state.status=="Connected")Green else Muted,fontSize=12.sp)
+                    Text(chrome.safety,color=if(chrome.status=="Connected")Green else Muted,fontSize=12.sp)
                     Text("Mapping stays stopped after testing. Restart it from Home when ready.",color=Muted,fontSize=12.sp)
+                }else if(page==2)LiveGuided(source,onReset,onArmBenchmark,onAliases,onArmDisconnect)
+                else LiveDiagnostics(source,onReset,onPause,onClear,onExport)
+            }else{
+            LazyColumn(Modifier.weight(1f),state=pageScroll,contentPadding=PaddingValues(16.dp),verticalArrangement=Arrangement.spacedBy(12.dp)){
+                if(chrome.benchmarkPrompt.isNotBlank())item("benchmark"){DiagnosticCard{Text(chrome.benchmarkPrompt,color=Violet,fontWeight=FontWeight.Bold);if(chrome.benchmarkRemaining>0)Text("${chrome.benchmarkRemaining} seconds remaining");Text("Physical protocol v1 · no touch injection",fontSize=12.sp,color=Muted)}}
+                if(page==0){
+                    item("title"){Row(verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)){
+                        Text("GameSir G8 Galileo Tester",Modifier.weight(1f),fontSize=20.sp,fontWeight=FontWeight.Bold);Badge(chrome.status)
+                    }}
+                    item("source"){Text("Live input · Diagnostics · No touch injection",color=Muted,fontSize=12.sp)}
+                    item("controller"){LiveController(source)}
+                    item("buttons"){LiveButtons(source)}
+                    item("sticks"){Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(10.dp)){
+                        LiveStick(source,true,Modifier.weight(1f));LiveStick(source,false,Modifier.weight(1f))
+                    }}
+                    item("triggers"){Row(horizontalArrangement=Arrangement.spacedBy(10.dp)){
+                        LiveTrigger(source,"LT",Modifier.weight(1f));LiveTrigger(source,"RT",Modifier.weight(1f))
+                    }}
+                    item("rear"){Text("L4 / R4 mirror their programmed buttons. If assigned to L3 / R3, the same indicators light. Identical Android codes cannot be distinguished.",color=Muted,fontSize=11.sp)}
+                    item("safety"){Text(chrome.safety,color=if(chrome.status=="Connected")Green else Muted,fontSize=12.sp)}
+                    item("exit"){Text("Mapping stays stopped after testing. Restart it from Home when ready.",color=Muted,fontSize=12.sp)}
+                }else if(page==2){
+                    item("guide"){LiveGuided(source,onReset,onArmBenchmark,onAliases,onArmDisconnect)}
                 }else{
-                    Checklist(state,onReset)
-                    EventLog(state,onPause,onClear,onExport)
-                    ControllerInfo(state)
+                    item("checklist"){val current by source;Checklist(current,onReset)}
+                    item("events"){val current by source;EventLog(current,onPause,onClear,onExport)}
+                    item("info"){val current by source;ControllerInfo(current)}
                 }
+            }
             }
             Surface(Modifier.padding(horizontal=12.dp,vertical=8.dp).fillMaxWidth(),color=CardInk,shape=RoundedCornerShape(20.dp),border=BorderStroke(1.dp,Line)){
                 Row(Modifier.padding(6.dp),horizontalArrangement=Arrangement.spacedBy(8.dp)){
-                    for((index,label)in listOf("Controller","Diagnostics").withIndex()){
+                    for((index,label)in listOf("Controller","Diagnostics","Guided").withIndex()){
                         val selected=page==index
                         Surface(Modifier.weight(1f).clickable{page=index;onPageChanged(index)}.semantics{contentDescription="$label tab";this.selected=selected},
                             color=if(selected)Color(0xff302044)else Color.Transparent,shape=RoundedCornerShape(14.dp),border=BorderStroke(1.dp,if(selected)Violet else Color.Transparent)){
@@ -94,17 +120,53 @@ private fun number(v:Float?)=v?.let{"%.2f".format(Locale.ROOT,it)}?:"—"
         if(settings)AlertDialog(onDismissRequest={settings=false},title={Text("Diagnostic thresholds")},text={
             Column{
                 Text("Change thresholds to reset test progress. Android Y is positive down. Range requires eight outer sectors and all four extents.",fontSize=13.sp)
-                Text("Dead zone ${number(state.thresholds.deadZone)}")
-                Slider(value=state.thresholds.deadZone,onValueChange={onThresholds(state.thresholds.copy(deadZone=it))},valueRange=.05f.. .3f)
-                Text("Direction ${number(state.thresholds.direction)}")
-                Slider(value=state.thresholds.direction,onValueChange={onThresholds(state.thresholds.copy(direction=it))},valueRange=.4f.. .8f)
-                Text("Full travel ${number(state.thresholds.travel)}")
-                Slider(value=state.thresholds.travel,onValueChange={onThresholds(state.thresholds.copy(travel=it))},valueRange=.8f.. .98f)
+                Text("Dead zone ${number(chrome.thresholds.deadZone)}")
+                Slider(value=chrome.thresholds.deadZone,onValueChange={onThresholds(chrome.thresholds.copy(deadZone=it))},valueRange=.05f.. .3f)
+                Text("Direction ${number(chrome.thresholds.direction)}")
+                Slider(value=chrome.thresholds.direction,onValueChange={onThresholds(chrome.thresholds.copy(direction=it))},valueRange=.4f.. .8f)
+                Text("Full travel ${number(chrome.thresholds.travel)}")
+                Slider(value=chrome.thresholds.travel,onValueChange={onThresholds(chrome.thresholds.copy(travel=it))},valueRange=.8f.. .98f)
                 TextButton(onClick=onCenter){Text("Measure center offset now")}
                 Text("Release both sticks first. This measures observed offset, not an automatic calibration.",fontSize=12.sp,color=Muted)
             }
         },confirmButton={TextButton(onClick={settings=false}){Text("Done")}})
     }
+}
+@androidx.compose.runtime.Immutable
+private data class TesterChrome(val device:TesterDevice?,val status:String,val safety:String,val thresholds:Thresholds,val benchmarkPrompt:String,val benchmarkRemaining:Int)
+@androidx.compose.runtime.Immutable
+private data class VisualReading(val held:Set<String>,val left:StickReading,val right:StickReading)
+@Composable private fun LiveController(source:State<TesterState>){
+    val visual by remember(source){derivedStateOf{val s=source.value;VisualReading(s.held,s.left,s.right)}}
+    ControllerDrawing(visual.held,visual.left,visual.right)
+}
+@Composable private fun LiveButtons(source:State<TesterState>){
+    val held by remember(source){derivedStateOf{source.value.held}}
+    Column(verticalArrangement=Arrangement.spacedBy(5.dp)){
+        for(row in listOf(listOf("A","B","X","Y","LB","RB","LT","RT"),listOf("↑","↓","←","→","L3","R3","View","Menu"))){
+            Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(4.dp)){for(label in row)ButtonLamp(label,label in held,Modifier.weight(1f))}
+        }
+    }
+}
+@Composable private fun LiveStick(source:State<TesterState>,left:Boolean,modifier:Modifier){
+    val reading by remember(source,left){derivedStateOf{if(left)source.value.left else source.value.right}}
+    val zone by remember(source){derivedStateOf{source.value.thresholds.deadZone}}
+    StickCard(if(left)"Left Stick (L)"else"Right Stick (R)",reading,zone,modifier)
+}
+@androidx.compose.runtime.Immutable
+private data class TriggerReading(val range:AxisRange?,val raw:Float?,val digital:Boolean,val pressed:Boolean)
+@Composable private fun LiveTrigger(source:State<TesterState>,name:String,modifier:Modifier){
+    val reading by remember(source,name){derivedStateOf{val s=source.value;val code=if(name=="LT")s.device?.lt else s.device?.rt
+        TriggerReading(s.device?.ranges?.find{it.code==code},s.raw[code],name in (s.device?.keys?:emptySet()),name in s.held)}}
+    TriggerCard(name,reading.range,reading.raw,reading.digital,reading.pressed,modifier)
+}
+@Composable private fun LiveGuided(source:State<TesterState>,reset:()->Unit,benchmark:()->Unit,aliases:()->Unit,disconnect:()->Unit){
+    val current by source
+    GuidedHardware(current,reset,benchmark,aliases,disconnect)
+}
+@Composable private fun LiveDiagnostics(source:State<TesterState>,reset:()->Unit,pause:()->Unit,clear:()->Unit,export:()->Unit){
+    val current by source
+    Checklist(current,reset);EventLog(current,pause,clear,export);ControllerInfo(current)
 }
 @Composable private fun rememberSaveableInt()=androidx.compose.runtime.saveable.rememberSaveable{mutableIntStateOf(0)}
 @Composable private fun Badge(label:String){
@@ -126,6 +188,7 @@ private fun number(v:Float?)=v?.let{"%.2f".format(Locale.ROOT,it)}?:"—"
     }
 }
 @Composable private fun StickCard(title:String,reading:StickReading,deadZone:Float,modifier:Modifier){
+    SideEffect{TesterWork.hit(2)}
     DiagnosticCard(modifier){Column(verticalArrangement=Arrangement.spacedBy(4.dp)){
         Text(title,fontWeight=FontWeight.SemiBold,fontSize=14.sp)
         Canvas(Modifier.fillMaxWidth().aspectRatio(1.2f).semantics{contentDescription="$title X ${number(reading.rawX)} Y ${number(reading.rawY)}"}){
@@ -146,6 +209,7 @@ private fun number(v:Float?)=v?.let{"%.2f".format(Locale.ROOT,it)}?:"—"
     }}
 }
 @Composable private fun TriggerCard(name:String,range:AxisRange?,raw:Float?,digital:Boolean,pressed:Boolean,modifier:Modifier){
+    SideEffect{TesterWork.hit(3)}
     val code=range?.code;val pressure=raw?.let{range?.pressure(it)}
     DiagnosticCard(modifier){
         Row{Text("$name (Analog)",Modifier.weight(1f),fontSize=13.sp);Text(pressure?.let{"${(it*100).roundToInt()}%"}?:"—",fontWeight=FontWeight.Bold,fontSize=13.sp)}
@@ -213,9 +277,10 @@ private fun number(v:Float?)=v?.let{"%.2f".format(Locale.ROOT,it)}?:"—"
 
 /** Original vector geometry, 500×300 units. No vendor image/logo or raster asset. */
 @Composable fun ControllerDrawing(held:Set<String>,left:StickReading,right:StickReading){
+    SideEffect{TesterWork.hit(1)}
     val labelPaint=remember{android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply{textAlign=android.graphics.Paint.Align.CENTER;isFakeBoldText=true}}
     Canvas(Modifier.fillMaxWidth().aspectRatio(500f/300).semantics{contentDescription="Original G8 controller illustration. Pressed: ${held.joinToString().ifEmpty{"none"}}"}){
-        scale(size.width/500,size.height/300,pivot=Offset.Zero){
+        TesterWork.section(4,"Tester.draw.controller"){scale(size.width/500,size.height/300,pivot=Offset.Zero){
             drawRoundRect(Brush.verticalGradient(listOf(Color(0xff454551),Color(0xff22232e))),Offset(119f,64f),Size(262f,185f),CornerRadius(10f),style=Fill)
             drawRoundRect(Color(0xff181923),Offset(146f,71f),Size(208f,171f),CornerRadius(4f))
             for(x in 158..340 step 10)drawLine(Color(0xff242631),Offset(x.toFloat(),78f),Offset(x.toFloat(),235f),1f)
@@ -238,5 +303,41 @@ private fun number(v:Float?)=v?.let{"%.2f".format(Locale.ROOT,it)}?:"—"
             button("View",119f,85f,10f);button("Menu",381f,85f,10f);button("Home",84f,260f,10f)
             text("MYTHICMAPPER",250f,163f,Color(0xff69677c),12f)
         }
+    }}
+}
+
+@Composable private fun GuidedHardware(state:TesterState,onReset:()->Unit,onBenchmark:()->Unit,onAliases:()->Unit,onDisconnect:()->Unit){
+    DiagnosticCard{
+        Text("Guided hardware acceptance",fontWeight=FontWeight.Bold,fontSize=20.sp)
+        Text("Evidence is retained separately from the rolling log. Press and release each pending control. Counts below come only from observed Android input.",color=Muted,fontSize=12.sp)
+        for(check in state.checks){
+            val proof=state.guided.controls.find{it.label==check.id}
+            Text("${if(check.passed||proof?.pairs?.let{it>0}==true)"✓"else"○"} ${check.label}"+(proof?.let{" · ↓${it.downs} ↑${it.ups} paired ${it.pairs}"}?:""),color=if(check.passed)Green else Muted,fontSize=13.sp)
+        }
+        Text("Simultaneous buttons · hold together ≥50 ms, then release both",fontWeight=FontWeight.SemiBold)
+        for(pair in listOf("A + B","LB + RB")){
+            val supported=pair.split(" + ").all{it in (state.device?.keys?:emptySet())}
+            if(supported){val proof=state.guided.overlaps.find{it.labels==pair};Text("${if(proof?.released==true)"✓"else"○"} $pair · ${proof?.durationMs?:0} ms observed",color=if(proof?.released==true)Green else Muted)}
+        }
+        OutlinedButton(onClick=onReset,Modifier.fillMaxWidth()){Text("Archive evidence & start new test")}
+    }
+    DiagnosticCard{
+        Text("Rear L4 / R4 verification",fontWeight=FontWeight.Bold)
+        Text("Follow the prompt one actuator at a time. L4/R4 have no invented separate Android identity. Identical reported codes cannot distinguish rear buttons from stick clicks.",color=Muted,fontSize=12.sp)
+        if(state.guided.aliasPrompt.isNotBlank())Text(state.guided.aliasPrompt,color=Violet,fontWeight=FontWeight.Bold)
+        for(report in state.guided.aliasReports)Text(report,fontSize=12.sp)
+        OutlinedButton(onClick=onAliases){Text("Begin four-step alias check")}
+    }
+    DiagnosticCard{
+        Text("Safe physical disconnect",fontWeight=FontWeight.Bold)
+        Text("Arm first. Hold A and move a stick, physically unplug the G8 while held, then reconnect and release everything. The app never disconnects USB for you. Mapping stays stopped.",color=Muted,fontSize=12.sp)
+        if(state.guided.armedDisconnect)Text("Armed · waiting for your physical unplug",color=Violet)
+        for(test in state.guided.disconnects)Text("Held before: ${test.heldBefore.joinToString().ifEmpty{"none"}} · axis values ${test.axesBefore} · cleared ${test.cleared} · reconnected ${test.reconnected}",fontSize=12.sp)
+        OutlinedButton(onClick=onDisconnect,enabled=state.status=="Connected"){Text("Arm disconnect test")}
+    }
+    DiagnosticCard{
+        Text("Repeatable physical benchmark",fontWeight=FontWeight.Bold)
+        Text("Warm both sticks for five seconds, press A to start. 10s both-stick circles; 10s alternating full LT/RT; 5s A+B plus circles; 5s all released. Repeat this exact protocol for before/after builds.",fontSize=12.sp,color=Muted)
+        OutlinedButton(onClick=onBenchmark,enabled=state.status=="Connected"){Text("Arm 30-second benchmark")}
     }
 }
