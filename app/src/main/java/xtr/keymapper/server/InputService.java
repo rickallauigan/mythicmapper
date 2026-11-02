@@ -288,6 +288,11 @@ public class InputService implements IInputInterface {
         return stopEvents && !acceptingTouches && activeTouches.isEmpty();
     }
 
+    /** Logical release alone is insufficient if the backend rejected the cleanup submission. */
+    public synchronized boolean isDiagnosticSafe() {
+        return isPausedAndReleased() && !touchBackend.hasSubmissionFailure();
+    }
+
     public void stopTouchpad() {
         if (touchpadInputMode == KeymapConfig.TOUCHPAD_DIRECT)
             stopTouchpadDirect();

@@ -35,6 +35,13 @@ public class BackendFailureTest {
         var next=service();next.injectEvent(100,100,1,0);assertFalse(next.stopEvents);assertTrue(backend.calls>before);
         next.stop();old.stop();
     }
+    @Test public void failedReleaseCannotAcknowledgeDiagnosticSafety() throws Exception {
+        var backend=new Backend();backend.reject=false;Input.inputManager=backend;
+        Input.injectInputEventMethod=Backend.class.getMethod("inject",InputEvent.class,int.class);Input.setDisplayIdMethod=null;
+        var runtime=service();runtime.injectEvent(100,100,1,0);
+        backend.reject=true;runtime.stopEvents=true;runtime.stop();
+        assertTrue(runtime.isPausedAndReleased());assertFalse(runtime.isDiagnosticSafe());
+    }
     @Test public void nearestRankPercentilesAndEmptyWindow() {
         assertEquals(0,RuntimeMetrics.percentile(new long[0],.99));
         assertEquals(3,RuntimeMetrics.percentile(new long[]{1,2,3,4,5},.5));
