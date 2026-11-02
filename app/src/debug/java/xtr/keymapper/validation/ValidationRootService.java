@@ -27,6 +27,10 @@ public class ValidationRootService extends RootService {
                 catch(Exception ignored){return "{}";}
             }
         }
+        @Override public String runHeroes(IValidationSurface surface) {
+            try{return exerciseHeroes(surface).toString();}
+            catch(Exception error){return "{\"status\":\"FAIL\",\"error\":\"Hero safe-surface replay failed: "+error.getClass().getSimpleName()+"\"}";}
+        }
     };
     @Override public IBinder onBind(Intent intent){return binder;}
     private void requireSurface(IValidationSurface surface)throws Exception {
@@ -51,6 +55,57 @@ public class ValidationRootService extends RootService {
         for(String key:new String[]{"cpu_ms","elapsed_ns","art.gc.gc-count","art.gc.bytes-allocated","art.gc.gc-time"})
             out.put(key,before.isNull(key)||after.isNull(key)?JSONObject.NULL:after.getLong(key)-before.getLong(key));
         return out.put("pss_kb_after",after.getLong("pss_kb")).put("managed_heap_bytes_after",after.getLong("managed_heap_bytes"));
+    }
+    private interface MainStep { void run() throws Exception; }
+    private void onMain(MainStep step)throws Exception {
+        var done=new java.util.concurrent.CountDownLatch(1);var failure=new java.util.concurrent.atomic.AtomicReference<Throwable>();
+        new android.os.Handler(android.os.Looper.getMainLooper()).post(()->{try{step.run();}catch(Throwable e){failure.set(e);}finally{done.countDown();}});
+        if(!done.await(8,java.util.concurrent.TimeUnit.SECONDS))throw new IllegalStateException("Hero replay timed out");
+        if(failure.get()!=null)throw new IllegalStateException("Hero replay failed",failure.get());
+    }
+    /** Fixed synthetic controller replay into the same focused, purchase-free blue surface. */
+    private JSONObject exerciseHeroes(IValidationSurface surface)throws Exception {
+        requireSurface(surface);int width=surface.width(),height=surface.height();
+        if(width<300||height<300)throw new IllegalStateException("Surface not laid out");
+        var config=new KeymapConfig(null);config.pointerMode=KeymapConfig.POINTER_OVERLAY;
+        int actors=0;
+        for(String variant:List.of("BEATRIX_HOLD","BEATRIX_PULSE","KIMMY")){
+            var hero=xtr.keymapper.controller.HeroGameplayConfig.Hero.valueOf(variant.startsWith("BEATRIX")?"BEATRIX":"KIMMY");
+            String lines=String.join("\n",xtr.keymapper.mythic.HeroTrainingProfiles.INSTANCE.draft(hero))
+                .replace("HOLD_RELEASE 0 0",variant.equals("BEATRIX_PULSE")?"PULSE 150 1":"HOLD_RELEASE 0 1")+"\nENABLED";
+            var callback=(IRemoteServiceCallback)Proxy.newProxyInstance(getClassLoader(),new Class[]{IRemoteServiceCallback.class},
+                (p,m,a)->switch(m.getName()){case "requestKeymapProfile"->ProfileConfiguration.parse(lines);case "requestKeymapConfig"->config;default->null;});
+            TouchBackend guarded=new TouchBackend(){
+                final Input delegate=new Input(0);
+                public void injectTouch(int action,int pointer,float pressure,float x,float y){
+                    if(action!=MotionEvent.ACTION_UP)try{requireSurface(surface);}catch(Exception e){throw new SecurityException("Safe surface lost",e);}
+                    delegate.injectTouch(action,pointer,pressure,x,y);
+                }
+                public boolean hasSubmissionFailure(){return delegate.hasSubmissionFailure();}
+            };
+            final InputService[] runtime={null};final ControllerDeviceMonitor[] monitor={null};
+            Map<String,long[]> nodes=new HashMap<>();nodes.put("hero-replay",new long[]{1,2,0,255,128,0,255,128});
+            try{
+                onMain(()->{
+                    requireSurface(surface);runtime[0]=new InputService(ProfileConfiguration.parse(lines),config,callback,width,height,null,true,0,guarded,true);
+                    monitor[0]=new ControllerDeviceMonitor(runtime[0],width,height,()->new HashMap<>(nodes));
+                    var field=InputService.class.getDeclaredField("controllers");field.setAccessible(true);field.set(runtime[0],monitor[0]);monitor[0].start();
+                });
+                String[] packets=variant.equals("BEATRIX_HOLD")?new String[]{"EV_KEY BTN_TL2 DOWN","EV_ABS ABS_RX ff","EV_SYN SYN_REPORT 0","EV_KEY BTN_TR DOWN","EV_KEY BTN_TR2 DOWN","EV_KEY BTN_TL DOWN","EV_KEY BTN_EAST DOWN","EV_KEY BTN_THUMBL DOWN","EV_KEY BTN_GAMEPAD DOWN","EV_KEY BTN_WEST DOWN","EV_KEY BTN_EAST UP","EV_KEY BTN_THUMBL UP"}
+                    :variant.equals("BEATRIX_PULSE")?new String[]{"EV_KEY BTN_TL2 DOWN","EV_ABS ABS_RX ff","EV_SYN SYN_REPORT 0"}
+                    :new String[]{"EV_ABS ABS_RX ff","EV_SYN SYN_REPORT 0","EV_KEY BTN_TR DOWN","EV_KEY BTN_TL DOWN","EV_KEY BTN_TR UP","EV_KEY BTN_TL UP","EV_KEY BTN_EAST DOWN","EV_KEY BTN_THUMBL DOWN","EV_KEY BTN_EAST UP","EV_KEY BTN_THUMBL UP"};
+                for(String packet:packets){onMain(()->{requireSurface(surface);monitor[0].event("hero-replay",packet);});SystemClock.sleep(16);}
+                SystemClock.sleep(180);
+                onMain(()->{requireSurface(surface);runtime[0].reloadKeymap();});
+                SystemClock.sleep(200);
+                onMain(()->{runtime[0].pauseResumeKeymap();if(!runtime[0].isDiagnosticSafe())throw new IllegalStateException("Hero runtime not released/healthy");});
+                if(guarded.hasSubmissionFailure())throw new IllegalStateException("Platform rejected hero gesture");
+                actors++;
+            }finally{onMain(()->{if(monitor[0]!=null)monitor[0].stop();if(runtime[0]!=null)runtime[0].stop();});}
+        }
+        return new JSONObject().put("status","PASS").put("uid",android.os.Process.myUid()).put("hero_touch_policies",actors)
+            .put("source","Deterministic hero engine replay into guarded blue surface; not physical controller input or MLBB gameplay")
+            .put("reload_and_pulse_cleanup",true).put("runtime_metrics",new JSONObject(RuntimeMetrics.snapshot()));
     }
     private JSONObject exercise(IValidationSurface surface)throws Exception {
         requireSurface(surface);
