@@ -40,4 +40,20 @@ public class BackendFailureTest {
         assertEquals(3,RuntimeMetrics.percentile(new long[]{1,2,3,4,5},.5));
         assertEquals(5,RuntimeMetrics.percentile(new long[]{1,2,3,4,5},.99));
     }
+    @Test public void scopedRuntimeRejectsAnEditorReloadWithRepeatingMapping() throws Exception {
+        var backend=new Backend();backend.reject=false;Input.inputManager=backend;
+        Input.injectInputEventMethod=Backend.class.getMethod("inject",InputEvent.class,int.class);Input.setDisplayIdMethod=null;
+        var config=new KeymapConfig(null);config.pointerMode=KeymapConfig.POINTER_OVERLAY;
+        var callback=(xtr.keymapper.IRemoteServiceCallback)java.lang.reflect.Proxy.newProxyInstance(getClass().getClassLoader(),new Class[]{xtr.keymapper.IRemoteServiceCallback.class},
+            (p,m,a)->switch(m.getName()) {
+                case "requestKeymapProfile" -> ProfileConfiguration.parse("APPLICATION com.mobile.legends\nBTN_TL2 100 100 0 150");
+                case "requestKeymapConfig" -> config;
+                default -> null;
+            });
+        var scoped=new InputService(ProfileConfiguration.parse("APPLICATION com.mobile.legends\nBTN_TL2 100 100 0"),config,callback,2280,1080,null,true,0,null,true);
+        scoped.injectEvent(100,100,1,0);scoped.reloadKeymap();
+        assertTrue(scoped.isPausedAndReleased());assertEquals(0,scoped.getKeymapProfile().keys.get(0).repeatIntervalMs);
+        int calls=backend.calls;scoped.injectEvent(100,100,1,0);assertEquals(calls,backend.calls);scoped.stop();
+    }
+
 }

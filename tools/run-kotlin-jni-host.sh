@@ -7,8 +7,9 @@ cargo build --locked --offline --release --manifest-path engine/Cargo.toml
 classes=app/build/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes
 test -f "$classes/xtr/keymapper/engine/RustMappingMath.class"
 stdlib_root="${GRADLE_USER_HOME:-$HOME/.gradle}/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0"
-stdlib=$(rg --files "$stdlib_root" -g '*.jar' | head -n 1)
-test -n "$stdlib"
+stdlib_candidates=("$stdlib_root"/*/*.jar)
+stdlib=${stdlib_candidates[0]}
+test -f "$stdlib"
 jdk_dir=${JAVA_HOME:-$(dirname "$(dirname "$(readlink -f "$(command -v javac)")")")}
 work=$(mktemp -d /tmp/mythicmapper-kotlin-jni.XXXXXX)
 trap 'rm -rf "$work"' EXIT

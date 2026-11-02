@@ -6,8 +6,9 @@ The injectable constructor supports replacement without moving mapping into a dr
 Legacy mouse support still constructs Input for compatibility; it is not a second touch
 backend and there is no new uinput touchscreen implementation.
 
-Root entry rejects non-MLBB, macro/swipe/repeat, keyboard/mouse and synthetic movement-pad
-profiles. Controller discovery caches acceptance of the exact historically observed original
+Root entry and editor reloads in scoped runtime instances reject non-MLBB, macro/swipe/repeat,
+keyboard/mouse and synthetic movement-pad profiles. Rejected reloads pause/release the runtime
+without installing the rejected definition; legacy host engine fixtures remain reusable. Controller discovery caches acceptance of the exact historically observed original
 G8 USB name plus 054c:0ce6 and BUS_USB, then applies existing capability checks. Android status
 uses name/VID/PID/controller sources; native bus evidence remains authoritative at runtime.
 This intentionally rejects unevidenced modes and G8+. Original fixtures remain untouched.
@@ -41,3 +42,7 @@ mapping/ownership/lifecycle tests retained. BackendFailureTest exercises rejecti
 input, cleanup and a fresh healthy runtime. Actual compiled Kotlin/JNI/Rust bridge and missing
 library behavior pass on Linux host; Android ABI loading remains a device gate. Full combined
 implementation: 253 Android tests, zero failures/errors/skips, lint/debug assembly PASS.
+
+CI follow-up: the Kotlin JNI host harness uses a Bash glob for the pinned stdlib artifact,
+so GitHub runners need no ripgrep installation. Local actual-Kotlin JNI and missing-library
+checks pass after removing that environmental dependency.
