@@ -153,4 +153,15 @@ class ForegroundProfileWorkflowTest {
         assertEquals(profilesBefore.keys, storage().keys)
     }
 
+    @Test fun favoriteChoiceUsesExistingForegroundLifecycleAndSurvivesReturningToGame() {
+        profiles.saveProfile("Personal hero",arrayListOf("BTN_TR 100 100 0"),mlbb,true,2280,1080)
+        foreground(mlbb)
+        pointer.launchProfile("Personal hero");idle()
+        assertEquals("Personal hero",started.last())
+        val count=started.size
+        foreground("file.manager");assertNull(pointer.selectedProfile);assertEquals(count,started.size)
+        foreground(mlbb);assertEquals("Personal hero",started.last())
+        assertEquals(count+1,started.size)
+    }
+
 }
