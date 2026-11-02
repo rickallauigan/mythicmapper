@@ -1,0 +1,21 @@
+{
+  "android": {
+    "tests": 282,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "debug_build": "PASS",
+  "lint_debug": "PASS (0 errors; inherited warnings remain)",
+  "rust_tests": 5,
+  "native_suites": 3,
+  "host_jni_vectors": 242406,
+  "compiled_kotlin_jni": "PASS including missing-library handling",
+  "fixture_hashes": "12/12 unchanged",
+  "scope": "Host-side validation; no physical button or gameplay certification",
+  "final_apk_installed": false,
+  "debug_apk_sha256": "bf5d43a6e9722683b8409506da9d3f7ec038106653dbb82eba18f6362fe3b32e",
+  "benchmark_apk_sha256": "b40dfbdbb3e2085635ee3466d54ca73c15a597e1f40d3d9a7a3b0b555cb08abf",
+  "benchmark_build": "PASS final source; non-debuggable, shell-profileable, no debug validation instrumentation",
+  "source_commit": "4a8ce88"
+}

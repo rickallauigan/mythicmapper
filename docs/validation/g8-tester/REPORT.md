@@ -97,3 +97,9 @@ Home retains the pre-existing Runtime metrics entry alongside Controller Tester.
 Metadata-only USB updates preserve live state and the last observed connection
 time; settings-dialog focus loss clears held buttons while retaining the last axis
 sample for explicit center measurement. Both have reducer regressions.
+
+## Acceptance and rendering follow-up
+
+See [acceptance/README.md](acceptance/README.md) for the controlled physical protocol,
+retained baseline, new guided evidence and outstanding final-device gates. Existing
+results above describe the previous APK; they do not certify subsequent changes.

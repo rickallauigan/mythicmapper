@@ -154,3 +154,35 @@ Known: remaining debug rendering jank (separate synthetic replay 40.36% / p99 53
 full physical button capture, disconnect with held controls and OS-reserved Home
 behavior. No gameplay validation, release budget or 60-FPS claim. Private raw logs
 remain ignored in `app/build/s10e-private/`. Never merge/publish automatically.
+
+
+## Controller tester acceptance follow-up — 2026-11-02
+
+Continues on feature/g8-controller-tester / draft PR #13, still stacked on PR #12.
+Device was rediscovered after a network change: read ignored
+`app/build/s10e-private/current-adb-target.txt` rather than assuming an address.
+Actual S10e model and G8 interfaces verified; tester foreground and phone awake.
+
+New work adds persistent bounded guided down/up evidence, rear-alias prompts,
+manual held-unplug recording, a timed physical benchmark with common instrumentation,
+scoped Compose state/lazy sections and cheaper display-only decimal formatting.
+Root mapping pipeline and profile schemas are unchanged. A real tester-first/Home
+libsu initialization crash was reproduced; shell configuration now belongs in
+Application before Activity entry (commit 3fef480). Final runtime retest is pending.
+
+See docs/validation/g8-tester/acceptance/README.md. An earlier physical debug baseline
+is retained; no matched optimization improvement is claimed. Fresh controlled
+baseline `before-current-debug-1` was saved (711 frames; 72.86% jank; zero touch
+submissions), but trigger/overlap evidence is incomplete. Optimized paired trial
+`after-current-debug-1` is now armed, waiting for physical input. Do not replace that installed APK or interrupt the
+Activity before collecting the result. Its exact APK/hash is preserved privately as
+acceptance-common-debug.apk / acceptance-common-build.json. Use the same APK's
+`render_baseline=false` path for the paired optimized trial; changing that flag
+requires a new Activity, not merely onNewIntent. Root logical pointers must be zero
+and mapping inactive before any lifecycle/process termination test.
+
+Next: collect and JSON-validate files/validation/physical-after-current-debug-1.json;
+check actual trigger/overlap evidence before claiming matching workloads. Keep all old evidence. Guided rear aliases
+and held-control unplug/replug require physical actions, never automated USB disconnect.
+Final debug APK rebuild/test/lint passed (282 Android tests); final benchmark build
+also passed but has not run on the phone. No merges/releases. Reference PNG stays untracked.
