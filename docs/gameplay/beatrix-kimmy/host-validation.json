@@ -1,0 +1,18 @@
+{
+  "android": {
+    "tests": 294,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "lint_debug": "PASS including debug-only safe-surface harness",
+  "debug_build": "PASS; installed APK SHA256 in device-environment.json",
+  "rust_tests": 5,
+  "native_suites": 3,
+  "host_jni_parity_vectors": 242406,
+  "compiled_kotlin_jni": "PASS including missing library",
+  "protected_fixture_hashes": "12/12 unchanged",
+  "rust_hot_path_migration": false,
+  "gameplay": "NOT TESTED",
+  "tools_tests": 4
+}

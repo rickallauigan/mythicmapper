@@ -161,7 +161,7 @@ remain ignored in `app/build/s10e-private/`. Never merge/publish automatically.
 Continue feature/g8-controller-tester / draft PR #13, stacked on unmerged PR #12.
 Read the ignored app/build/s10e-private/current-adb-target.txt for the device's
 current network target. Do not commit addresses, serials or raw private logs.
-Do not start Beatrix/Kimmy work, merge PRs or publish releases.
+Historical Beatrix/Kimmy pause is superseded by the user-authorized gameplay feature below. Do not merge PRs or publish releases.
 
 All four fresh physical reports are retained under docs/validation/g8-tester/acceptance:
 before-current-debug-1 / after-current-debug-1 and repeat -2 JSON files. Both
@@ -201,3 +201,37 @@ firmware/security/thermal changes or online MLBB matches. All test artifacts are
 scoped; the source reference PNG stays untracked. Remaining acceptance gates include
 physical held-control unplug/replug, exhaustive supported-button evidence, reliable
 matched/release-like performance, manual MLBB training and inherited license/assets.
+
+
+## Beatrix / Kimmy gameplay feature — 2026-11-02
+
+User explicitly authorized this feature after the tester checkpoint. Branch
+feature/beatrix-kimmy-gameplay starts at complete validated PR #13 head 1ee6e51,
+stacked over PR #12 f0132f9 and dev. See docs/gameplay/beatrix-kimmy/REPORT.md.
+Draft PR #14 is open against feature/g8-controller-tester. Implementation 0ab8303;
+guarded device harness 8b7b30e. Final local lint/build pass, remote CI pending.
+No parent PR merged; no tester work, personal profile or favorite overwritten.
+Supplied mockup PNG remains untracked.
+
+Implemented shared controls, B/L3 ownership, Beatrix manual weapon/hold-or-pulse
+policy and Kimmy stick shooting/skill priority/neutral arming. Reuses held aim,
+RepeatKeyHandler, pointer ledger, native movement and diagnostic ownership. Rust
+remains reference-only. Both templates disabled until explicit calibration; edits
+revoke readiness. Recommended favorite slots require opt-in and cannot overwrite
+occupied slots. Hero setup acquired its exclusive root lease and rendered on S10e.
+
+294 Android tests passed; Rust 5, native 3, host JNI 242406 vectors, compiled Kotlin
+JNI/missing-library and 12/12 fixture hash checks passed. Device heroes guard,
+heroes_prepare, heroes_touch and jni suites passed; sanitized JSON is in the report
+directory. Guarded blue-surface replay observed 43 events / 7 pointers, zero sequence
+errors and zero final contacts. Tester ownership allowed zero gameplay submissions.
+Two new disabled training drafts exist; original favorites unchanged. APK installed
+with -r and private pre-feature APK/preferences/evidence backups retained. Current
+ADB endpoint lives only in ignored app/build/s10e-private/current-adb-target.txt.
+No physical Beatrix/Kimmy gameplay or hero-specific HUD calibration verified.
+
+Next: manually enter Beatrix Hero Training with mapping stopped and report equipped
+weapon. Inspect real HUD privately before enabling a calibrated copy. Then validate
+physical LT/aim, native movement, skills and shared spell, followed by Kimmy. Keep
+raw game screenshots/account data private. Never claim weapon behaviors verified
+from host or safe-surface replay. No automatic matches, merges or releases.
