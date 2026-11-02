@@ -78,7 +78,7 @@ fun MythicHome(activity: MainActivity) {
         onAssign={slot,id -> action{val s=store.read();store.update(s,s.assign(slot,id))}},
         onSwap={a,b -> action{val s=store.read();store.update(s,s.swap(a,b))}},
         onEditor={edit(it,false)},onCalibration={edit(it,true)},
-        onDiagnostics={activity.startActivity(Intent(activity,DiagnosticsActivity::class.java))},
+        onDiagnostics={activity.startActivity(Intent(activity,xtr.keymapper.tester.TesterActivity::class.java))},
         onPermission={activity.startActivity(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,android.net.Uri.parse("package:${activity.packageName}")))})
     nameRequest?.let {request ->
         var name by remember(request){mutableStateOf(request.initial)}
@@ -115,7 +115,7 @@ fun MythicHomeScreen(library: HeroLibrary, connected: Boolean, active: Boolean, 
                     Text(if(connected) "G8 connected · observed USB mode" else "G8 not detected · wake controller or check USB mode",color=if(connected)MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface)
                     Text("Selected: ${library.profiles.find{it.id==selected}?.name ?: "None"}")
                     Text(if(active)"Mapper service running" else "Mapper stopped")
-                    Row {OutlinedButton(onClick=onDiagnostics){Text("Diagnostics")};Spacer(Modifier.width(8.dp));OutlinedButton(onClick=onPermission){Text("Overlay permission")}}
+                    Row {OutlinedButton(onClick=onDiagnostics){Text("Controller Tester")};Spacer(Modifier.width(8.dp));OutlinedButton(onClick=onPermission){Text("Overlay permission")}}
                     if(active) Button(onClick=onStop){Text("Stop mapping")}
                 }
                 item {Text("Five favorites",style=MaterialTheme.typography.titleLarge)}

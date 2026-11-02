@@ -26,6 +26,7 @@
         android:supportsRtl="false"
         android:theme="@style/Theme.XtMapper" >
 
+        <activity android:name=".tester.TesterActivity" android:exported="false" android:configChanges="orientation|screenSize|keyboard|keyboardHidden|navigation" />
         <activity android:name=".mythic.DiagnosticsActivity" android:exported="false" />
         <activity android:name=".structured.StructuredProfileActivity" android:exported="false" />
 
