@@ -157,6 +157,7 @@ class TouchPointer : Service() {
 
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
         val notification = builder.setOngoing(true)
+            .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
             .setContentTitle("Keymapper service running")
             .setContentText("Touch to launch editor")
             .setContentIntent(pendingIntent)

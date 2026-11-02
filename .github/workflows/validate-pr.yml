@@ -53,9 +53,10 @@ jobs:
         run: |
           bash app/src/test/native/run-controller-probe-tests.sh
           bash app/src/test/native/run-mouse-reader-tests.sh
+          bash app/src/test/native/run-reader-parent-death-tests.sh
 
       - name: Run Android tests, lint, inventory and build debug APK
-        run: bash ./gradlew :app:testDebugUnitTest :app:lintDebug :app:dependencyInventory :app:assembleDebug
+        run: bash ./gradlew :app:testDebugUnitTest :app:lintDebug :app:dependencyInventory :app:assembleDebug :app:processReleaseMainManifest
 
       - name: Check actual compiled Kotlin JNI bridge on host
         run: bash tools/run-kotlin-jni-host.sh

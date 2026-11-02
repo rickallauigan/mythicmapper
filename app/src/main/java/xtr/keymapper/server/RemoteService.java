@@ -40,10 +40,12 @@ import xtr.keymapper.server.event.KeyEventHandler;
 
 public class RemoteService extends IRemoteService.Stub {
     private String currentDevice = "";
+    private volatile Process inputReaderProcess;
+    private volatile boolean readerStopping;
     private final RuntimeRequestGate<InputService> runtimeRequests = new RuntimeRequestGate<>();
     private OnKeyEventListener mOnKeyEventListener;
     boolean isWaylandClient = false;
-    private ActivityObserverService activityObserverService;
+    private volatile ActivityObserverService activityObserverService;
     String nativeLibraryDir = System.getProperty("java.library.path");
     private View cursorView;
     private int TYPE_SECURE_SYSTEM_OVERLAY;
@@ -167,7 +169,9 @@ public class RemoteService extends IRemoteService.Stub {
         if (isWaylandClient) {
             getevent = new BufferedReader(new InputStreamReader(System.in));
         } else {
-            getevent = Utils.geteventStream(nativeLibraryDir);
+            inputReaderProcess = Utils.startGeteventProcess(nativeLibraryDir);
+            if (readerStopping) inputReaderProcess.destroy();
+            getevent = new BufferedReader(new InputStreamReader(inputReaderProcess.getInputStream()));
         }
         String line;
         while ((line = getevent.readLine()) != null) {
@@ -185,12 +189,16 @@ public class RemoteService extends IRemoteService.Stub {
             });
         }
     } catch (Exception e){
-        RuntimeMetrics.error("Controller reader failed: " + e.getClass().getSimpleName());
+        if (!readerStopping) RuntimeMetrics.error("Controller reader failed: " + e.getClass().getSimpleName());
         Log.e(TAG, "Controller reader failed", e);
     } finally {
-        RuntimeMetrics.error("Controller reader stopped; restart mapper service");
-        long request = runtimeRequests.next();
-        mHandler.post(() -> runtimeRequests.commit(request, () -> stopServer(request, false)));
+        Process reader = inputReaderProcess;
+        if (reader != null) reader.destroy();
+        if (!readerStopping) {
+            RuntimeMetrics.error("Controller reader stopped; restart mapper service");
+            long request = runtimeRequests.next();
+            mHandler.post(() -> runtimeRequests.commit(request, () -> stopServer(request, false)));
+        }
     }}
 
     private void handleInputFrame(RuntimeRequestGate.Frame<InputService> target, String[] data, String line) {
@@ -306,7 +314,24 @@ public class RemoteService extends IRemoteService.Stub {
 
     private void stopServer(long request, boolean exitProcess) {
         runtimeRequests.discardOwned(runtimeRequests.takeOwned(request), this::stopRuntime);
-        if (!startedFromShell && exitProcess && runtimeRequests.isCurrent(request)) System.exit(0);
+        if (!startedFromShell && exitProcess && runtimeRequests.isCurrent(request)) {
+            stopInputReader();
+            if (activityObserverService != null) activityObserverService.stop();
+            System.exit(0);
+        }
+    }
+
+    private void stopInputReader() {
+        readerStopping = true;
+        Process reader = inputReaderProcess;
+        if (reader != null) reader.destroy();
+    }
+
+    /** RootService destruction must release resources synchronously, before its process exits. */
+    public void shutdown() {
+        stopInputReader();
+        runtimeRequests.discardOwned(runtimeRequests.invalidateAndGetOwner(), this::stopRuntime);
+        if (activityObserverService != null) activityObserverService.stop();
     }
 
     private void stopRuntime(InputService stopping, boolean releaseSharedResources) {
@@ -354,7 +379,7 @@ public class RemoteService extends IRemoteService.Stub {
     public void registerActivityObserver(ActivityObserver callback) {
         if (activityObserverService != null)
             activityObserverService.stop();
-        activityObserverService = new ActivityObserverService(callback);
+        activityObserverService = new ActivityObserverService(context, callback);
     }
 
     @Override
@@ -406,8 +431,19 @@ public class RemoteService extends IRemoteService.Stub {
         return (frame.owner == null || frame.owner.isPausedAndReleased()) && runtimeRequests.accepts(frame);
     }
 
+    private boolean isReaderAlive() {
+        Process reader = inputReaderProcess;
+        if (reader == null) return false;
+        try { reader.exitValue(); return false; }
+        catch (IllegalThreadStateException running) { return true; }
+    }
+
     @Override
-    public String diagnostics() { return RuntimeMetrics.snapshot(); }
+    public String diagnostics() {
+        try { return new org.json.JSONObject(RuntimeMetrics.snapshot()).put("foreground_observer",
+            activityObserverService == null ? "inactive" : activityObserverService.mode()).put("reader_running", isReaderAlive()).toString(2); }
+        catch (org.json.JSONException error) { return RuntimeMetrics.snapshot(); }
+    }
 
     @Override
     public boolean isActive() {
