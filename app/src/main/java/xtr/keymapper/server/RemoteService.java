@@ -264,7 +264,7 @@ public class RemoteService extends IRemoteService.Stub {
             final InputService candidate;
             try {
                 candidate = new InputService(profile, keymapConfig, cb, screenWidth, screenHeight,
-                    cursorView, isWaylandClient, displayId);
+                    cursorView, isWaylandClient, displayId, null, true);
                 if (!isWaylandClient) {
                     candidate.setMouseLock(true);
                     candidate.openDevice(currentDevice);

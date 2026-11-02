@@ -28,6 +28,7 @@ public class InputService implements IInputInterface {
     private KeymapProfile keymapProfile;
     private final Input input;
     private final TouchBackend touchBackend;
+    private final boolean scopeRestricted;
     private final java.util.Map<Integer, float[]> activeTouches = new java.util.HashMap<>();
     private volatile boolean acceptingTouches = true;
     private final int screenWidth, screenHeight;
@@ -56,6 +57,14 @@ public class InputService implements IInputInterface {
     public InputService(KeymapProfile profile, KeymapConfig keymapConfig, IRemoteServiceCallback mCallback,
                         int screenWidth, int screenHeight, View cursorView, boolean isWaylandClient,
                         int displayId, TouchBackend backend) throws RemoteException {
+        this(profile, keymapConfig, mCallback, screenWidth, screenHeight, cursorView, isWaylandClient, displayId, backend, false);
+    }
+
+    public InputService(KeymapProfile profile, KeymapConfig keymapConfig, IRemoteServiceCallback mCallback,
+                        int screenWidth, int screenHeight, View cursorView, boolean isWaylandClient,
+                        int displayId, TouchBackend backend, boolean scopeRestricted) throws RemoteException {
+        this.scopeRestricted = scopeRestricted;
+        if (scopeRestricted) xtr.keymapper.mythic.MythicScope.validateProfile(profile);
         this.screenWidth = screenWidth; this.screenHeight = screenHeight;
         input = new Input(displayId);
         touchBackend = backend == null ? input : backend;
@@ -242,6 +251,7 @@ public class InputService implements IInputInterface {
         try {
             KeymapProfile nextProfile = mCallback.requestKeymapProfile();
             KeymapConfig nextConfig = mCallback.requestKeymapConfig();
+            if (scopeRestricted) xtr.keymapper.mythic.MythicScope.validateProfile(nextProfile);
             stop();
             nextProfile.scale(screenWidth, screenHeight);
             keymapProfile = nextProfile;
@@ -254,8 +264,10 @@ public class InputService implements IInputInterface {
                 startControllers();
             }
         } catch (Exception e) {
+            stopEvents = true;
             stop();
-            Log.e(RemoteService.TAG, e.getMessage(), e);
+            RuntimeMetrics.error("Profile reload rejected: " + e.getClass().getSimpleName());
+            Log.e(RemoteService.TAG, "Profile reload rejected", e);
         }
     }
 
