@@ -217,6 +217,46 @@ public class ConcurrentControllerInputTest {
         }
         try(var next=new Harness(hero("KIMMY",false))){assertTrue(next.recorder.frames.isEmpty());next.monitor.stop();next.runtime.stop();}
     }
+    @Test public void beatrixRepeatedAttackAcquiresAnchorBeforeAimingAtNeighboringControls() throws Exception {
+        try(var h=new Harness(hero("BEATRIX",true).replace(
+                "STICK_AIM BTN_TL2 1981.08 946.58 80 ","STICK_AIM BTN_TL2 1981.08 946.58 180 "))){
+            var attack=h.runtime.getKeymapProfile().aimKeys.stream().filter(a->a.code.equals("BTN_TL2")).findFirst().orElseThrow();
+            h.axis("ABS_RX","00");h.axis("ABS_RY","00");h.key("BTN_TL2",true);
+            assertEquals("No same-turn drag before anchor acquisition",1,h.recorder.frames.size());
+            // Even continuously changing stick samples must not move a newly pressed
+            // contact onto neighboring skill hit areas during acquisition.
+            for(int i=0;i<50;i++){h.axis("ABS_RX",i%2==0?"00":"ff");h.tick(10);}
+            h.key("BTN_TL2",false);
+            long down=-1;boolean moved=false;int complete=0;
+            for(Frame f:h.recorder.frames){
+                if(f.action==MotionEvent.ACTION_DOWN){
+                    assertEquals(attack.x,f.xs.get(0),.001f);assertEquals(attack.y,f.ys.get(0),.001f);
+                    down=f.time;moved=false;
+                }else if(f.action==MotionEvent.ACTION_MOVE){
+                    assertTrue("Anchor must persist before moving",f.time-down>=40);
+                    assertTrue(Math.hypot(f.xs.get(0)-attack.x,f.ys.get(0)-attack.y)<=180.001);
+                    moved=true;
+                }else if(f.action==MotionEvent.ACTION_UP&&f.time-down>=80){
+                    assertTrue("Complete pulse includes aimed phase",moved);complete++;
+                }
+            }
+            assertTrue(complete>=3);h.recorder.validLifecycle();int end=h.recorder.frames.size();h.tick(500);assertEquals(end,h.recorder.frames.size());
+        }
+    }
+    @Test public void pendingBeatrixAimCannotRunAfterEarlyReleaseSkillPriorityOrDisconnect() throws Exception {
+        for(String interrupt:List.of("release","skill","disconnect","stop"))try(var h=new Harness(hero("BEATRIX",true))){
+            h.axis("ABS_RX","ff");h.key("BTN_TL2",true);h.tick(20);
+            switch(interrupt){
+                case "release" -> h.key("BTN_TL2",false);
+                case "skill" -> h.key("BTN_TR",true);
+                case "disconnect" -> h.monitor.event("pad","EV_SYN SYN_DROPPED 00000000");
+                case "stop" -> h.monitor.stop();
+            }
+            int end=h.recorder.frames.size();h.tick(500);assertEquals("No stale aimed movement after "+interrupt,end,h.recorder.frames.size());
+            if(!interrupt.equals("stop"))h.key("BTN_TL2",false);if(interrupt.equals("skill"))h.key("BTN_TR",false);
+            h.monitor.stop();h.runtime.stop();h.recorder.validLifecycle();
+        }
+    }
     @Test public void kimmySkillPriorityCenteringAndDisconnectReleaseEveryPointer() throws Exception {
         try(var h=new Harness(hero("KIMMY",false))){
             h.axis("ABS_X","ff");assertTrue(h.recorder.frames.isEmpty()); // native movement is untouched

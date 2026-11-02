@@ -14,16 +14,22 @@ public final class ControllerHeroHandler {
     private final xtr.keymapper.server.event.RepeatKeyHandler pulses;
     private final xtr.keymapper.keymap.element.Key pulseKey=new xtr.keymapper.keymap.element.Key();
     private final float deadZone;
+    private final android.os.Handler handler;
+    private final int anchorMs;
     private final Set<String> spellOwners=new LinkedHashSet<>(), skills=new LinkedHashSet<>();
     private float x,y;
     private boolean lt, attack, running=true, waitForCenter=true;
     public ControllerHeroHandler(HeroGameplayConfig config,ControllerAimHandler aim,BiConsumer<String,Integer> dispatch,android.os.Handler handler,float deadZone){
         if(!config.calibrated)throw new IllegalArgumentException("Confirm hero HUD calibration first");
-        this.config=config;this.aim=aim;this.dispatch=dispatch;this.deadZone=deadZone;
+        this.config=config;this.aim=aim;this.dispatch=dispatch;this.deadZone=deadZone;this.handler=handler;
+        // Provisional acquisition/aim phases, scoped to manually held Beatrix repeat.
+        // At the 150 ms training cadence: anchor 40 ms, aimed 40 ms, released 70 ms.
+        anchorMs=config.hero==HeroGameplayConfig.Hero.BEATRIX&&config.fire==HeroGameplayConfig.Fire.PULSE
+            ?Math.min(40,config.repeatMs/3):0;
         pulseKey.repeatIntervalMs=config.repeatMs;
         // Reuse the proven cancelable pulse scheduler. Aim retains the actual
         // pointer and current stick position; dummy fixed coordinates never reach injection.
-        pulses=new xtr.keymapper.server.event.RepeatKeyHandler(handler,(px,py,action,pointer)->setAttack(action==1));
+        pulses=new xtr.keymapper.server.event.RepeatKeyHandler(handler,(px,py,action,pointer)->setAttack(action==1),anchorMs*2);
     }
     public void axes(float x,float y){if(!running)return;this.x=x;this.y=y;
         if(Math.hypot(x,y)<=deadZone)waitForCenter=false;
@@ -55,7 +61,9 @@ public final class ControllerHeroHandler {
         if(config.fire==HeroGameplayConfig.Fire.HOLD_RELEASE){setAttack(lt);return;}
         pulses.event(pulseKey,0,lt&&skills.isEmpty()?1:0);
     }
-    private void setAttack(boolean down){if(attack==down)return;attack=down;aim.trigger(ATTACK,down?1:0);}
+    private void setAttack(boolean down){if(attack==down)return;attack=down;
+        if(down&&anchorMs>0)aim.triggerAfterAnchor(ATTACK,handler,anchorMs);else aim.trigger(ATTACK,down?1:0);
+    }
     public void stop(){if(!running)return;running=false;lt=false;pulses.reset();setAttack(false);
         for(String code:skills)dispatch.accept(code,0);skills.clear();spellOwners.clear();aim.focus(null);x=y=0;
     }

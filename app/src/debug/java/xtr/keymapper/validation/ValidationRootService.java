@@ -69,6 +69,7 @@ public class ValidationRootService extends RootService {
         if(width<300||height<300)throw new IllegalStateException("Surface not laid out");
         var config=new KeymapConfig(null);config.pointerMode=KeymapConfig.POINTER_OVERLAY;
         int actors=0;
+        List<Long> pulseAcquisitionDelays=new ArrayList<>();
         for(String variant:List.of("BEATRIX_HOLD","BEATRIX_PULSE","KIMMY")){
             var hero=xtr.keymapper.controller.HeroGameplayConfig.Hero.valueOf(variant.startsWith("BEATRIX")?"BEATRIX":"KIMMY");
             String lines=String.join("\n",xtr.keymapper.mythic.HeroTrainingProfiles.INSTANCE.draft(hero))
@@ -77,8 +78,15 @@ public class ValidationRootService extends RootService {
                 (p,m,a)->switch(m.getName()){case "requestKeymapProfile"->ProfileConfiguration.parse(lines);case "requestKeymapConfig"->config;default->null;});
             TouchBackend guarded=new TouchBackend(){
                 final Input delegate=new Input(0);
+                long anchorTime;
+                boolean awaitingAim;
                 public void injectTouch(int action,int pointer,float pressure,float x,float y){
                     if(action!=MotionEvent.ACTION_UP)try{requireSurface(surface);}catch(Exception e){throw new SecurityException("Safe surface lost",e);}
+                    if(variant.equals("BEATRIX_PULSE")) {
+                        if(action==MotionEvent.ACTION_DOWN){anchorTime=SystemClock.uptimeMillis();awaitingAim=true;}
+                        if(action==MotionEvent.ACTION_MOVE&&awaitingAim){pulseAcquisitionDelays.add(SystemClock.uptimeMillis()-anchorTime);awaitingAim=false;}
+                        if(action==MotionEvent.ACTION_UP)awaitingAim=false;
+                    }
                     delegate.injectTouch(action,pointer,pressure,x,y);
                 }
                 public boolean hasSubmissionFailure(){return delegate.hasSubmissionFailure();}
@@ -103,7 +111,9 @@ public class ValidationRootService extends RootService {
                 actors++;
             }finally{onMain(()->{if(monitor[0]!=null)monitor[0].stop();if(runtime[0]!=null)runtime[0].stop();});}
         }
+        if(pulseAcquisitionDelays.isEmpty()||pulseAcquisitionDelays.stream().anyMatch(ms->ms<40))throw new IllegalStateException("Attack acquisition phase missing");
         return new JSONObject().put("status","PASS").put("uid",android.os.Process.myUid()).put("hero_touch_policies",actors)
+            .put("beatrix_pulse_anchor_to_first_move_ms",new org.json.JSONArray(pulseAcquisitionDelays))
             .put("source","Deterministic hero engine replay into guarded blue surface; not physical controller input or MLBB gameplay")
             .put("reload_and_pulse_cleanup",true).put("runtime_metrics",new JSONObject(RuntimeMetrics.snapshot()));
     }

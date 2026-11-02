@@ -10,6 +10,7 @@ import xtr.keymapper.mouse.HeldAimHandler.TouchSink;
 public final class RepeatKeyHandler {
     private final Handler handler;
     private final TouchSink sink;
+    private final int requestedPressMs;
     private final Map<Integer, Pulse> held = new HashMap<>();
     private final class Pulse implements Runnable {
         final Key key; final int pointer;
@@ -20,7 +21,8 @@ public final class RepeatKeyHandler {
                 if (held.get(pointer) != this) return;
                 down = !down;
                 sink.inject(key.x + key.offset, key.y + key.offset, down ? 1 : 0, pointer);
-                int pressMs = Math.min(40, key.repeatIntervalMs / 2);
+                int pressMs = requestedPressMs > 0 ? Math.min(requestedPressMs, key.repeatIntervalMs - 1)
+                    : Math.min(40, key.repeatIntervalMs / 2);
                 handler.postDelayed(this, down ? pressMs : key.repeatIntervalMs - pressMs);
             }
         }
@@ -30,7 +32,12 @@ public final class RepeatKeyHandler {
             down = false;
         }
     }
-    public RepeatKeyHandler(Handler handler, TouchSink sink) { this.handler = handler; this.sink = sink; }
+    public RepeatKeyHandler(Handler handler, TouchSink sink) { this(handler, sink, 0); }
+    /** Explicit contact duration for multi-phase aimed pulses; zero retains fixed-tap behavior. */
+    public RepeatKeyHandler(Handler handler, TouchSink sink, int pressMs) {
+        if (pressMs < 0) throw new IllegalArgumentException("Negative press duration");
+        this.handler = handler; this.sink = sink; this.requestedPressMs = pressMs;
+    }
     public synchronized void event(Key key, int pointer, int action) {
         if (action == 1 && !held.containsKey(pointer)) {
             Pulse pulse = new Pulse(key, pointer); held.put(pointer, pulse); pulse.run();
