@@ -80,7 +80,7 @@ fun MythicHome(activity: MainActivity) {
         onEditor={edit(it,false)},onCalibration={edit(it,true)},
         onDiagnostics={activity.startActivity(Intent(activity,xtr.keymapper.tester.TesterActivity::class.java))},
         onRuntimeDiagnostics={activity.startActivity(Intent(activity,DiagnosticsActivity::class.java))},
-        onHeroSetup={p->activity.startActivity(Intent(activity,HeroTrainingActivity::class.java).putExtra("profile",p.id))},
+        onHeroSetup={p->activity.openHeroTrainingFromCompose(p.id)},
         onPermission={activity.startActivity(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,android.net.Uri.parse("package:${activity.packageName}")))})
     nameRequest?.let {request ->
         var name by remember(request){mutableStateOf(request.initial)}

@@ -368,6 +368,13 @@ public class MainActivity extends AppCompatActivity {
         stopPointer();
     }
 
+    /** Configuration must not leave a foreground mapper that can reactivate on editor exit. */
+    public void openHeroTrainingFromCompose(String profileId) {
+        stopPointer();
+        startActivity(new Intent(this, xtr.keymapper.mythic.HeroTrainingActivity.class)
+                .putExtra("profile", profileId));
+    }
+
     public void openHelpFromCompose() {
         startActivity(new Intent(this, InfoActivity.class));
     }
