@@ -112,9 +112,10 @@ root-process death cleanup passed. Existing XtMapper preferences remain unchange
 Both legacy packages disabled to prevent concurrent mapper startup; enable only
 after stopping MythicMapper. No data clearing/uninstall.
 
-Remaining: normal user unlock for screen-off bounded-wait retest (initial 300ms
-assertion failed; later run blocked at rotation by keyguard), complete physical
-G8 buttons/sticks/triggers, physical disconnect with held gestures, and manual MLBB
+Screen-off bounded-wait retest passed after normal user unlock; overlay detached,
+screen woke and keyguard remained locked. The initial 300ms assertion was premature.
+Remaining: complete physical G8 buttons/sticks/triggers, physical disconnect with
+held gestures, and manual MLBB
 training. G8 idle sleep/wake is observed, not physical USB unplug/replug. Physical
 capture is partial; no gameplay claims. Rust stays reference-only. Licensing
 evidence resolves Guava parent metadata and scrcpy reference match but inherited
@@ -123,3 +124,5 @@ raster provenance/final artifact-specific notices remain release blockers.
 Resume with status/evidence inspection. Do not bypass keyguard. Do not merge PR or
 publish production releases. Private raw evidence remains ignored under
 `app/build/s10e-private/`; never commit it.
+
+Draft S10e validation PR: https://github.com/rickallauigan/mythicmapper/pull/12.

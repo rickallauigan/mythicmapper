@@ -18,5 +18,10 @@
   "profile_python_tests_passed": 12,
   "tool_python_tests_passed": 4,
   "secret_guard_findings": 0,
-  "physical_gameplay_test": false
+  "physical_gameplay_test": false,
+  "actual_kotlin_jni_roundtrip": "PASS",
+  "actual_kotlin_missing_library_handling": "PASS",
+  "dependency_inventory": "PASS",
+  "osv_maven_components_queried": 104,
+  "osv_components_with_advisory_records": 0
 }

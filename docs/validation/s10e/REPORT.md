@@ -25,7 +25,7 @@ screenshots and user profile contents are excluded. See [environment.json](envir
 | PROF-01 | Profiles/favorites | Five slots, clone/rename/duplicate/reorder and restart persistence | Disposable fixtures persisted between instrumentation processes, then removed; prior library restored | PASS | profiles_prepare.json, profiles_verify.json | Visual CRUD gestures not covered |
 | PROF-02 | Schema/preset safety | Reject corrupt/future schema; immutable starter | Direct codec rejection and bundled starter comparison pass without corrupting actual user store | PASS | profiles_prepare.json | Device upgrade migration scenarios require additional fixtures |
 | OVR-01 | Floating selector | Attach, five slots, drag/collapse, editor hide, notification | Real overlay operations, immediate FGS notification and Activity rotation reclamp pass | PASS | overlay.json | Human touch usability and MLBB overlay behavior unverified |
-| OVR-02 | Screen off/on | Remove selector and release runtime | Initial 300 ms teardown assertion failed; bounded-wait retest blocked by keyguard preventing Activity rotation | BLOCKED | screen-initial-failure.json, screen.json | Unlock normally and rerun screen suite; production defect not yet established |
+| OVR-02 | Screen off/on | Remove selector and release runtime | Initial 300 ms assertion was premature; after normal user unlock, bounded-wait retest observed overlay detach and screen wake with keyguard intact | PASS | screen-initial-failure.json, screen.json | Idle mapping only; screen-off with physical held gestures remains untested |
 | FG-01 | Foreground transitions | Avoid five-second reaction delay where supported | Root TaskStackListener registered; measured callback transitions below old five-second polling delay | PASS | foreground-before.json, startup.json | Hidden API compatibility tested only on this ROM; fallback retained |
 | GAME-01 | MLBB gameplay | Physical movement/attack/skills/aiming and safe interruption | Game installed; never launched or played by this validation | NOT TESTED | environment.json | Complete manual training checklist below |
 | LIC-01 | Distribution notices | Preserve GPL and bundled notices | License texts bundled; Guava parent metadata and scrcpy reference matches recorded | BLOCKED | license-evidence.json, scrcpy-comparison.json, ../../architecture/LICENSING.md | Inherited raster provenance and full artifact notice review remain release gates |
@@ -63,6 +63,17 @@ Mapping processing includes synchronous injection. Submission measures the API c
 not display observation. Replay dispatch delay is software Handler queue time, not
 USB latency. No physical controller-to-display latency was measured and no numeric
 release budget is set from this single device session.
+
+## Automated host checks
+
+[host-results.json](host-results.json) records 256 Android tests (zero failures,
+errors or skips), five Rust tests, three native suites, 242,406 host JNI parity
+vectors, 12 fixture hash matches, 12 profile Python tests and four tool tests.
+Actual compiled Kotlin/JNI roundtrip and missing-library handling passed on host;
+ARM64 JNI results are separate device evidence. Debug build/lint and release
+manifest generation passed. Dependency inventory regenerated successfully; OSV
+queried 104 Maven components and returned no advisory records at check time.
+This is not a complete security or licensing audit.
 
 ## Reproduction
 
