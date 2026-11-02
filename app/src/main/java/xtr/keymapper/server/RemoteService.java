@@ -85,6 +85,8 @@ public class RemoteService extends IRemoteService.Stub {
         }
 
         Looper.getMainLooper().getThread().setUncaughtExceptionHandler((t, e) -> {
+            try { runtimeRequests.discardOwned(runtimeRequests.invalidateAndGetOwner(), this::stopRuntime); }
+            catch (Throwable cleanupFailure) { Log.e(TAG, "Crash cleanup failed", cleanupFailure); }
             try {
                 ApplicationErrorReport.CrashInfo crashInfo = new ApplicationErrorReport.CrashInfo(e);
 
@@ -169,15 +171,26 @@ public class RemoteService extends IRemoteService.Stub {
         }
         String line;
         while ((line = getevent.readLine()) != null) {
+            final long receipt = System.nanoTime();
             String[] data = line.split(":"); // split a string like "/dev/input/event2: EV_REL REL_X ffffffff"
             // The reader only produces frames. Runtime selection and handling happen
             // on the same looper as initialization, teardown, pause, resume and reload.
             final String frame = line;
             RuntimeRequestGate.Frame<InputService> target = runtimeRequests.captureFrame();
-            mHandler.post(() -> handleInputFrame(target, data, frame));
+            mHandler.post(() -> {
+                long dispatch = System.nanoTime();
+                RuntimeMetrics.record(0, dispatch - receipt);
+                try { handleInputFrame(target, data, frame); }
+                finally { RuntimeMetrics.record(1, System.nanoTime() - dispatch); }
+            });
         }
     } catch (Exception e){
-        Log.e(TAG, e.getMessage(), e);
+        RuntimeMetrics.error("Controller reader failed: " + e.getClass().getSimpleName());
+        Log.e(TAG, "Controller reader failed", e);
+    } finally {
+        RuntimeMetrics.error("Controller reader stopped; restart mapper service");
+        long request = runtimeRequests.next();
+        mHandler.post(() -> runtimeRequests.commit(request, () -> stopServer(request, false)));
     }}
 
     private void handleInputFrame(RuntimeRequestGate.Frame<InputService> target, String[] data, String line) {
@@ -231,6 +244,10 @@ public class RemoteService extends IRemoteService.Stub {
      */
     @Override
     public void startServer(KeymapProfile profile, KeymapConfig keymapConfig, IRemoteServiceCallback cb, int screenWidth, int screenHeight, int displayId) throws RemoteException {
+        xtr.keymapper.mythic.MythicScope.validateProfile(profile);
+        // Controller MVP never starts the legacy grabbing touchpad paths.
+        keymapConfig.touchpadInputMode = KeymapConfig.TOUCHPAD_DISABLED;
+        keymapConfig.pointerMode = KeymapConfig.POINTER_SYSTEM;
         long request = runtimeRequests.next();
         mHandler.post(() -> runtimeRequests.commit(request, () -> {
             runtimeRequests.discardOwned(runtimeRequests.takeOwned(request), this::stopRuntime);
@@ -247,7 +264,7 @@ public class RemoteService extends IRemoteService.Stub {
             final InputService candidate;
             try {
                 candidate = new InputService(profile, keymapConfig, cb, screenWidth, screenHeight,
-                    cursorView, isWaylandClient, displayId);
+                    cursorView, isWaylandClient, displayId, null, true);
                 if (!isWaylandClient) {
                     candidate.setMouseLock(true);
                     candidate.openDevice(currentDevice);
@@ -388,6 +405,9 @@ public class RemoteService extends IRemoteService.Stub {
         RuntimeRequestGate.Frame<InputService> frame = runtimeRequests.captureFrame();
         return (frame.owner == null || frame.owner.isPausedAndReleased()) && runtimeRequests.accepts(frame);
     }
+
+    @Override
+    public String diagnostics() { return RuntimeMetrics.snapshot(); }
 
     @Override
     public boolean isActive() {

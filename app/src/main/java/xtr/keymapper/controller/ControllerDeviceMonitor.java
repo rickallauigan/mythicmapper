@@ -18,6 +18,7 @@ public final class ControllerDeviceMonitor {
         static void ensureLoaded() {}
     }
     public static native long[] probe(String path);
+    public static native boolean isOriginalG8(String path);
     private final Supplier<Map<String, long[]>> discovery;
     public static native long[] identity(String path);
     public static final class NodeDiscovery implements Supplier<Map<String, long[]>> {
@@ -32,7 +33,7 @@ public final class ControllerDeviceMonitor {
                 if (nodes != null) for (File file : nodes)
                     if (file.getName().matches("event[0-9]+")) paths.add(file.getAbsolutePath());
                 return paths;
-            }, path -> { NativeProbe.ensureLoaded(); return identity(path); }, ControllerDeviceMonitor::probe);
+            }, path -> { NativeProbe.ensureLoaded(); return identity(path); }, path -> isOriginalG8(path) ? probe(path) : null);
         }
         public NodeDiscovery(Supplier<java.util.List<String>> paths,
                 java.util.function.Function<String, long[]> identities,
@@ -103,6 +104,7 @@ public final class ControllerDeviceMonitor {
             axes();
         }
         void axes() {
+            xtr.keymapper.server.RuntimeMetrics.axes(rx, ry);
             float x = ControllerAimHandler.normalize(rx, (int)info[2], (int)info[3], center(info[2], info[3]));
             float y = ControllerAimHandler.normalize(ry, (int)info[5], (int)info[6], center(info[5], info[6]));
             aim.axes(x, y);
@@ -111,6 +113,7 @@ public final class ControllerDeviceMonitor {
         }
         void button(String code, int action) {
             if (action == 1 ? !pressed.add(code) : !pressed.remove(code)) return;
+            xtr.keymapper.server.RuntimeMetrics.button(code, action);
             if (chords.event(code, action)) return;
             boolean aimingTrigger = input.getKeymapProfile().aimKeys.stream().anyMatch(c -> c.stick && c.code.equals(code));
             if (aimingTrigger && action == 1 && camera != null) camera.suspend(true);
@@ -160,6 +163,7 @@ public final class ControllerDeviceMonitor {
             devices.remove(path).reset(); if (path.equals(owner)) owner = null;
             Log.i("XtMapper", "Controller disconnected: " + path);
         }
+        xtr.keymapper.server.RuntimeMetrics.controllers(devices.size());
     }
     /** true consumes controller traffic from generic keyboard/mouse routing, never from Android. */
     public synchronized boolean event(String path, String line) {
@@ -178,6 +182,7 @@ public final class ControllerDeviceMonitor {
         }
         if (owner == null) owner = path;
         if (!path.equals(owner)) return true; // One active physical controller owns this profile.
+        xtr.keymapper.server.RuntimeMetrics.controller(line);
         xtr.keymapper.server.InputDiagnostics.controller(line);
         String[] parts = line.trim().split("\\s+");
         if (parts.length < 3) return true;
@@ -198,6 +203,7 @@ public final class ControllerDeviceMonitor {
             }
         } else if (type.equals("EV_SYN")) {
             if (code.equals("SYN_DROPPED")) {
+                xtr.keymapper.server.RuntimeMetrics.dropped();
                 device.reset(); devices.remove(path); owner = null;
                 if (discovery instanceof NodeDiscovery nodes) nodes.invalidate(path);
             }
@@ -209,5 +215,6 @@ public final class ControllerDeviceMonitor {
         running = false; handler.removeCallbacks(poll); handler.removeCallbacks(frame);
         for (Device device : devices.values()) device.reset();
         devices.clear(); owner = null;
+        xtr.keymapper.server.RuntimeMetrics.controllers(0);
     }
 }

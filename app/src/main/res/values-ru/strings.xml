@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">XtMapper</string>
+    <string name="app_name" translatable="false">MythicMapper</string>
     <string name="start">Начать</string>
     <string name="stop">Остановить</string>
     <string name="configure">Параметры</string>
