@@ -48,12 +48,24 @@ class TouchPointer : Service() {
     var activityCallback: MainActivityCallback? = null
     @Volatile var mService: IRemoteService? = null
     @Volatile var selectedProfile: String? = null
+    private var mythicProfileChoice: String? = null
     private val mHandler = Handler(Looper.getMainLooper())
     private var activityRemoteCallback = false
     private var mWindowManager: WindowManager? = null
     private var displayId = 0
     private val foreground = ForegroundProfileSession()
     private var profileDialog: AlertDialog? = null
+    private val screenOff = object : android.content.BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if(intent?.action == Intent.ACTION_SCREEN_OFF) {
+                foreground.stop { pauseMapping() }
+                favoriteOverlay?.close()
+                activityCallback?.stopPointer()
+                stopSelf()
+            }
+        }
+    }
+    private var favoriteOverlay: xtr.keymapper.mythic.FavoriteOverlay? = null
     private var displayListener: DisplayListener? = null
     private var connectedIdentities = emptySet<String>()
     private val profilePreferences by lazy { getSharedPreferences("profiles", MODE_PRIVATE) }
@@ -78,6 +90,7 @@ class TouchPointer : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        androidx.core.content.ContextCompat.registerReceiver(this, screenOff, android.content.IntentFilter(Intent.ACTION_SCREEN_OFF), androidx.core.content.ContextCompat.RECEIVER_NOT_EXPORTED)
         xtr.keymapper.editor.EditorSessionGuard.listen(editorListener)
         profilePreferences.registerOnSharedPreferenceChangeListener(preferencesListener)
         devicePreferences.registerOnSharedPreferenceChangeListener(preferencesListener)
@@ -147,7 +160,7 @@ class TouchPointer : Service() {
             .setContentTitle("Keymapper service running")
             .setContentText("Touch to launch editor")
             .setContentIntent(pendingIntent)
-            .setSmallIcon(R.mipmap.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.mythic_notification)
             .setCategory(Notification.CATEGORY_SERVICE)
             .build()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
@@ -158,8 +171,19 @@ class TouchPointer : Service() {
 
         this.displayId = i.getIntExtra(DISPLAY_ID, Display.DEFAULT_DISPLAY)
 
-        val keymapProfile = KeymapProfiles(this).getProfile(selectedProfile, true)
-        connectRemoteService(keymapProfile)
+        mythicProfileChoice = selectedProfile
+        val keymapProfile = KeymapProfiles(this).getProfile(selectedProfile, false)
+        try {
+            xtr.keymapper.mythic.MythicScope.validateProfile(keymapProfile)
+            connectRemoteService(keymapProfile)
+            favoriteOverlay?.close()
+            favoriteOverlay = xtr.keymapper.mythic.FavoriteOverlay(this, this::launchProfile)
+            favoriteOverlay?.show()
+        } catch (error: Exception) {
+            Log.e("MythicMapper", "Mapping startup rejected", error)
+            stopSelf()
+            return START_NOT_STICKY
+        }
 
         displayListener?.let { getSystemService(DisplayManager::class.java).unregisterDisplayListener(it) }
         displayListener = object :
@@ -168,7 +192,7 @@ class TouchPointer : Service() {
             }
 
             override fun onDisplayChanged(displayId: Int) {
-                if (displayId != this@TouchPointer.displayId) return
+                if (displayId != this@TouchPointer.displayId || xtr.keymapper.editor.EditorSessionGuard.active) return
                 // Re-read the current profile and scale on connection, never the startup snapshot.
                 if (KeymapConfig(this@TouchPointer).disableAutoProfiling) launchProfile(selectedProfile)
                 else refreshForeground()
@@ -185,9 +209,13 @@ class TouchPointer : Service() {
 
     fun launchProfile(profileName: String?) {
         if (profileName == null) return
+        val keymapProfile = KeymapProfiles(this).getProfile(profileName, false)
+        xtr.keymapper.mythic.MythicScope.validateProfile(keymapProfile)
+        check(!xtr.keymapper.editor.EditorSessionGuard.active) { "Close the editor before switching profiles" }
+        mythicProfileChoice = profileName
         this.selectedProfile = profileName
-        val keymapProfile = KeymapProfiles(this).getProfile(selectedProfile, true)
-        connectRemoteService(keymapProfile)
+        if (KeymapConfig(this).disableAutoProfiling) connectRemoteService(keymapProfile)
+        else refreshForeground()
     }
 
     private fun connectRemoteService(profile: KeymapProfile,
@@ -234,6 +262,8 @@ class TouchPointer : Service() {
     }
 
     override fun onDestroy() {
+        runCatching { unregisterReceiver(screenOff) }
+        favoriteOverlay?.close(); favoriteOverlay = null
         xtr.keymapper.editor.EditorSessionGuard.remove(editorListener)
         foreground.stop { pauseMapping() }
         profileDialog?.dismiss()
@@ -284,7 +314,7 @@ class TouchPointer : Service() {
         }
 
         override fun requestKeymapProfile(): KeymapProfile {
-            return selectedProfile?.let { KeymapProfiles(this@TouchPointer).getProfile(it, true) }
+            return selectedProfile?.let { KeymapProfiles(this@TouchPointer).getProfile(it, false) }
                 ?: KeymapProfile().apply { disabled = true }
         }
 
@@ -411,7 +441,13 @@ class TouchPointer : Service() {
     }
 
     private fun decision(packageName: String): AutomaticProfileResolver.Decision {
+        if (packageName != xtr.keymapper.mythic.MythicScope.GAME) return AutomaticProfileResolver.Decision.Unconfigured
         val profiles = KeymapProfiles(this).getAllProfilesForApp(packageName)
+        mythicProfileChoice?.let { chosen ->
+            profiles[chosen]?.let { profile ->
+                return if (profile.disabled) AutomaticProfileResolver.Decision.Disabled(chosen) else AutomaticProfileResolver.Decision.Activate(chosen)
+            }
+        }
         val store = DeviceMappingStore(this)
         return AutomaticProfileResolver.resolve(packageName, profiles, store.listGroups(),
             store.listBindings(), connectedDeviceIdentities())
@@ -432,7 +468,7 @@ class TouchPointer : Service() {
     private fun activate(request: ForegroundProfileSession.Request, profile: String?) {
         if (!canActivate(request, profile)) return
         selectedProfile = profile
-        connectRemoteService(KeymapProfiles(this).getProfile(profile, true), request)
+        connectRemoteService(KeymapProfiles(this).getProfile(profile, false), request)
     }
 
     private fun refreshForeground() {

@@ -51,10 +51,15 @@ object HeroLibraryCodec {
     }
     fun decode(text: String): HeroLibrary {
         require(text.length <= 4 * 1024 * 1024) { "Library metadata exceeds storage limit" }
-        val root=JSONObject(text); val version=root.getInt("version")
+        val root=JSONObject(text)
+        require(root.keys().asSequence().toSet() == setOf("version","profiles","favorites")) { "Unexpected library fields" }
+        val versionValue=root.get("version"); require(versionValue is Int) { "Invalid library version" }
+        val version=versionValue
         require(version in 0..1) { "Unsupported library version; nothing overwritten" }
         val profiles=root.getJSONArray("profiles").let { a -> (0 until a.length()).map { i ->
             val p=a.getJSONObject(i)
+            require(p.keys().asSequence().toSet() == setOf("id","name","preset")) { "Unexpected profile fields" }
+            require(p.get("id") is String && p.get("name") is String && (p.isNull("preset") || p.get("preset") is String))
             HeroProfile(p.getString("id"),p.getString("name"),if(p.isNull("preset")) null else p.getString("preset"))
         } }
         // Version 0 was the development compact favorites array. Migration pads empty slots.
@@ -65,9 +70,9 @@ object HeroLibraryCodec {
 }
 
 /** Single checked metadata transaction. Mapping text remains in the proven profile store. */
-class HeroLibraryStore(context: Context) {
-    private val prefs=context.getSharedPreferences("mythic_hero_library",Context.MODE_PRIVATE)
-    private val mappings=KeymapProfiles(context).sharedPref
+class HeroLibraryStore internal constructor(private val prefs: android.content.SharedPreferences,
+                                            private val mappings: android.content.SharedPreferences) {
+    constructor(context: Context): this(context.getSharedPreferences("mythic_hero_library",Context.MODE_PRIVATE),KeymapProfiles(context).sharedPref)
     fun read(): HeroLibrary = synchronized(StructuredProfiles.SAVE_LOCK) {
         prefs.getString("library",null)?.let(HeroLibraryCodec::decode) ?: HeroLibrary()
     }

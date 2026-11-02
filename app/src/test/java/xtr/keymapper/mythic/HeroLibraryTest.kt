@@ -59,4 +59,36 @@ class HeroLibraryTest {
             assertThrows(IllegalArgumentException::class.java){HeroLibraryStore(context).clone("bad",lines)}
         }
     }
+    @Test fun failedCommitRestoresPriorMetadataAndFutureDataIsNeverOverwritten() {
+        val context=ApplicationProvider.getApplicationContext<Context>()
+        val actual=context.getSharedPreferences("failure_metadata",0)
+        var reject=true
+        val failing=object:android.content.SharedPreferences by actual {
+            override fun edit():android.content.SharedPreferences.Editor {
+                val edit=actual.edit()
+                return object:android.content.SharedPreferences.Editor by edit {
+                    override fun putString(key:String?,value:String?):android.content.SharedPreferences.Editor {edit.putString(key,value);return this}
+                    override fun remove(key:String?):android.content.SharedPreferences.Editor {edit.remove(key);return this}
+                    override fun commit():Boolean {val result=edit.commit();if(reject){reject=false;return false};return result}
+                }
+            }
+        }
+        val store=HeroLibraryStore(failing,KeymapProfiles(context).sharedPref)
+        val before=store.read();val p=profile("Test")
+        assertThrows(IllegalStateException::class.java){store.update(before,before.copy(profiles=listOf(p)))}
+        assertEquals(before,store.read());assertFalse(actual.contains("library"))
+        val future="{\"version\":99,\"profiles\":[],\"favorites\":[null,null,null,null,null]}"
+        actual.edit().putString("library",future).commit()
+        assertThrows(IllegalArgumentException::class.java){store.read()}
+        assertEquals(future,actual.getString("library",null))
+    }
+
+    @Test fun deviceEvidenceRequiresObservedNameIdentityAndControllerSource() {
+        val g8=xtr.keymapper.devices.HardwareDevice("Sony Interactive Entertainment GameSir-G8",xtr.keymapper.devices.DeviceType.GAMEPAD,
+            vendorId=0x054c,productId=0x0ce6,sources=android.view.InputDevice.SOURCE_GAMEPAD)
+        assertTrue(MythicScope.supported(g8))
+        for(other in listOf(g8.copy(name="Sony Controller"),g8.copy(name="GameSir G8+"),g8.copy(productId=1),g8.copy(sources=android.view.InputDevice.SOURCE_KEYBOARD),g8.copy(isConnected=false)))
+            assertFalse(MythicScope.supported(other))
+    }
+
 }
