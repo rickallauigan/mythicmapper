@@ -1,0 +1,9 @@
+{
+  "suite": "reader_hold",
+  "result": {
+    "root_binder_death_observed": true,
+    "mapping_inactive_before_termination": true,
+    "held_touch_kill_tested": false
+  },
+  "status": "PASS"
+}

@@ -1,0 +1,5 @@
+{
+  "suite": "screen",
+  "status": "FAIL",
+  "error": "IllegalStateException: Activity landscape transition failed"
+}

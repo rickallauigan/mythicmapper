@@ -1,0 +1,16 @@
+{
+  "suite": "overlay",
+  "result": {
+    "screen": null,
+    "foreground_service_notification": true,
+    "notification_flags": 98,
+    "attached": true,
+    "favorite_slots": 5,
+    "expand_collapse": true,
+    "drag_reposition": true,
+    "editor_lease_hide_restore": true,
+    "activity_rotation_reclamp": true,
+    "gameplay_mapping_inactive": true
+  },
+  "status": "PASS"
+}
