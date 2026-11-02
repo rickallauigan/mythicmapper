@@ -13,9 +13,12 @@
   "compiled_kotlin_jni": "PASS including missing-library handling",
   "fixture_hashes": "12/12 unchanged",
   "scope": "Host-side validation; no physical button or gameplay certification",
-  "final_apk_installed": false,
-  "debug_apk_sha256": "bf5d43a6e9722683b8409506da9d3f7ec038106653dbb82eba18f6362fe3b32e",
+  "final_apk_installed": true,
+  "debug_apk_sha256": "a0487c2557f0cc1c9b48566471f1caba9696ba4a16b36b4c424397970144ce20",
   "benchmark_apk_sha256": "b40dfbdbb3e2085635ee3466d54ca73c15a597e1f40d3d9a7a3b0b555cb08abf",
-  "benchmark_build": "PASS final source; non-debuggable, shell-profileable, no debug validation instrumentation",
-  "source_commit": "4a8ce88"
+  "benchmark_build": "PASS before navigation-only fix; not remeasured or installed",
+  "ci_failure_followup": "ci-recovery.json",
+  "base_source_commit": "e05532f6eed3097ad7a2a5358fdff7c848227d1b",
+  "navigation_source_blob": "7c5612a5c790120b0be1bd251cc3f60ca2699359",
+  "final_source_local_tests": "282 PASS including enabled shutdown test and extended navigation assertions"
 }

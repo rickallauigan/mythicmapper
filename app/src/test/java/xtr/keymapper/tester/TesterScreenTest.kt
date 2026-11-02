@@ -31,6 +31,13 @@ class TesterScreenTest {
         compose.onNodeWithText("○ B").assertExists()
         compose.onNodeWithText("Arm disconnect test").performScrollTo().performClick()
         compose.runOnIdle{org.junit.Assert.assertEquals(1,armed)}
+        // Panel changes must retain all tab labels and usable navigation targets.
+        compose.onNodeWithContentDescription("Diagnostics tab").performClick()
+        compose.onNodeWithText("Test Checklist").assertExists()
+        compose.onNodeWithContentDescription("Guided tab").performClick()
+        for(label in listOf("Controller","Diagnostics","Guided")){
+            compose.onNodeWithText(label,useUnmergedTree=true).assertIsDisplayed()
+        }
         compose.onNodeWithContentDescription("Controller tab").performClick()
         compose.onNodeWithText("GameSir G8 Galileo Tester").assertExists()
     }

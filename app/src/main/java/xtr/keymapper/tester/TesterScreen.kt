@@ -108,10 +108,12 @@ private fun number(v:Float?)=if(TesterWork.baselineFormatting)v?.let{"%.2f".form
             Surface(Modifier.padding(horizontal=12.dp,vertical=8.dp).fillMaxWidth(),color=CardInk,shape=RoundedCornerShape(20.dp),border=BorderStroke(1.dp,Line)){
                 Row(Modifier.padding(6.dp),horizontalArrangement=Arrangement.spacedBy(8.dp)){
                     for((index,label)in listOf("Controller","Diagnostics","Guided").withIndex()){
-                        val selected=page==index
-                        Surface(Modifier.weight(1f).clickable{page=index;onPageChanged(index)}.semantics{contentDescription="$label tab";this.selected=selected},
-                            color=if(selected)Color(0xff302044)else Color.Transparent,shape=RoundedCornerShape(14.dp),border=BorderStroke(1.dp,if(selected)Violet else Color.Transparent)){
-                            Column(Modifier.padding(6.dp),horizontalAlignment=Alignment.CenterHorizontally){Icon(if(index==0)Icons.Outlined.SportsEsports else Icons.Outlined.FactCheck,null,tint=if(selected)Violet else Muted);Text(label,fontSize=12.sp)}
+                        key(label){
+                            val selected=page==index
+                            Surface(Modifier.weight(1f).clickable{page=index;onPageChanged(index)}.semantics{contentDescription="$label tab";this.selected=selected},
+                                color=if(selected)Color(0xff302044)else Color.Transparent,shape=RoundedCornerShape(14.dp),border=BorderStroke(1.dp,if(selected)Violet else Color.Transparent)){
+                                Column(Modifier.padding(6.dp),horizontalAlignment=Alignment.CenterHorizontally){Icon(if(index==0)Icons.Outlined.SportsEsports else Icons.Outlined.FactCheck,null,tint=if(selected)Violet else Muted);Text(label,fontSize=12.sp)}
+                            }
                         }
                     }
                 }

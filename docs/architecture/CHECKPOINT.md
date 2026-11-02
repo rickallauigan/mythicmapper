@@ -158,31 +158,46 @@ remain ignored in `app/build/s10e-private/`. Never merge/publish automatically.
 
 ## Controller tester acceptance follow-up — 2026-11-02
 
-Continues on feature/g8-controller-tester / draft PR #13, still stacked on PR #12.
-Device was rediscovered after a network change: read ignored
-`app/build/s10e-private/current-adb-target.txt` rather than assuming an address.
-Actual S10e model and G8 interfaces verified; tester foreground and phone awake.
+Continue feature/g8-controller-tester / draft PR #13, stacked on unmerged PR #12.
+Read the ignored app/build/s10e-private/current-adb-target.txt for the device's
+current network target. Do not commit addresses, serials or raw private logs.
+Do not start Beatrix/Kimmy work, merge PRs or publish releases.
 
-New work adds persistent bounded guided down/up evidence, rear-alias prompts,
-manual held-unplug recording, a timed physical benchmark with common instrumentation,
-scoped Compose state/lazy sections and cheaper display-only decimal formatting.
-Root mapping pipeline and profile schemas are unchanged. A real tester-first/Home
-libsu initialization crash was reproduced; shell configuration now belongs in
-Application before Activity entry (commit 3fef480). Final runtime retest is pending.
+All four fresh physical reports are retained under docs/validation/g8-tester/acceptance:
+before-current-debug-1 / after-current-debug-1 and repeat -2 JSON files. Both
+original baselines are preserved. The exact comparison APK/hash is archived privately
+as acceptance-common-debug.apk / acceptance-common-build.json. Reports describe the
+pre-navigation-fix debug APK, not release performance or final-build display latency.
 
-See docs/validation/g8-tester/acceptance/README.md. An earlier physical debug baseline
-is retained; no matched optimization improvement is claimed. Fresh controlled
-baseline `before-current-debug-1` was saved (711 frames; 72.86% jank; zero touch
-submissions), but trigger/overlap evidence is incomplete. Optimized paired trial
-`after-current-debug-1` is now armed, waiting for physical input. Do not replace that installed APK or interrupt the
-Activity before collecting the result. Its exact APK/hash is preserved privately as
-acceptance-common-debug.apk / acceptance-common-build.json. Use the same APK's
-`render_baseline=false` path for the paired optimized trial; changing that flag
-requires a new Activity, not merely onNewIntent. Root logical pointers must be zero
-and mapping inactive before any lifecycle/process termination test.
+The repeat observed jank 70.39% -> 60.47%, frame p99 41.28 -> 47.62 ms, app CPU
+54.45% -> 45.25% of one core. Workloads still differ (11259 vs 8627 events; trigger
+pairs 24 each vs 13 each). Baseline ended with A+B held; later actual releases were
+observed. Both root snapshots remained zero pointers/submissions, mapping inactive.
+No stable p99 improvement or matched-workload performance acceptance is claimed.
 
-Next: collect and JSON-validate files/validation/physical-after-current-debug-1.json;
-check actual trigger/overlap evidence before claiming matching workloads. Keep all old evidence. Guided rear aliases
-and held-control unplug/replug require physical actions, never automated USB disconnect.
-Final debug APK rebuild/test/lint passed (282 Android tests); final benchmark build
-also passed but has not run on the phone. No merges/releases. Reference PNG stays untracked.
+CI run 41455233159 failed ActivityObserverLifecycleTest line 33. Its artifact and
+a deterministic local thread-join repro show HandlerThread.getLooper() becoming
+null after termination. e05532f keeps a live Handler/Looper before stopping, joins
+and verifies termination/rejected posts/late refresh/idempotent stop. The enabled
+282-test suite passed locally and CI run 41461355489 is green; no skipped tests.
+
+The debug APK was installed with -r, preserving data. On-device JNI passed 61206
+vectors with zero error. Root ownership/start-resume rejection, rotation, normal
+exit and controlled zero-pointer process death passed. Cold Tester -> Home in the
+same process passed without the previous libsu initialization crash. One existing
+root-owned getevent reader runs during diagnostics; diagnosticOwner rejects mapping
+frames. It stops on exit/death. App-only CPU excludes that root process/reader.
+
+Final screenshots exposed a missing Diagnostics icon/label on Guided despite a
+retained semantic target. Stable Compose keys for tab identities fix it on S10e;
+regression navigation now exercises Guided -> Diagnostics -> Guided -> Controller.
+Final build/test/lint passed after that delta (282 tests, no skips). The exact
+rebuilt APK was installed and its JNI/ownership/rotation/teardown and zero-pointer
+process-death checks passed again; four preference hashes remain unchanged. See
+PR Checks for latest-head CI and acceptance reports for exact artifact hashes.
+
+No profile/favorite reset, XtMapper data operation, gameplay touch injection,
+firmware/security/thermal changes or online MLBB matches. All test artifacts are
+scoped; the source reference PNG stays untracked. Remaining acceptance gates include
+physical held-control unplug/replug, exhaustive supported-button evidence, reliable
+matched/release-like performance, manual MLBB training and inherited license/assets.

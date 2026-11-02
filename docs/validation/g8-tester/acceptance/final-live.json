@@ -1,0 +1,43 @@
+{
+  "source": "Observed Android InputDevice events",
+  "ready": true,
+  "status": "Connected",
+  "event_history_count": 0,
+  "events_observed_total": 0,
+  "passed_checks": [
+    "A",
+    "B",
+    "LT",
+    "RT",
+    "L3",
+    "R3",
+    "L stick \u00b7 all directions",
+    "L stick \u00b7 full range",
+    "R stick \u00b7 all directions",
+    "R stick \u00b7 full range",
+    "LT analog range",
+    "RT analog range"
+  ],
+  "applicable_checks": 23,
+  "held": [],
+  "queue_overflows": 0,
+  "repeated_downs": 0,
+  "events": [],
+  "receipt_to_reducer_ns": {
+    "samples": 1,
+    "p50": 4853462,
+    "p95": 4853462,
+    "p99": 4853462
+  },
+  "app_cpu_ms": 2894,
+  "uptime_ms": 615776175,
+  "app_pss_kb": 151539,
+  "root": {
+    "backend_uid": 0,
+    "logical_active_touches": 0,
+    "diagnostic_exclusive": true,
+    "reader_running": true,
+    "injection_errors": 0,
+    "injection_submission_samples": 0
+  }
+}

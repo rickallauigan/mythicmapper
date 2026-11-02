@@ -1,5 +1,9 @@
 # G8 Controller Tester validation — 2026-11-02
 
+Latest follow-up: [physical comparison, CI recovery and final APK evidence](acceptance/README.md).
+The tables below retain the earlier APK results; the acceptance report identifies
+subsequent builds and limitations separately.
+
 Implemented and installed on the rooted SM-G970F / Android 16 S10e. This feature
 uses real Android controller data and exclusive root ownership, not a new input
 injector. It is reviewable development work; no gameplay or production release
