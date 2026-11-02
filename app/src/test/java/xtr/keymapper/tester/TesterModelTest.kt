@@ -25,6 +25,16 @@ class TesterModelTest {
         m.connect(null,3);m.connect(d.copy(id=8),4);assertTrue(m.snapshot().checks.first{it.id=="A"}.passed);assertTrue(m.snapshot().held.isEmpty())
         m.connect(d.copy(descriptor="different-test-device"),5);assertFalse(m.snapshot().checks.any{it.passed})
     }
+    @Test fun transportMetadataDoesNotInventAReconnectOrReleaseAHeldButton(){val m=model();val initial=m.snapshot().lastConnection
+        m.key("A",96,true,0,1);m.connect(m.device!!.copy(transport="USB observed"),2)
+        assertEquals(initial,m.snapshot().lastConnection);assertEquals(setOf("A"),m.snapshot().held)
+        m.key("A",96,false,0,3);assertTrue(m.snapshot().checks.first{it.id=="A"}.passed)
+    }
+    @Test fun focusLossReleasesButtonsButRetainsLastAxisForExplicitCenterMeasurement(){val m=model();m.axes(mapOf(0 to 127.5f,1 to 127.5f),1);m.key("A",96,true,0,2)
+        m.clearHeld();assertTrue(m.snapshot().held.isEmpty());assertFalse(m.snapshot().raw.isEmpty())
+        m.measureCenter();assertEquals(0f,m.snapshot().left.drift!!,0f)
+        m.clearTransient();assertTrue(m.snapshot().raw.isEmpty())
+    }
     @Test fun asymmetricNormalizationAndCenter(){val a=AxisRange(0,"X",0f,255f);assertEquals(-1f,a.signed(0f),0f);assertEquals(1f,a.signed(255f),0f);assertEquals(0f,a.signed(127.5f),0f)
         assertEquals(0f,AxisRange(0,"invalid",1f,1f).signed(9f),0f);assertEquals(.5f,AxisRange(0,"T",-1f,1f).pressure(0f),0f)
     }

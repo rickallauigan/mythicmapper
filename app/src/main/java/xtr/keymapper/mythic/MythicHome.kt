@@ -79,6 +79,7 @@ fun MythicHome(activity: MainActivity) {
         onSwap={a,b -> action{val s=store.read();store.update(s,s.swap(a,b))}},
         onEditor={edit(it,false)},onCalibration={edit(it,true)},
         onDiagnostics={activity.startActivity(Intent(activity,xtr.keymapper.tester.TesterActivity::class.java))},
+        onRuntimeDiagnostics={activity.startActivity(Intent(activity,DiagnosticsActivity::class.java))},
         onPermission={activity.startActivity(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,android.net.Uri.parse("package:${activity.packageName}")))})
     nameRequest?.let {request ->
         var name by remember(request){mutableStateOf(request.initial)}
@@ -102,7 +103,7 @@ fun MythicHomeScreen(library: HeroLibrary, connected: Boolean, active: Boolean, 
     onActivate:(HeroProfile)->Unit, onStop:()->Unit, onClone:(HeroPreset)->Unit,
     onRename:(HeroProfile)->Unit, onDuplicate:(HeroProfile)->Unit, onDelete:(HeroProfile)->Unit,
     onRestore:(HeroProfile)->Unit, onAssign:(Int,String?)->Unit, onSwap:(Int,Int)->Unit,
-    onEditor:(HeroProfile)->Unit, onCalibration:(HeroProfile)->Unit, onDiagnostics:()->Unit, onPermission:()->Unit) {
+    onEditor:(HeroProfile)->Unit, onCalibration:(HeroProfile)->Unit, onDiagnostics:()->Unit, onPermission:()->Unit, onRuntimeDiagnostics:()->Unit={}) {
     var search by remember {mutableStateOf("")}
     var assignSlot by remember {mutableStateOf<Int?>(null)}
     MaterialTheme(colorScheme=darkColorScheme(primary=Color(0xff6de0c1),surface=Color(0xff14212b),background=Color(0xff0b141d))) {
@@ -116,6 +117,7 @@ fun MythicHomeScreen(library: HeroLibrary, connected: Boolean, active: Boolean, 
                     Text("Selected: ${library.profiles.find{it.id==selected}?.name ?: "None"}")
                     Text(if(active)"Mapper service running" else "Mapper stopped")
                     Row {OutlinedButton(onClick=onDiagnostics){Text("Controller Tester")};Spacer(Modifier.width(8.dp));OutlinedButton(onClick=onPermission){Text("Overlay permission")}}
+                    TextButton(onClick=onRuntimeDiagnostics){Text("Runtime metrics")}
                     if(active) Button(onClick=onStop){Text("Stop mapping")}
                 }
                 item {Text("Five favorites",style=MaterialTheme.typography.titleLarge)}

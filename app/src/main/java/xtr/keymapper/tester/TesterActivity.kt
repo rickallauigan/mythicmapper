@@ -71,7 +71,7 @@ class TesterActivity:ComponentActivity(),InputManager.InputDeviceListener {
                 if(!service.beginDiagnostics(token)){service.endDiagnostics(token);error("Exclusive root lease unavailable or cleanup failed")}
                 if(ownGeneration!=generation||!started){service.endDiagnostics(token);return@post}
                 remote=service;service.asBinder().linkToDeath(death,0)
-                model.ready=true;model.safety="Exclusive tester · mapping stopped · zero touch injection"
+                model.ready=true;model.device?.let{model.connect(reportedTransport(it),now())};model.safety="Exclusive tester · mapping stopped · zero touch injection"
                 main.postDelayed({captureWindow("controller")},500)
                 if(captureEnabled)worker.postDelayed(captureTick,32)
             }catch(error:Exception){model.ready=false;model.safety="Input unavailable · ${error.javaClass.simpleName}. Mapping remains paused."}
@@ -98,7 +98,7 @@ class TesterActivity:ComponentActivity(),InputManager.InputDeviceListener {
         super.onStop()
     }
     override fun onDestroy(){worker.post{thread.quitSafely()};super.onDestroy()}
-    override fun onWindowFocusChanged(hasFocus:Boolean){super.onWindowFocusChanged(hasFocus);if(!hasFocus)submit{model.clearTransient()}}
+    override fun onWindowFocusChanged(hasFocus:Boolean){super.onWindowFocusChanged(hasFocus);if(!hasFocus)submit{model.clearHeld()}}
     private fun now()=SystemClock.uptimeMillis()-epoch
     override fun onInputDeviceAdded(id:Int)=discover()
     override fun onInputDeviceChanged(id:Int)=discover()
@@ -120,7 +120,24 @@ class TesterActivity:ComponentActivity(),InputManager.InputDeviceListener {
                 trigger(MotionEvent.AXIS_LTRIGGER,MotionEvent.AXIS_BRAKE),trigger(MotionEvent.AXIS_RTRIGGER,MotionEvent.AXIS_GAS))
         }
         selectedId=info?.id;selectedAxes=info?.ranges?.map{it.code}?:emptyList()
-        submit{model.connect(info,now())}
+        submit{
+            val current=model.device
+            val next=if(info!=null&&current?.id==info.id&&current.descriptor==info.descriptor)info.copy(transport=current.transport)
+                else if(model.ready&&info!=null)reportedTransport(info)else info
+            model.connect(next,now())
+        }
+    }
+    /** Once per connection, off the UI thread. Only numeric identity is interpolated;
+     * no input node is opened, grabbed or probed, and no sysfs value is written. */
+    private fun reportedTransport(info:TesterDevice):TesterDevice {
+        if(!info.supported)return info
+        return runCatching{
+            val vendor="%04x".format(java.util.Locale.ROOT,info.vendor)
+            val product="%04x".format(java.util.Locale.ROOT,info.product)
+            val command="""for d in /sys/bus/usb/devices/*; do if test -f "${'$'}d/idVendor" && test "${'$'}(cat "${'$'}d/idVendor")" = "$vendor" && test "${'$'}(cat "${'$'}d/idProduct")" = "$product"; then echo USB; fi; done"""
+            val result=com.topjohnwu.superuser.Shell.cmd(command).exec()
+            if(result.isSuccess&&result.out.count{it=="USB"}==1)info.copy(transport="USB · unique sysfs identity observed")else info
+        }.getOrDefault(info)
     }
     private fun controller(event:KeyEvent):Boolean {
         if(event.deviceId!=selectedId)return false

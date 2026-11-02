@@ -46,11 +46,14 @@ class TesterModel {
     var dropped=0;private set
     fun connect(next:TesterDevice?,at:Long) {
         if(next==device)return
+        val connectionChanged=next?.id!=device?.id||next?.descriptor!=device?.descriptor
+        val controlsChanged=next?.copy(transport="")!=device?.copy(transport="")
         val identityChanged=next!=null&&next.descriptor!=lastDescriptor
         if(next!=null)lastDescriptor=next.descriptor
-        device=next;held.clear();raw.clear();pressed.clear()
+        device=next
+        if(controlsChanged){held.clear();raw.clear();pressed.clear()}
         if(identityChanged) reset()
-        connection="${at}ms · ${if(next==null)"Disconnected"else"Connected"}"
+        if(connectionChanged)connection="${at}ms · ${if(next==null)"Disconnected"else"Connected"} (observed)"
     }
     fun reset(){passed.clear();pressed.clear();sectors.clear();directions.clear();extents.clear();triggerMin.clear();triggerMax.clear();drift.clear()}
     fun configure(next:Thresholds){thresholds=next;reset()}
@@ -61,7 +64,8 @@ class TesterModel {
     fun clearLog(){history.clear();if(frozen!=null)frozen=emptyList()}
     fun pauseLog(){frozen=if(frozen==null)history.takeLast(60)else null}
     fun overflow(){dropped++;held.clear();pressed.clear();raw.clear()}
-    fun clearTransient(){held.clear();pressed.clear();raw.clear()}
+    fun clearHeld(){held.clear();pressed.clear()}
+    fun clearTransient(){clearHeld();raw.clear()}
     fun recordTiming(ns:Long){if(timing.size==512)timing.removeFirst();timing.addLast(ns.coerceAtLeast(0))}
     fun key(label:String,code:Int,down:Boolean,repeat:Int,at:Long){
         if(!ready || device?.supported!=true || label !in device!!.keys)return
