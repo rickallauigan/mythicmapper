@@ -264,12 +264,94 @@ public class ConcurrentControllerInputTest {
             h.key("BTN_TL2",true);int count=h.recorder.frames.size();h.key("BTN_TL2",false);assertEquals(count,h.recorder.frames.size());
             h.key("BTN_TR",true);assertEquals(MotionEvent.ACTION_UP,h.recorder.frames.get(count).action);
             h.key("BTN_TL",true);h.key("BTN_TR",false);h.axis("ABS_RY","ff");
-            h.key("BTN_TL",false);assertEquals(MotionEvent.ACTION_MOVE,h.recorder.frames.get(h.recorder.frames.size()-1).action);
+            h.key("BTN_TL",false);assertTrue(h.live().isEmpty());h.tick(80);
+            assertEquals(MotionEvent.ACTION_MOVE,h.recorder.frames.get(h.recorder.frames.size()-1).action);
             h.key("BTN_GAMEPAD",true);h.key("BTN_WEST",true);h.nodes.clear();h.tick(250);
             assertEquals(MotionEvent.ACTION_UP,h.recorder.frames.get(h.recorder.frames.size()-1).action);h.recorder.validLifecycle();
             count=h.recorder.frames.size();h.nodes.put("pad",new long[]{5,6,0,255,255,0,255,128});h.tick(250);h.axis("ABS_RX","ff");assertEquals(count,h.recorder.frames.size());
             h.axis("ABS_RX","80");h.axis("ABS_RY","80");h.axis("ABS_RX","ff");assertTrue(h.recorder.frames.size()>count);
             h.monitor.stop();h.runtime.stop();h.recorder.validLifecycle();
+        }
+    }
+    @Test public void kimmyShootingStaysOneContinuousContactWithoutLtOrRepeatTimer() throws Exception {
+        try(var h=new Harness(hero("KIMMY",false))){
+            h.axis("ABS_RX","c0");
+            assertEquals(1,h.live().size());
+            h.key("BTN_TL2",true);int before=h.recorder.frames.size();h.key("BTN_TL2",false);
+            assertEquals("LT must not gate or retrigger Kimmy shooting",before,h.recorder.frames.size());
+            for(int i=0;i<30;i++){
+                h.axis("ABS_RX",i%2==0?"ff":"c0");h.axis("ABS_RY",i%2==0?"90":"a0");h.tick(20);
+                assertEquals("Aim updates retain one contact",1,h.live().size());
+            }
+            before=h.recorder.frames.size();h.tick(5000);
+            assertEquals("A displaced stick has no attack-repeat timer",before,h.recorder.frames.size());
+            assertEquals(1,h.recorder.frames.stream().filter(f->f.action==MotionEvent.ACTION_DOWN).count());
+            assertEquals(0,h.recorder.frames.stream().filter(f->f.action==MotionEvent.ACTION_UP).count());
+            h.axis("ABS_RX","80");h.axis("ABS_RY","80");assertTrue(h.live().isEmpty());
+            assertEquals(1,h.recorder.frames.stream().filter(f->f.action==MotionEvent.ACTION_UP).count());
+            before=h.recorder.frames.size();h.tick(1000);assertEquals(before,h.recorder.frames.size());h.recorder.validLifecycle();
+        }
+    }
+    @Test public void kimmySkillReleaseSeparatesTouchesAndReacquiresUsingLatestAim() throws Exception {
+        for(String skill:List.of("BTN_TR","BTN_TR2","BTN_TL"))try(var h=new Harness(hero("KIMMY",false))){
+            var attack=h.runtime.getKeymapProfile().aimKeys.stream().filter(a->a.code.equals("BTN_TL2")).findFirst().orElseThrow();
+            h.axis("ABS_RX","ff");h.key(skill,true);h.tick(100);h.key(skill,false);
+            Frame up=h.recorder.frames.get(h.recorder.frames.size()-1);assertEquals(MotionEvent.ACTION_UP,up.action);
+            assertTrue(h.live().isEmpty());int end=h.recorder.frames.size();
+            h.tick(39);h.axis("ABS_RX","00");assertEquals(end,h.recorder.frames.size());
+            h.tick(1);Frame down=h.recorder.frames.get(end);assertEquals(MotionEvent.ACTION_DOWN,down.action);
+            assertTrue(down.time-up.time>=40);assertEquals(attack.x,down.xs.get(0),.001f);assertEquals(attack.y,down.ys.get(0),.001f);
+            end=h.recorder.frames.size();h.axis("ABS_RY","00");h.tick(39);assertEquals(end,h.recorder.frames.size());
+            h.tick(1);Frame moved=h.recorder.frames.get(end);assertEquals(MotionEvent.ACTION_MOVE,moved.action);
+            assertTrue(moved.time-down.time>=40);assertTrue(moved.xs.get(0)<attack.x);assertTrue(moved.ys.get(0)<attack.y);
+            end=h.recorder.frames.size();h.tick(1000);assertEquals("Resumption is not repetition",end,h.recorder.frames.size());
+            h.axis("ABS_RX","80");h.axis("ABS_RY","80");assertTrue(h.live().isEmpty());h.recorder.validLifecycle();
+        }
+    }
+    @Test public void kimmyResumeCancellationCoversReleaseGapAndAnchorPhase() throws Exception {
+        for(int elapsed:List.of(20,60))for(String interrupt:List.of("neutral","recall","skill","disconnect","stop","reload"))
+            try(var h=new Harness(hero("KIMMY",false))){
+                h.axis("ABS_RX","ff");h.key("BTN_TR2",true);h.key("BTN_TR2",false);h.tick(elapsed);
+                switch(interrupt){
+                    case "neutral" -> h.axis("ABS_RX","80");
+                    case "recall" -> {h.key("BTN_WEST",true);h.key("BTN_WEST",false);}
+                    case "skill" -> h.key("BTN_TR",true);
+                    case "disconnect" -> h.monitor.event("pad","EV_SYN SYN_DROPPED 00000000");
+                    case "stop" -> h.monitor.stop();
+                    case "reload" -> {ReflectionHelpers.setField(h.runtime,"controllers",h.monitor);h.runtime.reloadKeymap();}
+                }
+                int end=h.recorder.frames.size();h.tick(500);
+                assertEquals("No stale touch after "+interrupt+" at "+elapsed+"ms",end,h.recorder.frames.size());
+                if(interrupt.equals("recall")){
+                    h.axis("ABS_RX","c0");assertEquals(end,h.recorder.frames.size());
+                    h.axis("ABS_RX","80");h.axis("ABS_RX","ff");assertFalse(h.live().isEmpty());
+                }
+                h.monitor.stop();h.runtime.stop();h.recorder.validLifecycle();
+            }
+    }
+    @Test public void kimmySharedSpellWaitsForFinalOwnerBeforeOneShotResume() throws Exception {
+        try(var h=new Harness(hero("KIMMY",false))){
+            h.axis("ABS_RX","ff");h.key("BTN_EAST",true);h.key("BTN_THUMBL",true);
+            h.key("BTN_EAST",false);int end=h.recorder.frames.size();h.tick(200);
+            assertEquals(end,h.recorder.frames.size());assertEquals(1,h.live().size());
+            h.key("BTN_THUMBL",false);assertTrue(h.live().isEmpty());h.tick(80);assertEquals(1,h.live().size());
+            assertEquals(3,h.recorder.frames.stream().filter(f->f.action==MotionEvent.ACTION_DOWN).count());
+            end=h.recorder.frames.size();h.tick(500);assertEquals(end,h.recorder.frames.size());
+            h.monitor.stop();h.runtime.stop();h.recorder.validLifecycle();
+        }
+    }
+    @Test public void bennett400msAnd180pxRemainUnchangedByKimmyHandoff() throws Exception {
+        String profile=hero("BEATRIX",true).replace("BEATRIX NIBIRU PULSE 150 1","BEATRIX BENNETT PULSE 400 1")
+            .replace("STICK_AIM BTN_TL2 1981.08 946.58 80 ","STICK_AIM BTN_TL2 1981.08 946.58 180 ");
+        try(var h=new Harness(profile)){
+            assertEquals(400,h.runtime.getKeymapProfile().heroGameplay.repeatMs);
+            assertEquals(180,h.runtime.getKeymapProfile().aimKeys.stream().filter(a->a.code.equals("BTN_TL2")).findFirst().orElseThrow().radius,.001f);
+            h.axis("ABS_RX","ff");h.key("BTN_TL2",true);Frame first=h.recorder.frames.get(0);
+            h.tick(40);assertEquals(MotionEvent.ACTION_MOVE,h.recorder.frames.get(1).action);
+            h.tick(40);assertEquals(MotionEvent.ACTION_UP,h.recorder.frames.get(2).action);
+            h.tick(319);assertEquals(3,h.recorder.frames.size());h.tick(1);
+            Frame next=h.recorder.frames.get(3);assertEquals(MotionEvent.ACTION_DOWN,next.action);assertEquals(400,next.time-first.time);
+            h.key("BTN_TL2",false);int end=h.recorder.frames.size();h.tick(500);assertEquals(end,h.recorder.frames.size());h.recorder.validLifecycle();
         }
     }
     @Test public void kimmyRecallDoesNotResumeShootingUntilNeutralAndSynDroppedCleansUp() throws Exception {

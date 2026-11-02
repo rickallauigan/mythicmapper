@@ -19,6 +19,10 @@ public final class ControllerHeroHandler {
     private final Set<String> spellOwners=new LinkedHashSet<>(), skills=new LinkedHashSet<>();
     private float x,y;
     private boolean lt, attack, running=true, waitForCenter=true;
+    private boolean kimmyResumeAfterSkill;
+    private Runnable pendingKimmyResume;
+    // One-shot touch handoff phases, not an attack cadence or game cooldown.
+    private static final int KIMMY_RELEASE_GAP_MS=40, KIMMY_RESUME_ANCHOR_MS=40;
     public ControllerHeroHandler(HeroGameplayConfig config,ControllerAimHandler aim,BiConsumer<String,Integer> dispatch,android.os.Handler handler,float deadZone){
         if(!config.calibrated)throw new IllegalArgumentException("Confirm hero HUD calibration first");
         this.config=config;this.aim=aim;this.dispatch=dispatch;this.deadZone=deadZone;
@@ -50,25 +54,49 @@ public final class ControllerHeroHandler {
             boolean after=!spellOwners.isEmpty();if(before!=after)skill(SPELL,after?1:0);return true;
         }
         if(code.equals("BTN_TR")||code.equals("BTN_TR2")||code.equals("BTN_TL")){skill(code,action);return true;}
-        if(code.equals("BTN_WEST")&&action==1&&config.hero==HeroGameplayConfig.Hero.KIMMY){waitForCenter=true;setAttack(false);}
+        if(code.equals("BTN_WEST")&&action==1&&config.hero==HeroGameplayConfig.Hero.KIMMY){waitForCenter=true;cancelKimmyResume();kimmyResumeAfterSkill=false;setAttack(false);}
         return false;
     }
     private void skill(String code,int action){
         if(action==1)skills.add(code);else skills.remove(code);
-        if(config.hero==HeroGameplayConfig.Hero.KIMMY&&action==1)setAttack(false);
+        if(config.hero==HeroGameplayConfig.Hero.KIMMY&&action==1){cancelKimmyResume();kimmyResumeAfterSkill=true;setAttack(false);}
         focus();dispatch.accept(code,action);reconcile();aim.axes(x,y);
     }
     private void focus(){String last=null;for(String code:skills)last=code;aim.focus(last==null?ATTACK:last);}
     private void reconcile(){
         focus();
-        if(config.hero==HeroGameplayConfig.Hero.KIMMY){setAttack(!waitForCenter&&skills.isEmpty()&&Math.hypot(x,y)>deadZone);return;}
+        if(config.hero==HeroGameplayConfig.Hero.KIMMY){
+            boolean shoot=!waitForCenter&&skills.isEmpty()&&Math.hypot(x,y)>deadZone;
+            if(!shoot){
+                cancelKimmyResume();setAttack(false);
+                if(skills.isEmpty())kimmyResumeAfterSkill=false;
+            }else if(!attack&&pendingKimmyResume==null){
+                if(kimmyResumeAfterSkill)scheduleKimmyResume();else setAttack(true);
+            }
+            return;
+        }
         if(config.fire==HeroGameplayConfig.Fire.HOLD_RELEASE){setAttack(lt);return;}
         pulses.event(pulseKey,0,lt&&skills.isEmpty()?1:0);
     }
     private void setAttack(boolean down){if(attack==down)return;attack=down;
         if(down&&anchorMs>0)aim.triggerAfterAnchor(ATTACK,aimScheduler,anchorMs);else aim.trigger(ATTACK,down?1:0);
     }
-    public void stop(){if(!running)return;running=false;lt=false;pulses.reset();setAttack(false);
+    private void scheduleKimmyResume(){
+        pendingKimmyResume=new Runnable(){public void run(){
+            if(pendingKimmyResume!=this)return;
+            pendingKimmyResume=null;
+            if(!running||waitForCenter||!skills.isEmpty()||Math.hypot(x,y)<=deadZone)return;
+            kimmyResumeAfterSkill=false;focus();attack=true;
+            aim.triggerAfterAnchor(ATTACK,aimScheduler,KIMMY_RESUME_ANCHOR_MS);
+            aim.axes(x,y);
+        }};
+        aimScheduler.after(pendingKimmyResume,KIMMY_RELEASE_GAP_MS);
+    }
+    private void cancelKimmyResume(){
+        if(pendingKimmyResume!=null)aimScheduler.cancel(pendingKimmyResume);
+        pendingKimmyResume=null;
+    }
+    public void stop(){if(!running)return;running=false;cancelKimmyResume();kimmyResumeAfterSkill=false;lt=false;pulses.reset();setAttack(false);
         for(String code:skills)dispatch.accept(code,0);skills.clear();spellOwners.clear();aim.focus(null);x=y=0;
     }
 }

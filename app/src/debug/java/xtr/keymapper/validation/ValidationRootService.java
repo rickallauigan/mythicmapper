@@ -70,22 +70,38 @@ public class ValidationRootService extends RootService {
         var config=new KeymapConfig(null);config.pointerMode=KeymapConfig.POINTER_OVERLAY;
         int actors=0;
         List<Long> pulseAcquisitionDelays=new ArrayList<>();
+        List<Long> kimmyReleaseGaps=new ArrayList<>(),kimmyAcquisitionDelays=new ArrayList<>();
         for(String variant:List.of("BEATRIX_HOLD","BEATRIX_PULSE","KIMMY")){
             var hero=xtr.keymapper.controller.HeroGameplayConfig.Hero.valueOf(variant.startsWith("BEATRIX")?"BEATRIX":"KIMMY");
             String lines=String.join("\n",xtr.keymapper.mythic.HeroTrainingProfiles.INSTANCE.draft(hero))
                 .replace("HOLD_RELEASE 0 0",variant.equals("BEATRIX_PULSE")?"PULSE 150 1":"HOLD_RELEASE 0 1")+"\nENABLED";
             var callback=(IRemoteServiceCallback)Proxy.newProxyInstance(getClassLoader(),new Class[]{IRemoteServiceCallback.class},
                 (p,m,a)->switch(m.getName()){case "requestKeymapProfile"->ProfileConfiguration.parse(lines);case "requestKeymapConfig"->config;default->null;});
+            final int[] attackPointer={-1};
             TouchBackend guarded=new TouchBackend(){
                 final Input delegate=new Input(0);
                 long anchorTime;
                 boolean awaitingAim;
+                long lastKimmySkillUp=-1,kimmyAnchorTime;
+                boolean awaitingKimmyAim;
                 public void injectTouch(int action,int pointer,float pressure,float x,float y){
                     if(action!=MotionEvent.ACTION_UP)try{requireSurface(surface);}catch(Exception e){throw new SecurityException("Safe surface lost",e);}
                     if(variant.equals("BEATRIX_PULSE")) {
                         if(action==MotionEvent.ACTION_DOWN){anchorTime=SystemClock.uptimeMillis();awaitingAim=true;}
                         if(action==MotionEvent.ACTION_MOVE&&awaitingAim){pulseAcquisitionDelays.add(SystemClock.uptimeMillis()-anchorTime);awaitingAim=false;}
                         if(action==MotionEvent.ACTION_UP)awaitingAim=false;
+                    }
+                    if(variant.equals("KIMMY")) {
+                        long now=SystemClock.uptimeMillis();
+                        if(action==MotionEvent.ACTION_UP&&pointer!=attackPointer[0])lastKimmySkillUp=now;
+                        if(action==MotionEvent.ACTION_DOWN&&pointer==attackPointer[0]&&lastKimmySkillUp>=0){
+                            kimmyReleaseGaps.add(now-lastKimmySkillUp);lastKimmySkillUp=-1;
+                            kimmyAnchorTime=now;awaitingKimmyAim=true;
+                        }
+                        if(action==MotionEvent.ACTION_MOVE&&pointer==attackPointer[0]&&awaitingKimmyAim){
+                            kimmyAcquisitionDelays.add(now-kimmyAnchorTime);awaitingKimmyAim=false;
+                        }
+                        if(action==MotionEvent.ACTION_UP&&pointer==attackPointer[0])awaitingKimmyAim=false;
                     }
                     delegate.injectTouch(action,pointer,pressure,x,y);
                 }
@@ -96,6 +112,8 @@ public class ValidationRootService extends RootService {
             try{
                 onMain(()->{
                     requireSurface(surface);runtime[0]=new InputService(ProfileConfiguration.parse(lines),config,callback,width,height,null,true,0,guarded,true);
+                    var aims=runtime[0].getKeymapProfile().aimKeys;
+                    for(int i=0;i<aims.size();i++)if(aims.get(i).code.equals("BTN_TL2"))attackPointer[0]=xtr.keymapper.controller.ControllerAimHandler.FIRST_POINTER_ID+i;
                     monitor[0]=new ControllerDeviceMonitor(runtime[0],width,height,()->new HashMap<>(nodes));
                     var field=InputService.class.getDeclaredField("controllers");field.setAccessible(true);field.set(runtime[0],monitor[0]);monitor[0].start();
                 });
@@ -112,8 +130,11 @@ public class ValidationRootService extends RootService {
             }finally{onMain(()->{if(monitor[0]!=null)monitor[0].stop();if(runtime[0]!=null)runtime[0].stop();});}
         }
         if(pulseAcquisitionDelays.isEmpty()||pulseAcquisitionDelays.stream().anyMatch(ms->ms<40))throw new IllegalStateException("Attack acquisition phase missing");
+        if(kimmyReleaseGaps.isEmpty()||kimmyReleaseGaps.stream().anyMatch(ms->ms<40)||kimmyAcquisitionDelays.isEmpty()||kimmyAcquisitionDelays.stream().anyMatch(ms->ms<40))throw new IllegalStateException("Kimmy handoff phase missing");
         return new JSONObject().put("status","PASS").put("uid",android.os.Process.myUid()).put("hero_touch_policies",actors)
             .put("beatrix_pulse_anchor_to_first_move_ms",new org.json.JSONArray(pulseAcquisitionDelays))
+            .put("kimmy_skill_up_to_attack_down_ms",new org.json.JSONArray(kimmyReleaseGaps))
+            .put("kimmy_resumed_attack_anchor_to_first_move_ms",new org.json.JSONArray(kimmyAcquisitionDelays))
             .put("source","Deterministic hero engine replay into guarded blue surface; not physical controller input or MLBB gameplay")
             .put("reload_and_pulse_cleanup",true).put("runtime_metrics",new JSONObject(RuntimeMetrics.snapshot()));
     }
