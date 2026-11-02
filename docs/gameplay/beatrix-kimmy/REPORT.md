@@ -49,8 +49,10 @@ Each training profile stores an explicit touch policy:
   lifecycle teardown, failure or device loss. Cadence is bounded 60..60000 ms.
 
 150 ms is historical **Dyrroth** LT tuning, not a verified Beatrix weapon cadence.
-The existing scheduler's press duration is retained; no performance budget or
-weapon timing is invented. A selected weapon does not silently switch policies
+Generic fixed-tap timing is retained. The Bennett aimed-repeat follow-up adds a
+provisional anchor-acquisition phase: at 150 ms cadence, 40 ms at the attack anchor,
+40 ms aimed, then 70 ms released. This is manual touch-protocol tuning, not a
+verified weapon cooldown or a performance budget. A selected weapon does not silently switch policies
 when RB changes the in-game weapon. Stop and configure/choose a matching profile
 when changing a weapon requiring another gesture. Correct native behavior for each
 weapon remains a physical training gate, especially release-fired aimed attacks.
@@ -112,7 +114,7 @@ was added to the live event path. No native/backend rewrite or new evdev reader.
 | HERO-DEVICE-03 | Guarded root replay | Correct event ordering, reload/pulse cleanup, zero final contacts | 43 real injected events observed only on blue test surface; maximum 7 pointers, zero sequence/injection errors and zero final pointers | PASS: device-heroes_touch.json |
 | HERO-DEVICE-04 | JNI | Packaged ARM64 reference math matches Java | 61,206 parity vectors, maximum absolute error 0; missing-library handling passed | PASS: device-jni.json |
 | HERO-DEVICE-05 | Setup UI | Safe configuration screen renders and acquires lease | Beatrix setup visibly rendered on S10e; exclusive calibration status confirmed in view hierarchy; no profile enabled | PASS: private UI capture (not committed) |
-| HERO-TRAIN-01 | Beatrix | LT/aim/weapon-specific native behavior correct | Requires manual Hero Training | BLOCKED on physical observations |
+| HERO-TRAIN-01 | Beatrix | LT/aim/weapon-specific native behavior correct | Bennett: human confirms direction, radius 180 and held-LT repeat; reports neighboring skill casts. Acquisition-phase fix pending gameplay retest; other weapons unverified | FAIL / follow-up pending |
 | HERO-TRAIN-02 | Kimmy | Stick-driven directional shots and skill-return correct on installed version | Requires manual Hero Training | BLOCKED on physical observations |
 
 Final local gates passed: 294 Android tests (0 failures/errors/skips), debug lint,
@@ -183,3 +185,57 @@ profiles and choose a previous profile before downgrading because older builds d
 not implement HERO_GAMEPLAY. No original XtMapper data restoration is needed: it
 was not modified. Do not restore an entire old preferences file over newer personal
 work; recover individual known test entries only.
+
+## Bennett radius and repeat follow-up
+
+The user confirmed that the personal Bennett copy's 180 px attack radius reaches
+the desired range, and that LT-held repeat fires along the stick aim. The previous
+80 px draft radius fell short. These observations apply to the personal training
+copy, not all weapons or bundled templates. Skill radii and favorites were retained.
+
+The user then reported that a neighboring skill actually casts during wide attack
+aiming. With mapping explicitly stopped through Home, both root runtime and reader
+were verified absent; the same physical LT/right-stick test produced no action.
+The previous input trace showed only BTN_TL2 and one logical Attack pointer. This
+rules out an independent mapped skill pointer in that capture, but does not prove
+how the game interprets the drag. No gameplay safety pass is claimed.
+
+Suspected cause: each old aimed pulse submitted anchor DOWN and displaced MOVE in
+the same turn. The game may acquire the touch at its moved position. A targeted
+protocol trial now holds each Beatrix repeat contact at the Attack anchor before
+aiming it. Axis samples continue updating during this phase; movement uses the
+latest sample once acquisition completes. At 150 ms cadence, acquisition is 40 ms
+and the total pressed phase is 80 ms. Generic taps, native-hold profiles and Kimmy
+retain their previous timing. Shorter configured cycles proportionally shorten the
+phases and require their own physical validation. Timing is provisional.
+
+UP, reset, skill priority, SYN_DROPPED and stop cancel pending aim callbacks. New
+host tests inspect actual MotionEvent positions/times and exercise interruption
+before acquisition completes. These tests establish event ordering and cleanup;
+they do not prove the game stops casting neighboring skills. Physical Training
+retest is mandatory before accepting the fix.
+
+A separate setup-exit lifecycle issue was observed: retaining TouchPointer while
+releasing EditorSessionGuard could refresh foreground selection and restart the root
+runtime. Home's explicit Stop mapping was used and process absence was verified
+before the no-mapper comparison and APK installation. The normal Home setup entry
+now calls MainActivity.stopPointer before launching configuration, removing both
+the started service and its activity binding. A regression test verifies that entry
+ordering. Direct privileged ADB setup launches bypass Home and still require the
+operator to explicitly stop mapping first; they are not the normal user flow.
+
+Follow-up implementation commits: `5e7999b` (Attack acquisition) and `28c605b`
+(Home setup stop). All 297 Android tests, lint and debug build passed. Installed
+APK SHA256: `092669eff3dd92dc7cea8c5628793e030538bb6f8cd87346fb80bf8fddbd2d93`.
+Actual guarded-root pulse acquisition measured 43/44 ms; the test surface observed
+43 events, maximum seven pointers, zero sequence errors and zero final contacts.
+Tester diagnostic ownership still allowed zero gameplay submissions. These are
+protocol checks, not evidence that the neighboring-skill gameplay defect is fixed.
+
+The normal Home setup-exit test now leaves the root process and reader absent.
+However, its root connection reported a transient IllegalArgumentException during
+handoff and correctly kept Save unavailable. That availability issue remains open;
+do not describe the configuration lease as fully stable. Original profile mappings
+and the entire library/favorites were compared with the pre-install backup and
+remain unchanged. See `bennett-acquisition-validation.json` and associated device
+JSON files. Human neighboring-skill regression is pending.

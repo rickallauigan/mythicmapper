@@ -235,3 +235,22 @@ weapon. Inspect real HUD privately before enabling a calibrated copy. Then valid
 physical LT/aim, native movement, skills and shared spell, followed by Kimmy. Keep
 raw game screenshots/account data private. Never claim weapon behaviors verified
 from host or safe-surface replay. No automatic matches, merges or releases.
+
+
+### Bennett repeat safety follow-up
+
+User confirms180 radius and LT repeat work but reports an adjacent skill actually
+casting. Explicit Home Stop then no-mapper physical LT/stick exercise produced no
+action. Source now adds anchor acquisition for Beatrix PULSE only: 40 ms anchor /
+40 ms aimed / 70 ms released at150ms cadence. No claim of game compatibility yet.
+Commit5e7999b adds timing/cancellation regression coverage. Commit28c605b stops the
+bound/started mapper before normal Home hero-setup entry (prevents exit autoResume).
+297 host Android tests, lint and debug assembly passed. Updated APK installed (-r),
+SHA092669eff3dd92dc7cea8c5628793e030538bb6f8cd87346fb80bf8fddbd2d93.
+Guarded real-device touch replay:43/44ms acquisition,43 events/7 max pointers,0 final
+pointers/errors. Diagnostic submission delta0. Normal setup exit root/readerabsent.
+Setup lease availability still transiently fails handoff; Save blocked safely. Do
+not claim it fixed. Profiles/library/favorites backup comparison unchanged. Read
+new bennett-acquisition-validation.json. Physical neighbor-cast retest pending.
+Current actual device/training state is in ignored s10e-private/hero-continuation.json;
+verify before resuming; no arbitrary game injection. No parent PR merge/release.
