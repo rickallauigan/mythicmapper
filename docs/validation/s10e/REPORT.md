@@ -115,5 +115,9 @@ only the verified idle MythicMapper root process. It does not kill held gestures
 5. Repeat sustained-input and long-running stability measurements before selecting
    performance budgets or approving a release.
 
-No CPU/GPU, thermal, global display, SELinux, MLBB-account or gameplay settings were
-changed. No telemetry, account, purchases, online matches or production release.
+No CPU/GPU, thermal, SELinux, MLBB-account or gameplay settings were changed.
+After these tests, the user explicitly requested keeping the display awake during
+network debugging. The screen timeout was changed from five minutes to the maximum
+value; see [DEBUG-POWER.md](DEBUG-POWER.md) for scope, restoration and the separate
+G8 firmware standby limitation. No telemetry, purchases, online matches or production
+release.
