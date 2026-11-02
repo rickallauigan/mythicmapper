@@ -107,8 +107,12 @@ class HeroLibraryStore internal constructor(private val prefs: android.content.S
 data class HeroPreset(val id: String, val name: String, val status: String, val asset: String)
 object HeroCatalog {
     val presets=listOf(HeroPreset("s10e-g8-tuned-v03-single-touch-r1", "S10e G8 starter · assign your hero",
-        "Unverified adaptation of historically tested tuned v0.3; recalibrate for your HUD", "mythic/s10e-g8-starter.txt"))
-    fun lines(context: Context, preset: HeroPreset): Set<String> = context.assets.open(preset.asset).bufferedReader().use {
-        ProfileConfiguration.validate(it.readText())
+        "Unverified adaptation of historically tested tuned v0.3; recalibrate for your HUD", "mythic/s10e-g8-starter.txt"),
+        HeroPreset("s10e-g8-beatrix-training-v1","Beatrix · training draft","Unverified hero/weapon HUD; disabled until setup. Suggested favorite 1, opt-in only.","generated:BEATRIX"),
+        HeroPreset("s10e-g8-kimmy-training-v1","Kimmy · training draft","Unverified current hero/HUD; disabled until setup. Suggested favorite 2, opt-in only.","generated:KIMMY"))
+    fun lines(context: Context, preset: HeroPreset): Set<String> {
+        if(preset.id in setOf("s10e-g8-beatrix-training-v1","s10e-g8-kimmy-training-v1"))
+            return HeroTrainingProfiles.draft(if(preset.id.contains("beatrix"))xtr.keymapper.controller.HeroGameplayConfig.Hero.BEATRIX else xtr.keymapper.controller.HeroGameplayConfig.Hero.KIMMY)
+        return context.assets.open(preset.asset).bufferedReader().use { ProfileConfiguration.validate(it.readText()) }
     }
 }

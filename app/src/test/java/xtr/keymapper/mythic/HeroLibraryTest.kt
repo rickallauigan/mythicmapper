@@ -26,7 +26,7 @@ class HeroLibraryTest {
     }
     @Test fun persistenceReopenAndImmutableCatalogClone() {
         val context=ApplicationProvider.getApplicationContext<Context>()
-        val preset=HeroCatalog.presets.single();val original=HeroCatalog.lines(context,preset)
+        val preset=HeroCatalog.presets.first{it.id=="s10e-g8-tuned-v03-single-touch-r1"};val original=HeroCatalog.lines(context,preset)
         val store=HeroLibraryStore(context);val p=store.clone("My hero",original,preset.id)
         val s=store.read();store.update(s,s.assign(2,p.id))
         assertEquals(p.id,HeroLibraryStore(context).read().favorites[2])
@@ -48,12 +48,12 @@ class HeroLibraryTest {
     }
     @Test fun staleWriterDoesNotOverwrite() {
         val context=ApplicationProvider.getApplicationContext<Context>();val store=HeroLibraryStore(context)
-        val old=store.read();val p=store.clone("Hero",HeroCatalog.lines(context,HeroCatalog.presets.single()))
+        val old=store.read();val p=store.clone("Hero",HeroCatalog.lines(context,HeroCatalog.presets.first{it.id=="s10e-g8-tuned-v03-single-touch-r1"}))
         assertThrows(IllegalArgumentException::class.java){store.update(old,HeroLibrary())}
         assertTrue(store.read().profiles.any{it.id==p.id})
     }
     @Test fun rejectsOtherGamesAndAutomation() {
-        val context=ApplicationProvider.getApplicationContext<Context>();val original=HeroCatalog.lines(context,HeroCatalog.presets.single())
+        val context=ApplicationProvider.getApplicationContext<Context>();val original=HeroCatalog.lines(context,HeroCatalog.presets.first{it.id=="s10e-g8-tuned-v03-single-touch-r1"})
         for(lines in listOf(original.map{it.replace(MythicScope.GAME,"other.game")}.toSet(),
             original.map{if(it.startsWith("BTN_TL2 ")) "$it 150" else it}.toSet())) {
             assertThrows(IllegalArgumentException::class.java){HeroLibraryStore(context).clone("bad",lines)}

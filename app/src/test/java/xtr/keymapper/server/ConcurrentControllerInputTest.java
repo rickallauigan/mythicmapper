@@ -82,17 +82,24 @@ public class ConcurrentControllerInputTest {
         final Object originalManager=Input.inputManager;
         final InputService runtime;
         final ControllerDeviceMonitor monitor;
-        Harness() throws Exception {
+        KeymapProfile reloadProfile;
+        final Map<String,long[]> nodes=new HashMap<>(Map.of("pad",new long[]{1,2,0,255,128,0,255,128},"other",new long[]{3,4,0,255,128,0,255,128}));
+        Harness() throws Exception {this(Files.readString(Path.of("../profiles/mlbb/samsung-s10e/mlbb-gamesir-g8-v0.3-tuned.txt")));}
+        Harness(String text) throws Exception {
             Input.injectInputEventMethod=Recorder.class.getMethod("inject",InputEvent.class,int.class);
             Input.inputManager=recorder; Input.setDisplayIdMethod=null;
             KeymapConfig config=new KeymapConfig(null);config.pointerMode=KeymapConfig.POINTER_OVERLAY;
-            IRemoteServiceCallback callback=(IRemoteServiceCallback)Proxy.newProxyInstance(getClass().getClassLoader(),new Class[]{IRemoteServiceCallback.class},(p,m,a)->null);
+            reloadProfile=ProfileConfiguration.parse(text);
+            IRemoteServiceCallback callback=(IRemoteServiceCallback)Proxy.newProxyInstance(getClass().getClassLoader(),new Class[]{IRemoteServiceCallback.class},(p,m,a)->switch(m.getName()){
+                case "requestKeymapProfile" -> reloadProfile;
+                case "requestKeymapConfig" -> config;
+                default -> null;
+            });
             // Read existing committed fixture; no invented gameplay coordinates.
-            String text=Files.readString(Path.of("../profiles/mlbb/samsung-s10e/mlbb-gamesir-g8-v0.3-tuned.txt"));
-            runtime=new InputService(ProfileConfiguration.parse(text),config,callback,2280,1080,null,true,0);
+            runtime=new InputService(reloadProfile,config,callback,2280,1080,null,true,0);
             // Keep production repeat state machine but make its scheduler deterministic on the host.
             ReflectionHelpers.setField(runtime.getKeyEventHandler(),"repeatKeys",new RepeatKeyHandler(new Handler(Looper.getMainLooper()),runtime::injectEvent));
-            monitor=new ControllerDeviceMonitor(runtime,2280,1080,()->Map.of("pad",new long[]{1,2,0,255,128,0,255,128},"other",new long[]{3,4,0,255,128,0,255,128}));
+            monitor=new ControllerDeviceMonitor(runtime,2280,1080,()->new HashMap<>(nodes));
             monitor.start();
         }
         void key(String code,boolean down) { assertTrue(monitor.event("pad","EV_KEY "+code+(down?" DOWN":" UP"))); }
@@ -181,6 +188,73 @@ public class ConcurrentControllerInputTest {
             h.key("BTN_TR2",false);assertEquals(2,h.live().keySet().stream().filter(p->p>=50&&p<58).count());
             h.key("BTN_TL2",false);h.key("BTN_TR",false);h.key("BTN_TL",false);
             assertTrue(h.live().isEmpty());h.recorder.validLifecycle();
+        }
+    }
+
+    private String hero(String name,boolean pulse){
+        return String.join("\n",xtr.keymapper.mythic.HeroTrainingProfiles.INSTANCE.draft(xtr.keymapper.controller.HeroGameplayConfig.Hero.valueOf(name)))
+            .replace("HOLD_RELEASE 0 0",pulse?"PULSE 150 1":"HOLD_RELEASE 0 1")+"\nENABLED";
+    }
+    @Test public void beatrixSharedSpellAndSimultaneousSkillsUseIndependentPointers() throws Exception {
+        try(var h=new Harness(hero("BEATRIX",false))){
+            h.axis("ABS_RX","ff");assertTrue(h.recorder.frames.isEmpty());
+            h.key("BTN_TL2",true);h.key("BTN_TR",true);h.key("BTN_TR2",true);h.key("BTN_TL",true);
+            h.key("BTN_EAST",true);int before=h.recorder.frames.size();h.key("BTN_THUMBL",true);assertEquals(before,h.recorder.frames.size());
+            h.key("BTN_GAMEPAD",true);h.key("BTN_WEST",true);
+            assertEquals(7,h.recorder.frames.get(h.recorder.frames.size()-1).ids.size());
+            before=h.recorder.frames.size();h.key("BTN_EAST",false);assertEquals(before,h.recorder.frames.size());
+            h.key("BTN_THUMBL",false);assertEquals(MotionEvent.ACTION_POINTER_UP,h.recorder.frames.get(h.recorder.frames.size()-1).action);
+            h.monitor.stop();h.runtime.stop();h.recorder.validLifecycle();
+        }
+    }
+    @Test public void beatrixPulseSurvivesAxisTrafficAndCancelsOnReleaseAndProfileStop() throws Exception {
+        try(var h=new Harness(hero("BEATRIX",true))){
+            h.key("BTN_TL2",true);
+            for(int i=0;i<40;i++){h.axis("ABS_RX",i%2==0?"ff":"c0");h.tick(10);}
+            assertTrue(h.recorder.frames.stream().filter(f->f.action==MotionEvent.ACTION_DOWN).count()>=3);
+            h.key("BTN_TL2",false);int end=h.recorder.frames.size();h.tick(500);assertEquals(end,h.recorder.frames.size());
+            h.key("BTN_TL2",true);h.monitor.stop();h.runtime.stop();end=h.recorder.frames.size();h.tick(500);assertEquals(end,h.recorder.frames.size());h.recorder.validLifecycle();
+        }
+        try(var next=new Harness(hero("KIMMY",false))){assertTrue(next.recorder.frames.isEmpty());next.monitor.stop();next.runtime.stop();}
+    }
+    @Test public void kimmySkillPriorityCenteringAndDisconnectReleaseEveryPointer() throws Exception {
+        try(var h=new Harness(hero("KIMMY",false))){
+            h.axis("ABS_X","ff");assertTrue(h.recorder.frames.isEmpty()); // native movement is untouched
+            h.axis("ABS_RX","ff");assertEquals(MotionEvent.ACTION_DOWN,h.recorder.frames.get(0).action);
+            h.key("BTN_TL2",true);int count=h.recorder.frames.size();h.key("BTN_TL2",false);assertEquals(count,h.recorder.frames.size());
+            h.key("BTN_TR",true);assertEquals(MotionEvent.ACTION_UP,h.recorder.frames.get(count).action);
+            h.key("BTN_TL",true);h.key("BTN_TR",false);h.axis("ABS_RY","ff");
+            h.key("BTN_TL",false);assertEquals(MotionEvent.ACTION_MOVE,h.recorder.frames.get(h.recorder.frames.size()-1).action);
+            h.key("BTN_GAMEPAD",true);h.key("BTN_WEST",true);h.nodes.clear();h.tick(250);
+            assertEquals(MotionEvent.ACTION_UP,h.recorder.frames.get(h.recorder.frames.size()-1).action);h.recorder.validLifecycle();
+            count=h.recorder.frames.size();h.nodes.put("pad",new long[]{5,6,0,255,255,0,255,128});h.tick(250);h.axis("ABS_RX","ff");assertEquals(count,h.recorder.frames.size());
+            h.axis("ABS_RX","80");h.axis("ABS_RY","80");h.axis("ABS_RX","ff");assertTrue(h.recorder.frames.size()>count);
+            h.monitor.stop();h.runtime.stop();h.recorder.validLifecycle();
+        }
+    }
+    @Test public void kimmyRecallDoesNotResumeShootingUntilNeutralAndSynDroppedCleansUp() throws Exception {
+        try(var h=new Harness(hero("KIMMY",false))){
+            h.axis("ABS_RX","ff");h.key("BTN_WEST",true);h.key("BTN_WEST",false);int stopped=h.recorder.frames.size();
+            h.axis("ABS_RX","c0");assertEquals(stopped,h.recorder.frames.size());
+            h.axis("ABS_RX","80");h.axis("ABS_RX","ff");assertTrue(h.recorder.frames.size()>stopped);
+            h.monitor.event("pad","EV_SYN SYN_DROPPED 00000000");h.recorder.validLifecycle();
+            h.monitor.stop();h.runtime.stop();
+        }
+    }
+
+    @Test public void actualProfileReloadCancelsOldHeroPulseAndReleasesSharedOwners() throws Exception {
+        try(var h=new Harness(hero("BEATRIX",true))){
+            ReflectionHelpers.setField(h.runtime,"controllers",h.monitor);
+            h.key("BTN_TL2",true);h.key("BTN_EAST",true);h.key("BTN_THUMBL",true);h.key("BTN_GAMEPAD",true);
+            assertFalse(h.live().isEmpty());
+            h.reloadProfile=ProfileConfiguration.parse(hero("KIMMY",false));h.runtime.reloadKeymap();
+            assertTrue(h.live().isEmpty());h.recorder.validLifecycle();int stopped=h.recorder.frames.size();
+            h.tick(500);assertEquals(stopped,h.recorder.frames.size());assertFalse(h.monitor.event("pad","EV_KEY BTN_TL2 DOWN"));
+            assertEquals(xtr.keymapper.controller.HeroGameplayConfig.Hero.KIMMY,h.runtime.getKeymapProfile().heroGameplay.hero);
+            var next=new ControllerDeviceMonitor(h.runtime,2280,1080,()->new HashMap<>(h.nodes));
+            ReflectionHelpers.setField(h.runtime,"controllers",next);next.start();
+            next.event("pad","EV_ABS ABS_RX ff");next.event("pad","EV_SYN SYN_REPORT 00000000");
+            assertFalse(h.live().isEmpty());next.stop();h.runtime.stop();h.recorder.validLifecycle();
         }
     }
 

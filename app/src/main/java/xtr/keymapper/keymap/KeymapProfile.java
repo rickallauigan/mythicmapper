@@ -36,6 +36,7 @@ public class KeymapProfile implements Parcelable {
     public final HashMap<String, Macro> macroIdMap = new HashMap<>();
     public static final int MAX_DPADS = 3;
     public Camera camera = null;
+    public xtr.keymapper.controller.HeroGameplayConfig heroGameplay;
 
     public KeymapProfile() {
         dpadArray = new Dpad[MAX_DPADS];
@@ -95,6 +96,7 @@ public class KeymapProfile implements Parcelable {
         leftClick = in.readParcelable(Key.class.getClassLoader());
         aimKeys = in.createTypedArrayList(AimKey.CREATOR);
         chords = in.createTypedArrayList(xtr.keymapper.keymap.element.ControllerChord.CREATOR);
+        heroGameplay = in.readParcelable(xtr.keymapper.controller.HeroGameplayConfig.class.getClassLoader());
     }
 
     @Override
@@ -114,6 +116,7 @@ public class KeymapProfile implements Parcelable {
         dest.writeParcelable(leftClick, flags);
         dest.writeTypedList(aimKeys);
         dest.writeTypedList(chords);
+        dest.writeParcelable(heroGameplay,flags);
     }
 
     @Override

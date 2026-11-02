@@ -87,6 +87,7 @@ public final class ControllerDeviceMonitor {
     private final class Device {
         final long[] info;
         final ControllerAimHandler aim;
+        final ControllerHeroHandler hero;
         final ControllerDpad dpad;
         final ControllerChordHandler chords;
         final ControllerCameraHandler camera;
@@ -96,6 +97,9 @@ public final class ControllerDeviceMonitor {
         Device(long[] info) {
             this.info = info; rx = (int)info[4]; ry = (int)info[7];
             aim = new ControllerAimHandler(input.getKeymapProfile().aimKeys, input::injectEvent, width, height);
+            var heroConfig=input.getKeymapProfile().heroGameplay;
+            hero=heroConfig==null?null:new ControllerHeroHandler(heroConfig,aim,this::routeButton,handler,
+                input.getKeymapProfile().aimKeys.stream().filter(a->a.code.equals("BTN_TL2")).findFirst().orElseThrow().deadZone);
             var config = input.getKeymapProfile().camera;
             camera = config != null && config.stick ? new ControllerCameraHandler(config, input::injectEvent, width, height) : null;
             chords = new ControllerChordHandler(input.getKeymapProfile().chords, input::injectEvent,
@@ -107,13 +111,17 @@ public final class ControllerDeviceMonitor {
             xtr.keymapper.server.RuntimeMetrics.axes(rx, ry);
             float x = ControllerAimHandler.normalize(rx, (int)info[2], (int)info[3], center(info[2], info[3]));
             float y = ControllerAimHandler.normalize(ry, (int)info[5], (int)info[6], center(info[5], info[6]));
-            aim.axes(x, y);
+            if(hero!=null)hero.axes(x,y);else aim.axes(x, y);
             if (camera != null) camera.axes(x, y);
             dirty = false;
         }
         void button(String code, int action) {
             if (action == 1 ? !pressed.add(code) : !pressed.remove(code)) return;
             xtr.keymapper.server.RuntimeMetrics.button(code, action);
+            if(hero!=null&&hero.button(code,action))return;
+            routeButton(code,action);
+        }
+        void routeButton(String code,int action){
             if (chords.event(code, action)) return;
             boolean aimingTrigger = input.getKeymapProfile().aimKeys.stream().anyMatch(c -> c.stick && c.code.equals(code));
             if (aimingTrigger && action == 1 && camera != null) camera.suspend(true);
@@ -125,6 +133,7 @@ public final class ControllerDeviceMonitor {
             catch (android.os.RemoteException error) { Log.e("XtMapper", "Controller key callback failed", error); }
         }
         void reset() {
+            if(hero!=null)hero.stop();
             if (camera != null) camera.reset();
             dpad.reset();
             for (String code : new HashSet<>(pressed)) button(code, 0);

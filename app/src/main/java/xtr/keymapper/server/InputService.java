@@ -64,7 +64,7 @@ public class InputService implements IInputInterface {
                         int screenWidth, int screenHeight, View cursorView, boolean isWaylandClient,
                         int displayId, TouchBackend backend, boolean scopeRestricted) throws RemoteException {
         this.scopeRestricted = scopeRestricted;
-        if (scopeRestricted) xtr.keymapper.mythic.MythicScope.validateProfile(profile);
+        if (scopeRestricted) xtr.keymapper.mythic.MythicScope.validateActivation(profile);
         this.screenWidth = screenWidth; this.screenHeight = screenHeight;
         input = new Input(displayId);
         touchBackend = backend == null ? input : backend;
@@ -251,7 +251,7 @@ public class InputService implements IInputInterface {
         try {
             KeymapProfile nextProfile = mCallback.requestKeymapProfile();
             KeymapConfig nextConfig = mCallback.requestKeymapConfig();
-            if (scopeRestricted) xtr.keymapper.mythic.MythicScope.validateProfile(nextProfile);
+            if (scopeRestricted) xtr.keymapper.mythic.MythicScope.validateActivation(nextProfile);
             stop();
             nextProfile.scale(screenWidth, screenHeight);
             keymapProfile = nextProfile;

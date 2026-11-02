@@ -175,7 +175,7 @@ class TouchPointer : Service() {
         mythicProfileChoice = selectedProfile
         val keymapProfile = KeymapProfiles(this).getProfile(selectedProfile, false)
         try {
-            xtr.keymapper.mythic.MythicScope.validateProfile(keymapProfile)
+            xtr.keymapper.mythic.MythicScope.validateActivation(keymapProfile)
             connectRemoteService(keymapProfile)
             favoriteOverlay?.close()
             favoriteOverlay = xtr.keymapper.mythic.FavoriteOverlay(this, this::launchProfile)
@@ -211,7 +211,7 @@ class TouchPointer : Service() {
     fun launchProfile(profileName: String?) {
         if (profileName == null) return
         val keymapProfile = KeymapProfiles(this).getProfile(profileName, false)
-        xtr.keymapper.mythic.MythicScope.validateProfile(keymapProfile)
+        xtr.keymapper.mythic.MythicScope.validateActivation(keymapProfile)
         check(!xtr.keymapper.editor.EditorSessionGuard.active) { "Close the editor before switching profiles" }
         mythicProfileChoice = profileName
         this.selectedProfile = profileName

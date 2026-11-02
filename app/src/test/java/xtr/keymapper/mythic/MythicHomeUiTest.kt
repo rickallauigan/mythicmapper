@@ -26,9 +26,9 @@ class MythicHomeUiTest {
     }
     @Test fun cloneIsExplicitAndSearchFiltersCatalog() {
         var clones=0;render{clones++}
-        compose.onNodeWithTag("mythic-home").performScrollToNode(hasText("Clone to personal profile"))
+        compose.onNodeWithTag("mythic-home").performScrollToNode(hasTestTag("clone-s10e-g8-tuned-v03-single-touch-r1"))
         Assert.assertEquals(0,clones)
-        compose.onNodeWithText("Clone to personal profile").performClick();Assert.assertEquals(1,clones)
+        compose.onNodeWithTag("clone-s10e-g8-tuned-v03-single-touch-r1").performClick();Assert.assertEquals(1,clones)
         compose.onNodeWithTag("mythic-home").performScrollToNode(hasText("Search profiles and starters"))
         compose.onNodeWithText("Search profiles and starters").performTextInput("no-match")
         compose.onNodeWithText("Clone to personal profile").assertDoesNotExist()

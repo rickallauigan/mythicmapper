@@ -14,6 +14,9 @@ public final class ControllerAimHandler {
     private final float width, height;
     private final Map<String, State> held = new LinkedHashMap<>();
     private float x, y;
+    private String focus;
+    /** Optional hero priority; ordinary profiles retain latest-held ownership. */
+    public synchronized void focus(String code) { focus=code; }
     private static final class State {
         final AimKey config; final int pointer;
         float x, y;
@@ -45,7 +48,7 @@ public final class ControllerAimHandler {
                 State state = new State(config, FIRST_POINTER_ID + i);
                 held.put(code, state);
                 sink.inject(state.x, state.y, 1, state.pointer);
-                move(state); // Includes stick already displaced when the shoulder goes down.
+                if(focus==null||focus.equals(code))move(state); // Includes stick already displaced when the shoulder goes down.
             } else if (action == 0) {
                 State state = held.remove(code);
                 if (state != null) sink.inject(state.x, state.y, 0, state.pointer);
@@ -59,8 +62,8 @@ public final class ControllerAimHandler {
     public synchronized void axes(float x, float y) {
         this.x = x; this.y = y;
         // Latest held action owns the stick. Other held pointers remain independently releasable.
-        State latest = null;
-        for (State state : held.values()) latest = state;
+        State latest = held.get(focus);
+        if(latest==null)for (State state : held.values()) latest = state;
         if (latest != null) move(latest);
     }
     private void move(State state) {
@@ -82,6 +85,6 @@ public final class ControllerAimHandler {
     }
     public synchronized void reset() {
         for (State state : held.values()) sink.inject(state.x, state.y, 0, state.pointer);
-        held.clear(); x = y = 0;
+        held.clear(); focus=null; x = y = 0;
     }
 }

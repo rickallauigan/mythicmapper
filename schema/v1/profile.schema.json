@@ -71,6 +71,131 @@
             "additionalProperties": false,
             "properties": {
               "action": {
+                "const": "hero_gameplay"
+              },
+              "input": {
+                "const": "HERO_GAMEPLAY"
+              },
+              "name": {
+                "type": "string",
+                "maxLength": 80
+              },
+              "description": {
+                "type": "string",
+                "maxLength": 1000
+              },
+              "isEnabled": {
+                "type": "boolean",
+                "default": true
+              },
+              "hero": {
+                "type": "string",
+                "enum": [
+                  "BEATRIX",
+                  "KIMMY"
+                ]
+              },
+              "weapon": {
+                "type": "string",
+                "enum": [
+                  "NIBIRU",
+                  "BENNETT",
+                  "WESKER",
+                  "RENNER",
+                  "NONE"
+                ]
+              },
+              "fire_policy": {
+                "type": "string",
+                "enum": [
+                  "HOLD_RELEASE",
+                  "PULSE"
+                ]
+              },
+              "repeat_ms": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 60000
+              },
+              "calibrated": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "action",
+              "input",
+              "hero",
+              "weapon",
+              "fire_policy",
+              "calibrated",
+              "hero",
+              "weapon",
+              "fire_policy",
+              "calibrated",
+              "repeat_ms"
+            ],
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "fire_policy": {
+                      "const": "HOLD_RELEASE"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "repeat_ms": {
+                      "const": 0
+                    }
+                  }
+                },
+                "else": {
+                  "properties": {
+                    "repeat_ms": {
+                      "minimum": 60
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "hero": {
+                      "const": "KIMMY"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "weapon": {
+                      "const": "NONE"
+                    },
+                    "fire_policy": {
+                      "const": "HOLD_RELEASE"
+                    },
+                    "repeat_ms": {
+                      "const": 0
+                    }
+                  }
+                },
+                "else": {
+                  "properties": {
+                    "weapon": {
+                      "not": {
+                        "const": "NONE"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "action": {
                 "const": "stick_aim"
               },
               "input": {
