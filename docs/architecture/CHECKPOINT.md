@@ -12,7 +12,7 @@ All implementation is in stacked draft PRs, not merged into dev. No production r
 3. profiles/offline-hero-library — PR #9, based on #8: immutable starter and UUID-based five-slot metadata.
 4. runtime/root-scope-diagnostics — PR #10, based on #9: G8/game scope, separate app/Binder identity,
    touch interface, submission failure handling, metrics and CI.
-5. ui/mythicmapper-home — based on #10: Compose home, favorite/personal profile controls, floating
+5. ui/mythicmapper-home — PR #11, based on #10: Compose home, favorite/personal profile controls, floating
    selector, visual/calibration routes, diagnostics, original artwork and lifecycle tests.
 
 ## Implemented and preserved
@@ -89,3 +89,6 @@ Do not merge draft PRs or publish releases without a new explicit instruction.
 
 Development APK: `app/build/outputs/apk/debug/app-debug.apk`
 SHA-256: `970d72c5781d1c08f588d4edddc33820d4e6798601342c16da44ed0129214f90`. Debug-signed; not installed or gameplay-certified.
+
+Draft UI PR: https://github.com/rickallauigan/mythicmapper/pull/11.
+Archived README trailing whitespace was normalized; original attribution/content and Git history remain preserved.

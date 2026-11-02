@@ -126,8 +126,8 @@ physical gameplay results. Mate 9 profiles remain future work. Generic held
 skill aiming and mouse-button syntax are documented in [PROFILE-AIM.md](docs/PROFILE-AIM.md).
 
 ## Upstream about and features
-https://xtr126.github.io/XtMapper-docs/guides/about  
-[Watch video on YouTube](https://www.youtube.com/watch?v=Slcu43xBV3M)  
+https://xtr126.github.io/XtMapper-docs/guides/about
+[Watch video on YouTube](https://www.youtube.com/watch?v=Slcu43xBV3M)
 
 ## Upstream screenshots
 
@@ -147,7 +147,7 @@ https://xtr126.github.io/XtMapper-docs/guides/about
 ## Development
 
 ### Build
-- Run `./gradlew assembleDebug` or `./gradlew.bat assembleDebug` at the base directory of the project 
+- Run `./gradlew assembleDebug` or `./gradlew.bat assembleDebug` at the base directory of the project
 
 ## Community contributions and support
 
@@ -172,30 +172,30 @@ Fork-specific reports should start here rather than in the upstream tracker.
 ## Using on waydroid
 https://xtr126.github.io/XtMapper-docs/waydroid/1-overview/
 ## Credits
-@guobao2333 - [Chinese translation](https://github.com/Xtr126/XtMapper/pull/101)  
-@muhammadbahaa2001 - [Arabic translation](https://github.com/Xtr126/XtMapper/pull/106)  
-@KSMaan45 - [Punjabi translation](https://github.com/Xtr126/XtMapper/pull/109)  
+@guobao2333 - [Chinese translation](https://github.com/Xtr126/XtMapper/pull/101)
+@muhammadbahaa2001 - [Arabic translation](https://github.com/Xtr126/XtMapper/pull/106)
+@KSMaan45 - [Punjabi translation](https://github.com/Xtr126/XtMapper/pull/109)
 
 
-Help us translate on [Crowdin](https://crowdin.com/project/xtmapper/) or GitHub  
+Help us translate on [Crowdin](https://crowdin.com/project/xtmapper/) or GitHub
 
 
 And everyone else not mentioned here who took their time reporting bugs and making suggestions.
 
 Open source libraries used:
-- [Starlight](https://github.com/withastro/starlight) - Documentation framework  
+- [Starlight](https://github.com/withastro/starlight) - Documentation framework
 - [Material Design Components](https://github.com/material-components/material-components-android) - User interface
 - [FloatingActionButtonSpeedDial](https://github.com/leinardi/FloatingActionButtonSpeedDial) - Controls in editor
-- [libsu](https://github.com/topjohnwu/libsu) - RootService  
+- [libsu](https://github.com/topjohnwu/libsu) - RootService
 - [Logo](https://github.com/Xtr126/XtMapper/assets/80520774/2093a10b-f63f-4687-a4c9-d803f66d4e82) - Made with [Blender](https://www.blender.org/)
 
 
-[Some code](./app/src/main/java/com/genymobile/scrcpy) from the [scrcpy](https://github.com/Genymobile/scrcpy) project was used for implementing multi-touch support in the keymapper.  
+[Some code](./app/src/main/java/com/genymobile/scrcpy) from the [scrcpy](https://github.com/Genymobile/scrcpy) project was used for implementing multi-touch support in the keymapper.
 [<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png"
      alt="Get it on IzzyOnDroid"
      height="80">](https://apt.izzysoft.de/fdroid/index/apk/xtr.keymapper)
 ## Copyright and License
-The source code is licensed under the GPL v3.   
+The source code is licensed under the GPL v3.
 ```
 XtMapper
 Copyright (C) 2022 Xtr126
@@ -209,7 +209,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License 
+You should have received a copy of the GNU General Public License
 along with this program. If not, see https://www.gnu.org/licenses/.
 ```
 Do not publish unofficial APKs to the play store. It hurts open source projects like ours.
