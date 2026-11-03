@@ -113,7 +113,7 @@ Hosted run41625577976 failed because sdkmanager was not on PATH; the workflow no
 uses its SDK path. Run41626628456 reached installation but doctor's emulator-version
 probe exited127; captured stderr was not previously surfaced. Doctor now reports
 stderr and uses headless `-no-window -version`, avoiding unnecessary GUI dependencies.
-The updated CI result remains pending; neither failure is relabelled PASS. The
+Those failed runs remain recorded; subsequent passing runs are listed below. The
 workflow's conditional cleanup only avoids stopping an emulator never created; it
 does not bypass any failed test. PR: https://github.com/rickallauigan/mythicmapper/pull/22.
 
