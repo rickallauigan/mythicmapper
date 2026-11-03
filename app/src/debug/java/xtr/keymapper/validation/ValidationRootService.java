@@ -31,6 +31,10 @@ public class ValidationRootService extends RootService {
             try{return exerciseHeroes(surface).toString();}
             catch(Exception error){return "{\"status\":\"FAIL\",\"error\":\"Hero safe-surface replay failed: "+error.getClass().getSimpleName()+"\"}";}
         }
+        @Override public String screenCleanup(IValidationSurface surface) {
+            try{return exerciseScreenCleanup(surface).toString();}
+            catch(Exception error){return "{\"status\":\"FAIL\",\"error\":\"Owned screen cleanup failed: "+error.getClass().getSimpleName()+"\"}";}
+        }
     };
     @Override public IBinder onBind(Intent intent){return binder;}
     private void requireSurface(IValidationSurface surface)throws Exception {
@@ -106,6 +110,7 @@ public class ValidationRootService extends RootService {
                     delegate.injectTouch(action,pointer,pressure,x,y);
                 }
                 public boolean hasSubmissionFailure(){return delegate.hasSubmissionFailure();}
+                public boolean cancelOwnedGesture(){return delegate.cancelOwnedGesture();}
             };
             final InputService[] runtime={null};final ControllerDeviceMonitor[] monitor={null};
             Map<String,long[]> nodes=new HashMap<>();nodes.put("hero-replay",new long[]{1,2,0,255,128,0,255,128});
@@ -137,6 +142,50 @@ public class ValidationRootService extends RootService {
             .put("kimmy_resumed_attack_anchor_to_first_move_ms",new org.json.JSONArray(kimmyAcquisitionDelays))
             .put("source","Deterministic hero engine replay into guarded blue surface; not physical controller input or MLBB gameplay")
             .put("reload_and_pulse_cleanup",true).put("runtime_metrics",new JSONObject(RuntimeMetrics.snapshot()));
+    }
+    /** Fixed one-contact protocol. Sleep is deliberate; never wakes or dismisses keyguard. */
+    private JSONObject exerciseScreenCleanup(IValidationSurface surface)throws Exception {
+        requireSurface(surface);
+        String lines=String.join("\n",xtr.keymapper.mythic.HeroTrainingProfiles.INSTANCE.draft(
+            xtr.keymapper.controller.HeroGameplayConfig.Hero.KIMMY)).replace("HOLD_RELEASE 0 0","HOLD_RELEASE 0 1")+"\nENABLED";
+        var config=new KeymapConfig(null);config.pointerMode=KeymapConfig.POINTER_OVERLAY;
+        var callback=(IRemoteServiceCallback)Proxy.newProxyInstance(getClassLoader(),new Class[]{IRemoteServiceCallback.class},
+            (p,m,a)->switch(m.getName()){case "requestKeymapProfile"->ProfileConfiguration.parse(lines);case "requestKeymapConfig"->config;default->null;});
+        Input delegate=new Input(0);
+        TouchBackend guarded=new TouchBackend(){
+            public void injectTouch(int action,int pointer,float pressure,float x,float y){
+                if(action!=MotionEvent.ACTION_UP)try{requireSurface(surface);}catch(Exception e){throw new SecurityException("Safe surface lost",e);}
+                delegate.injectTouch(action,pointer,pressure,x,y);
+            }
+            public boolean cancelOwnedGesture(){return delegate.cancelOwnedGesture();}
+            public boolean hasSubmissionFailure(){return delegate.hasSubmissionFailure();}
+        };
+        final InputService[] runtime={null};final ControllerDeviceMonitor[] monitor={null};
+        try {
+            int width=surface.width(),height=surface.height();
+            onMain(()->{
+                runtime[0]=new InputService(ProfileConfiguration.parse(lines),config,callback,width,height,null,true,0,guarded,true);
+                monitor[0]=new ControllerDeviceMonitor(runtime[0],width,height,()->Map.of("screen-replay",new long[]{1,2,0,255,128,0,255,128}));
+                var field=InputService.class.getDeclaredField("controllers");field.setAccessible(true);field.set(runtime[0],monitor[0]);monitor[0].start();
+                monitor[0].event("screen-replay","EV_ABS ABS_RX ff");monitor[0].event("screen-replay","EV_SYN SYN_REPORT 0");
+            });
+            long deadline=SystemClock.uptimeMillis()+3000;
+            while(surface.activeTouches()!=1&&SystemClock.uptimeMillis()<deadline)SystemClock.sleep(10);
+            if(surface.activeTouches()!=1)throw new IllegalStateException("Owned DOWN not observed");
+            requireSurface(surface);
+            if(android.os.Build.VERSION.SDK_INT<26)throw new IllegalStateException("Screen cleanup probe requires API 26+");
+            Process sleep=new ProcessBuilder("/system/bin/input","keyevent","223").start();
+            if(!sleep.waitFor(3,java.util.concurrent.TimeUnit.SECONDS)||sleep.exitValue()!=0)throw new IllegalStateException("Sleep command failed");
+            var power=getSystemService(android.os.PowerManager.class);
+            deadline=SystemClock.uptimeMillis()+3000;
+            while(power.isInteractive()&&SystemClock.uptimeMillis()<deadline)SystemClock.sleep(10);
+            if(power.isInteractive())throw new IllegalStateException("Display did not turn off");
+            onMain(()->runtime[0].stop());
+            return new JSONObject().put("status","PASS").put("screen_off_observed",true)
+                .put("submission_failure",guarded.hasSubmissionFailure())
+                .put("logical_contacts_after_stop",new JSONObject(RuntimeMetrics.snapshot()).getInt("logical_active_touches"))
+                .put("source","Owned blue-surface gesture only; no gameplay injection or keyguard dismissal");
+        }finally{onMain(()->{if(runtime[0]!=null)runtime[0].stop();if(monitor[0]!=null)monitor[0].stop();});}
     }
     private JSONObject exercise(IValidationSurface surface)throws Exception {
         requireSurface(surface);

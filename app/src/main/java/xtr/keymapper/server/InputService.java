@@ -272,6 +272,15 @@ public class InputService implements IInputInterface {
     }
 
     public void stop() {
+        // Kimmy's continuous attack must be aborted on lifecycle interruption,
+        // rather than treated as a normal user release. Other profiles retain UP.
+        if (keymapProfile != null && keymapProfile.heroGameplay != null && keymapProfile.heroGameplay.hero ==
+                xtr.keymapper.controller.HeroGameplayConfig.Hero.KIMMY) synchronized (this) {
+            acceptingTouches = false;
+            if (touchBackend.cancelOwnedGesture()) {
+                activeTouches.clear(); RuntimeMetrics.touches(0);
+            }
+        }
         if (controllers != null) { controllers.stop(); controllers = null; }
         keyEventHandler.stop();
         mouseEventHandler.stop();

@@ -265,9 +265,9 @@ are committed. Measured centers have approximately +/-6 px uncertainty:
 | RB / Speed Up | 1646, 943 | Pause while held/no aiming reticle observed; activation not separately certified |
 | RT / CC | 1755, 743 | Cast/aim reported; resumption later corrected to FAIL |
 | LB / AOE | 1955, 634 | Input observed; exact cast/charge/release semantics not certified |
-| X / Recall | 1160, 963 | Effect not yet physically certified |
-| A / Regen | 1311, 965 | Effect not yet physically certified |
-| B or L3 / equipped Revitalize | 1463, 970 | Shared input observed; effect not yet physically certified |
+| X / Recall | 1160, 963 | Human-confirmed; neutral required before shooting resumes |
+| A / Regen | 1311, 965 | Human-confirmed |
+| B or L3 / equipped Revitalize | 1463, 970 | Human-confirmed; no cooldown blocker reported |
 
 All Kimmy aim radii remain 80 px initial training values; skill full-range acceptance
 is pending. Geometry was confirmed through the setup's explicit unverified-training
@@ -314,7 +314,39 @@ zero-pointer diagnostic acknowledgement was obtained before stopping only Mythic
 process; root/reader absence was verified. This does not certify abrupt process kill
 with active contacts. Existing XtMapper data was not accessed or altered.
 
-**Current physical gate:** retest RT and LB resumption on the new build. Do not mark
-the failure fixed from host or blue-surface checks alone. Utility actions, actual
-skill casting semantics, physical reconnection, profile switching and interruptions
-remain separate manual acceptance items.
+### Physical follow-up and screen-off safety failure
+
+The user subsequently reported RT/LB shooting resumption working on the handoff
+build. Recall stops shooting until a neutral transition; Regen and B/L3 Revitalize
+were reported working. Disconnect during shooting stopped firing; the real trace
+ended at zero contacts and Android no longer enumerated the G8. Reconnecting with
+the right stick held reportedly did not immediately fire, then moving it restarted
+shooting. The exact intervening neutral step was not independently established.
+
+**FAIL: screen off/on during continuous shooting.** The user reported firing
+continued after unlock and skills no longer worked. The root trace logged an UP
+and zero logical contacts; the mapper root process and reader were absent. A manual
+on-screen Attack press/release stopped the game firing. With mapping still off,
+right-stick movement did not shoot. Therefore logical zero alone is insufficient
+to certify game cleanup. The exact framework/game delivery cause is unproven.
+Mapping remains stopped while this defect is investigated.
+
+A candidate Kimmy-only shutdown change cancels the backend's own tracked touch
+stream instead of sending ordinary releases. It does not call system-wide touch
+cancellation; Bennett retains its existing UP path. Unsupported backends retain
+UP cleanup. A new regression protects this distinction. All 303 Android tests and
+debug lint/build pass. Guarded device replay observed 40 events, one CANCEL, maximum
+seven pointers, zero final contacts and zero sequence errors. This is a blue-surface
+result, not evidence that Kimmy's screen-off failure is fixed.
+
+A dedicated debug-only probe now starts one owned gesture on the controlled blue
+surface, sleeps the display, stops the runtime and waits for normal manual unlock.
+It requires the same Activity/surface to retain observed cancellation evidence.
+The same surface retained one observed CANCEL after manual unlock, with zero active
+pointers and zero sequence errors. The validation binder was still alive immediately
+after unbind; do not claim instantaneous root exit from that sample. The separate
+diagnostic ownership suite passed with zero gameplay submissions and root exit.
+The subsequent real Training screen-off retest remains pending.
+No automated recovery touch has been injected into MLBB. Profiles, favorites and
+Bennett configuration were compared unchanged after installation. Exact Ultimate
+casting/charge semantics, profile switching and leaving MLBB remain separate gates.

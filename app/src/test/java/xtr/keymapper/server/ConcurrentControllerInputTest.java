@@ -50,7 +50,7 @@ public class ConcurrentControllerInputTest {
                 for(int i=0;i<f.ids.size();i++) {
                     assertTrue(f.ids.get(i)>=0 && f.ids.get(i)<32);
                     assertTrue(Float.isFinite(f.xs.get(i))); assertTrue(Float.isFinite(f.ys.get(i)));
-                    if(f.action!=MotionEvent.ACTION_UP && !(f.action==MotionEvent.ACTION_POINTER_UP && i==f.index))
+                    if(f.action!=MotionEvent.ACTION_CANCEL && f.action!=MotionEvent.ACTION_UP && !(f.action==MotionEvent.ACTION_POINTER_UP && i==f.index))
                         assertTrue("Held pointer must have pressure",f.pressures.get(i)>0);
                 }
                 assertEquals(f.ids.size(),new HashSet<>(f.ids).size());
@@ -61,6 +61,7 @@ public class ConcurrentControllerInputTest {
                     case MotionEvent.ACTION_DOWN -> { assertTrue(live.isEmpty()); down=f.down; assertTrue(live.add(id)); }
                     case MotionEvent.ACTION_POINTER_DOWN -> { assertFalse(live.isEmpty()); assertTrue(live.add(id)); }
                     case MotionEvent.ACTION_MOVE -> assertFalse(live.isEmpty());
+                    case MotionEvent.ACTION_CANCEL -> { assertEquals(live,new HashSet<>(f.ids));live.clear(); }
                     case MotionEvent.ACTION_POINTER_UP, MotionEvent.ACTION_UP -> {
                         assertEquals(live,new HashSet<>(f.ids)); assertTrue(live.remove(id));
                         if(f.action==MotionEvent.ACTION_UP) assertTrue(live.isEmpty());
@@ -68,7 +69,7 @@ public class ConcurrentControllerInputTest {
                     }
                     default -> fail("Unexpected touch action "+f.action);
                 }
-                if(f.action!=MotionEvent.ACTION_UP && f.action!=MotionEvent.ACTION_POINTER_UP)
+                if(f.action!=MotionEvent.ACTION_CANCEL && f.action!=MotionEvent.ACTION_UP && f.action!=MotionEvent.ACTION_POINTER_UP)
                     assertEquals(live,new HashSet<>(f.ids));
                 assertEquals(down,f.down); assertTrue(f.time>=f.down);
             }
@@ -290,6 +291,17 @@ public class ConcurrentControllerInputTest {
             h.axis("ABS_RX","80");h.axis("ABS_RY","80");assertTrue(h.live().isEmpty());
             assertEquals(1,h.recorder.frames.stream().filter(f->f.action==MotionEvent.ACTION_UP).count());
             before=h.recorder.frames.size();h.tick(1000);assertEquals(before,h.recorder.frames.size());h.recorder.validLifecycle();
+        }
+    }
+    @Test public void kimmyRuntimeStopCancelsOnlyOwnedGestureAndBennettKeepsRelease() throws Exception {
+        for(String hero:List.of("KIMMY","BEATRIX"))try(var h=new Harness(hero(hero,false))){
+            ReflectionHelpers.setField(h.runtime,"controllers",h.monitor);
+            h.axis("ABS_RX","ff");if(hero.equals("BEATRIX"))h.key("BTN_TL2",true);
+            assertEquals(1,h.live().size());h.runtime.stop();assertTrue(h.live().isEmpty());
+            Frame end=h.recorder.frames.get(h.recorder.frames.size()-1);
+            assertEquals(hero.equals("KIMMY")?MotionEvent.ACTION_CANCEL:MotionEvent.ACTION_UP,end.action);
+            int count=h.recorder.frames.size();h.tick(1000);assertEquals(count,h.recorder.frames.size());
+            h.runtime.stop();assertEquals(count,h.recorder.frames.size());h.recorder.validLifecycle();
         }
     }
     @Test public void kimmySkillReleaseSeparatesTouchesAndReacquiresUsingLatestAim() throws Exception {

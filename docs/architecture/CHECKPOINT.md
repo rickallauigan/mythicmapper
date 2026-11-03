@@ -273,3 +273,18 @@ retest is pending. Read kimmy-handoff-validation.json and the report. Current ru
 state is in ignored app/build/s10e-private/hero-continuation.json. No raw HUD images,
 profile IDs or network information may be committed. Keep PR #14 draft; push updated
 source/docs and check CI. No merges or production releases.
+
+### Kimmy screen-off safety follow-up
+
+User confirmed post-skill resumption, Recall neutral guard, Regen and B/L3. Physical
+disconnect stopped firing, root trace zero; held-stick reconnect did not immediately
+fire, exact neutral step not independently established. SCREEN OFF FAILED: game
+kept firing after unlock although root logged UP/zero and root/reader exited. Manual
+Attack touch stopped it; controller with mapping off did not shoot. Mapping stopped.
+Uncommitted candidate uses Kimmy-only backend-owned ACTION_CANCEL at stop, preserving
+Bennett UP behavior. 303 tests and lint/build pass, safe blue replay passes. Candidate
+installed with identical profiles/library. Debug kimmy_screen_cleanup probe sleeps
+only controlled blue surface, awaits manual unlock, requires same surface evidence.
+Read current private continuation and instrumentation report before any activation.
+Real Training screen-off retest remains mandatory; do not claim fixed from logical
+zero. No global touch cancellation, automatic game recovery tap or keyguard bypass.

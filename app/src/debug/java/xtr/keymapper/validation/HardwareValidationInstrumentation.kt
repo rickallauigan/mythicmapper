@@ -38,6 +38,7 @@ class HardwareValidationInstrumentation: Instrumentation() {
                 "heroes" -> report.put("result",tester(true))
                 "heroes_prepare" -> report.put("result",prepareHeroes())
                 "heroes_touch" -> report.put("result",injection(true))
+                "kimmy_screen_cleanup" -> report.put("result",screenCleanup())
                 "tester_render" -> report.put("result",testerRender())
                 else -> error("Unknown suite")
             }
@@ -378,6 +379,46 @@ class HardwareValidationInstrumentation: Instrumentation() {
             return JSONObject().put("production_binder_start_pause_resume_reload_replace_stop",true).put("empty_mapping_only",true)
                 .put("no_game_launch",true).put("root_metrics",metrics).put("root_exit_observed",true)
         } finally {runCatching{remote.stopServer()};runOnMainSync{activity.finish()}}
+    }
+    private fun screenCleanup():JSONObject {
+        val activity=startActivitySync(Intent(targetContext,ValidationActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) as ValidationActivity
+        val originalSurface=activity.surface
+        val connected=CountDownLatch(1);var runner:IValidationRunner?=null
+        val connection=object:ServiceConnection {
+            override fun onServiceConnected(name:ComponentName?,binder:IBinder?){runner=IValidationRunner.Stub.asInterface(binder);connected.countDown()}
+            override fun onServiceDisconnected(name:ComponentName?){runner=null}
+        }
+        val power=targetContext.getSystemService(PowerManager::class.java)
+        val keyguard=targetContext.getSystemService(android.app.KeyguardManager::class.java)
+        val wake=power.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,"MythicMapper:screen-cleanup-validation")
+        val marker=File(targetContext.filesDir,"validation/screen-cleanup-waiting.json")
+        try {
+            repeat(100){if(!activity.guard.ready())SystemClock.sleep(30)}
+            check(activity.guard.ready()){"Controlled screen-cleanup surface not focused"}
+            check(Shell.getShell().isRoot){"App root consent unavailable"}
+            runOnMainSync{RootService.bind(Intent(targetContext,ValidationRootService::class.java),connection)}
+            check(connected.await(15,TimeUnit.SECONDS)){"Validation root unavailable"}
+            wake.acquire(10000)
+            val binder=runner!!.asBinder()
+            val root=JSONObject(runner!!.screenCleanup(activity.guard))
+            check(root.getString("status")=="PASS"){root.toString()}
+            runOnMainSync{RootService.unbind(connection)}
+            if(wake.isHeld)wake.release()
+            marker.writeText(JSONObject().put("waiting_for_manual_unlock",true).put("root",root).toString(2))
+            val deadline=SystemClock.elapsedRealtime()+180000
+            while((!power.isInteractive||keyguard.isKeyguardLocked||!activity.guard.ready())&&SystemClock.elapsedRealtime()<deadline)SystemClock.sleep(100)
+            check(power.isInteractive&&!keyguard.isKeyguardLocked&&activity.guard.ready()){"Manual unlock/focused surface required"}
+            check(!activity.isDestroyed&&activity.surface===originalSurface){"Activity recreated; original contact evidence lost"}
+            val observed=originalSurface.result()
+            check(!root.getBoolean("submission_failure")&&root.getInt("logical_contacts_after_stop")==0){root.toString()}
+            check(observed.getInt("active_pointers")==0&&observed.getInt("cancel_events")>=1&&observed.getInt("sequence_errors")==0){observed.toString()}
+            return JSONObject().put("root",root).put("surface",observed).put("same_activity",true)
+                .put("injector_binder_dead_after_unbind",!binder.isBinderAlive)
+                .put("manual_unlock",true).put("gameplay_test",false)
+        }finally{
+            if(wake.isHeld)wake.release()
+            marker.delete();runOnMainSync{runCatching{RootService.unbind(connection)};activity.finish()}
+        }
     }
     private fun injection(heroes:Boolean=false):JSONObject {
         val activity=startActivitySync(Intent(targetContext,ValidationActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) as ValidationActivity
