@@ -39,6 +39,7 @@ class ForegroundProfileWorkflowTest {
     private val started = mutableListOf<String?>()
     private var pauses = 0
     private var observerRegistrations = 0
+    private var observerRefreshes = 0
     private val mlbb = "com.mobile.legends"
 
     @Before fun setup() {
@@ -63,6 +64,7 @@ class ForegroundProfileWorkflowTest {
         val remote = Proxy.newProxyInstance(IRemoteService::class.java.classLoader,
             arrayOf(IRemoteService::class.java)) { _, method, _ ->
             when (method.name) {
+                "refreshActivityObserver" -> { observerRefreshes++; null }
                 "registerActivityObserver" -> { observerRegistrations++; null }
                 "startServer" -> { started += pointer.selectedProfile; null }
                 "pauseMouse" -> { pauses++; null }
@@ -219,6 +221,33 @@ class ForegroundProfileWorkflowTest {
         receiver.onReceive(pointer,Intent(Intent.ACTION_USER_PRESENT))
         pointer.onDestroy();idle();foreground(mlbb)
         assertEquals(count,started.size)
+    }
+
+    @Test fun userPresentBeforeKeyguardSettlesRetriesWithoutBypassingLock() {
+        foreground(mlbb);val count=started.size
+        screen(Intent.ACTION_SCREEN_OFF,false,true)
+        screen(Intent.ACTION_USER_PRESENT,true,true)
+        assertEquals(0,observerRegistrations);assertEquals(count,started.size)
+        shadowOf(pointer.getSystemService(KeyguardManager::class.java)).setKeyguardLocked(false)
+        shadowOf(Looper.getMainLooper()).idleFor(java.time.Duration.ofMillis(250))
+        assertEquals(1,observerRegistrations);assertEquals(count,started.size)
+        foreground(mlbb);assertEquals(count+1,started.size)
+    }
+    @Test fun foregroundSettlingResamplesAreBoundedAndRelockCancelsThem() {
+        foreground(mlbb);val count=started.size
+        screen(Intent.ACTION_SCREEN_OFF,false,true)
+        screen(Intent.ACTION_USER_PRESENT,true,false)
+        foreground("com.android.systemui");assertEquals(count,started.size)
+        shadowOf(Looper.getMainLooper()).idleFor(java.time.Duration.ofMillis(300))
+        assertEquals(1,observerRefreshes)
+        foreground(mlbb);assertEquals(count+1,started.size)
+        shadowOf(Looper.getMainLooper()).idleFor(java.time.Duration.ofSeconds(5))
+        assertEquals(3,observerRefreshes)
+        screen(Intent.ACTION_SCREEN_OFF,false,true)
+        screen(Intent.ACTION_USER_PRESENT,true,false)
+        screen(Intent.ACTION_SCREEN_OFF,false,true)
+        shadowOf(Looper.getMainLooper()).idleFor(java.time.Duration.ofSeconds(5))
+        assertEquals(3,observerRefreshes)
     }
 
 }

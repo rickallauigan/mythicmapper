@@ -31,7 +31,7 @@ class HardwareValidationInstrumentation: Instrumentation() {
                 "profiles_verify" -> report.put("result",profiles(true))
                 "injection" -> report.put("result",injection())
                 "startup" -> report.put("result",startup())
-                "overlay", "screen" -> report.put("result",overlay())
+                "overlay", "screen", "screen_resume" -> report.put("result",overlay())
                 "reader_hold" -> report.put("result",readerHold())
                 "runtime" -> report.put("result",runtimeLifecycle())
                 "tester" -> report.put("result",tester())
@@ -303,7 +303,7 @@ class HardwareValidationInstrumentation: Instrumentation() {
             val notificationFlags=notifications.first{it.id==2}.notification.flags
             check(service!!.mService?.isActive!=true){"Test must not activate a gameplay mapping"}
             var screenResult:JSONObject?=null
-            if(suite=="screen") {
+            if(suite=="screen" || suite=="screen_resume") {
                 fun key(code:Int){uiAutomation.executeShellCommand("input keyevent $code").use{android.os.ParcelFileDescriptor.AutoCloseInputStream(it).use{stream->stream.readBytes()}}}
                 val power=targetContext.getSystemService(android.os.PowerManager::class.java)
                 key(223)
@@ -324,6 +324,22 @@ class HardwareValidationInstrumentation: Instrumentation() {
                 screenResult=JSONObject().put("screen_off_on",true).put("overlay_removed_on_screen_off",true)
                     .put("mapping_foreground_service_retained_while_locked",true).put("mapping_paused_while_locked",true)
                     .put("keyguard_locked_after_wake",targetContext.getSystemService(android.app.KeyguardManager::class.java).isKeyguardLocked)
+                if(suite=="screen_resume") {
+                    val marker=File(targetContext.filesDir,"validation/lock-session-waiting.json")
+                    marker.parentFile!!.mkdirs();marker.writeText("{\"waiting_for_manual_unlock\":true}")
+                    try {
+                        val keyguard=targetContext.getSystemService(android.app.KeyguardManager::class.java)
+                        val deadline=SystemClock.elapsedRealtime()+180000
+                        val session=field(service!!,"foreground") as xtr.keymapper.profiles.ForegroundProfileSession
+                        while((keyguard.isKeyguardLocked || field(service!!,"screenSuspended")==true || session.current()?.packageName!=targetContext.packageName)&&SystemClock.elapsedRealtime()<deadline)SystemClock.sleep(100)
+                        check(!keyguard.isKeyguardLocked&&field(service!!,"screenSuspended")==false){"Unlock session stayed suspended"}
+                        check(session.current()?.packageName==targetContext.packageName){"Fresh foreground callback missing after unlock"}
+                        check(service!!.mService?.isMappingPaused==true){"Must not map into the controlled test Activity"}
+                        check(!root.isAttachedToWindow){"Game selector restored outside MLBB"}
+                        screenResult.put("normal_unlock_session_restarted",true).put("fresh_foreground_observed",true)
+                            .put("mapping_stayed_paused_outside_mlbb",true)
+                    } finally {marker.delete()}
+                }
             }
             return JSONObject().put("screen",screenResult ?: JSONObject.NULL).put("foreground_service_notification",true).put("notification_flags",notificationFlags).put("attached",true).put("favorite_slots",slots)
                 .put("expand_collapse",true).put("drag_reposition",true).put("editor_lease_hide_restore",true).put("activity_rotation_reclamp",true).put("gameplay_mapping_inactive",true)

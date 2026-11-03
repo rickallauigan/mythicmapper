@@ -56,16 +56,30 @@ class TouchPointer : Service() {
     private val foreground = ForegroundProfileSession()
     private var profileDialog: AlertDialog? = null
     @Volatile private var screenSuspended = false
+    @Volatile private var lastScreenAction = "none"
+    override fun dump(fd: java.io.FileDescriptor, writer: java.io.PrintWriter, args: Array<out String>?) {
+        writer.println("screen_suspended=$screenSuspended last_screen_action=$lastScreenAction")
+        writer.println("interactive=${getSystemService(android.os.PowerManager::class.java).isInteractive} keyguard_locked=${getSystemService(android.app.KeyguardManager::class.java).isKeyguardLocked}")
+        writer.println("session_running=${foreground.current()!=null} profile_selected=${selectedProfile!=null} editor_active=${xtr.keymapper.editor.EditorSessionGuard.active}")
+        writer.println("overlay_attached=${favoriteOverlay?.isAttached()==true}")
+        try {
+            writer.println("root_alive=${mService?.asBinder()?.isBinderAlive==true} mapping_paused=${mService?.isMappingPaused}")
+            writer.println(mService?.diagnostics())
+        } catch(error:RemoteException) {writer.println("root_error=${error.javaClass.simpleName}")}
+    }
     private fun screenReady() = !screenSuspended &&
         getSystemService(android.os.PowerManager::class.java).isInteractive &&
         !getSystemService(android.app.KeyguardManager::class.java).isKeyguardLocked
 
     private val screenOff = object : android.content.BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
+            lastScreenAction = intent?.action ?: "none"
+            Log.i("MythicMapperLifecycle", "Screen transition $lastScreenAction interactive=${getSystemService(android.os.PowerManager::class.java).isInteractive} keyguard=${getSystemService(android.app.KeyguardManager::class.java).isKeyguardLocked}")
             when (intent?.action) {
                 Intent.ACTION_SCREEN_OFF -> {
                     // Retain the foreground service/profile; invalidate all queued activations.
                     screenSuspended = true
+                    cancelScreenChecks()
                     foreground.stop { pauseMapping() }
                     profileDialog?.dismiss(); profileDialog = null
                     favoriteOverlay?.close()
@@ -75,13 +89,32 @@ class TouchPointer : Service() {
         }
     }
 
+    private var unlockChecks = 0
+    private val unlockCheck = Runnable { resumeAfterUnlock() }
+    private var foregroundChecks = 0
+    private val foregroundCheck = object : Runnable {
+        override fun run() {
+            if (!screenReady() || foreground.current()==null) return
+            try { mService?.refreshActivityObserver() }
+            catch(error:RemoteException) { Log.e("MythicMapperLifecycle", "Foreground resample failed",error);return }
+            if (++foregroundChecks<3) mHandler.postDelayed(this,if(foregroundChecks==1)700 else 1500)
+        }
+    }
+    private fun cancelScreenChecks() {
+        mHandler.removeCallbacks(unlockCheck);mHandler.removeCallbacks(foregroundCheck)
+        unlockChecks=0;foregroundChecks=0
+    }
     private fun resumeAfterUnlock() {
-        if (!screenSuspended) return
+        if (!screenSuspended || !getSystemService(android.os.PowerManager::class.java).isInteractive) return
+        mHandler.removeCallbacks(unlockCheck)
+        // USER_PRESENT/SCREEN_ON can precede KeyguardManager's unlocked snapshot.
+        // Bounded settling only; never dismiss keyguard or keep polling when asleep.
+        if (getSystemService(android.app.KeyguardManager::class.java).isKeyguardLocked) {
+            if (++unlockChecks<=40) mHandler.postDelayed(unlockCheck,250)
+            return
+        }
         screenSuspended = false
-        if (!screenReady()) { screenSuspended = true; return }
         val request = foreground.start()
-        // Re-register to obtain a fresh actual foreground package, even when it
-        // equals the observer's pre-lock cache. Never resume from that cached name.
         RemoteServiceHelper.getInstance(this) { service ->
             mHandler.post {
                 foreground.commit(request) {
@@ -90,6 +123,9 @@ class TouchPointer : Service() {
                         mService = service
                         service.registerActivityObserver(mActivityObserverCallback)
                         activityRemoteCallback = true
+                        // The first snapshot can still name SystemUI during unlock.
+                        // Resample briefly without allocating another observer/reader.
+                        foregroundChecks=0;mHandler.postDelayed(foregroundCheck,300)
                     } catch (error: RemoteException) {
                         foreground.stop { pauseMapping() }
                         Log.e("MythicMapper", "Unlock foreground check unavailable", error)
@@ -229,7 +265,9 @@ class TouchPointer : Service() {
             }
 
             override fun onDisplayChanged(displayId: Int) {
-                if (displayId != this@TouchPointer.displayId || xtr.keymapper.editor.EditorSessionGuard.active) return
+                if (displayId != this@TouchPointer.displayId) return
+                if (screenSuspended) { resumeAfterUnlock();return }
+                if (xtr.keymapper.editor.EditorSessionGuard.active) return
                 // Re-read the current profile and scale on connection, never the startup snapshot.
                 if (KeymapConfig(this@TouchPointer).disableAutoProfiling) launchProfile(selectedProfile)
                 else refreshForeground()
@@ -300,6 +338,7 @@ class TouchPointer : Service() {
     }
 
     override fun onDestroy() {
+        cancelScreenChecks()
         runCatching { unregisterReceiver(screenOff) }
         favoriteOverlay?.close(); favoriteOverlay = null
         xtr.keymapper.editor.EditorSessionGuard.remove(editorListener)

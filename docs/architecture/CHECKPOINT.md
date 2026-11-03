@@ -306,3 +306,22 @@ unlock request pending. Mapping is stopped. After manual unlock activate only
 existing Kimmy copy; test lock with sticks CENTERED first, then unlock without Use
 and check right-stick shooting/skills. Do not inject automated touches into MLBB.
 Preserve Bennett400/180, open neighboring-skill regression, draft PR14 dependency.
+
+### Unlock settling candidate
+
+f1360fe user test FAILED after locking while firing: icon absent/controller dead,
+game still firing. ADB proved MM foreground service/root/reader still alive, so
+retention worked but session resume failed. Manual Attack recovery performed, then
+fresh exclusive zero-contact acknowledgement and own-app stop verified root exit.
+Added bounded keyguard settling, display callback fallback and three observer
+refreshes over 2.5s (same observer/reader); ordinary callbacks still deduplicate.
+Added standard service dump: screen_suspended, last_screen_action, session_running,
+overlay_attached, root_alive, mapping_paused. 310 tests/lint/build pass. Actual new
+screen_resume suite PASSED real manual unlock and fresh foreground observation,
+remaining paused outside MLBB. Profiles/favorites/settings identical after tests.
+Current APK hash: see unlock-settling-validation.json. Kimmy now ACTIVE again;
+awaiting user centered-sticks lock/unlock test (no firing at lock) with M icon,
+right-stick and RT checks without Use. If failed, first collect dumpsys activity
+service PACKAGE/xtr.keymapper.TouchPointer while leaving game foreground; do not
+restart instrumentation with possible active game contacts. Existing Bennett and
+favorites untouched. Firing-during-lock cleanup remains a separate open failure.

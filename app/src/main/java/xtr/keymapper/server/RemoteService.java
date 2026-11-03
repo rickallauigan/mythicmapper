@@ -386,6 +386,11 @@ public class RemoteService extends IRemoteService.Stub {
     }
 
     @Override
+    public void refreshActivityObserver() {
+        if (activityObserverService != null) activityObserverService.refresh();
+    }
+
+    @Override
     public void unregisterActivityObserver(ActivityObserver callback) {
         if (activityObserverService != null)
             activityObserverService.stop();

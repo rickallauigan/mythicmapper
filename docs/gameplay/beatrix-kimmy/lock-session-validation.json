@@ -128,7 +128,7 @@
   },
   "data_retained": true,
   "bennett_unchanged": true,
-  "physical_training_resume": "PENDING",
+  "physical_training_resume": "FAIL: user locked while shooting; after unlock M icon absent, controller unresponsive, game still firing. ADB shows foreground service/root/reader remained alive. Session resumption not established.",
   "known_separate_failure": "Kimmy game may retain firing when locked during shooting; prior CANCEL candidate did not fix gameplay observation",
   "apk_sha256": "3218a176e362b555d084925a17df8b501a07452d0deced2045673b60d69fcfc5"
 }

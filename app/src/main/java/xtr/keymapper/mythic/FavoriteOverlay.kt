@@ -110,6 +110,7 @@ class FavoriteOverlay(private val service: TouchPointer, private val select: (St
             panelScroll.visibility=View.VISIBLE;root.post {clamp();if(attached)manager.updateViewLayout(root,params)}
         } catch(error:Exception) {Toast.makeText(service,error.message,Toast.LENGTH_LONG).show()}
     }
+    fun isAttached() = attached
     fun close() {
         EditorSessionGuard.remove(editorVisibility)
         handler.removeCallbacks(refresh)

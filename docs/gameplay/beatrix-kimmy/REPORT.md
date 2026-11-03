@@ -378,3 +378,28 @@ matched before and after the disposable tests. Actual Training unlock resumption
 remains pending; see lock-session-validation.json. Bennett configuration and
 firing logic are unchanged. This service-lifecycle change does not itself prove
 that MLBB receives cleanup after screen-off.
+
+### Unlock follow-up after f1360fe
+
+The user locked while firing and reported no M icon or controller response after
+unlock, while Kimmy still fired with sticks centered. ADB confirmed TouchPointer
+was still started and foreground, its ongoing notification existed, and app/root/
+reader processes survived. Therefore service retention passed but functional
+session restoration failed. The user manually recovered via Attack, then a fresh
+exclusive diagnostic acknowledgement showed zero contacts before only MM was
+stopped. This is separate from proving game-side touch cleanup.
+
+The next candidate adds bounded keyguard settling (250 ms, at most 10 seconds per
+wake/unlock attempt), a display-change wake fallback and three fresh foreground
+samples over 2.5 seconds after connection. It reuses the same observer/reader;
+ordinary observations stay deduplicated. Relock/Stop cancels queued checks. These
+cover possible unlock-ordering/cache races; the exact cause of the previous device
+failure has not yet been established. Standard service dump now exposes suspension,
+last screen action, overlay attachment and root readiness without profile IDs.
+An extended safe-screen test now waits for the user's real unlock and requires a
+fresh foreground callback and mapping to remain paused outside MLBB. All 310 Android tests, lint/build/release-manifest processing pass. On the
+S10e, the extended safe-screen test passed after real manual unlock: the session
+restarted, a fresh foreground callback was observed, and mapping remained paused
+outside MLBB. Guarded touch and diagnostic exclusivity passed with zero gameplay
+submissions. All profiles/favorites/settings compared unchanged. Actual centered-
+stick Training lock/unlock resumption is pending; see unlock-settling-validation.json.
