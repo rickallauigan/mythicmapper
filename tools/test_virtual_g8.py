@@ -10,7 +10,7 @@ class VirtualWorkflowTests(unittest.TestCase):
             module.adb('shell','getprop','ro.kernel.qemu')
             self.assertEqual(run.call_args.args[0][1:3],['-s',module.CONFIG['serial']])
     def test_verify_refuses_physical_target(self):
-        with patch.object(module,'output',return_value='0'):
+        with patch.object(module,'owned'), patch.object(module,'output',return_value='0'):
             with self.assertRaises(RuntimeError):module.verify()
     def test_scenarios_are_bounded_and_provenanced(self):
         cases=list((ROOT/'tools/scenarios').glob('*.json'));self.assertGreaterEqual(len(cases),7)

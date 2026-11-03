@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Owned AVD only. Never selects a physical ADB target or wipes app/device data."""
-import argparse, base64, hashlib, json, os, pathlib, re, shutil, subprocess, sys, time, uuid, zipfile
+import argparse, base64, hashlib, json, os, pathlib, re, shlex, shutil, subprocess, sys, time, uuid, zipfile
 import xml.etree.ElementTree as ET
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 CONFIG=json.loads((ROOT/'tools/virtual-g8-avd.json').read_text())
@@ -11,7 +11,7 @@ PKG='io.github.rickallauigan.mythicmapper.debug'
 ENV=dict(os.environ,ANDROID_AVD_HOME=str(WORK/'avd'))
 def command(argv, **kw):
     shown=[str(x) if len(str(x))<200 else '<argument '+str(len(str(x)))+' bytes>' for x in argv]
-    print('+ '+' '.join(shown),file=sys.stderr,flush=True)
+    print('+ '+shlex.join(shown),file=sys.stderr,flush=True)
     kw.setdefault("text",True)
     return subprocess.run(list(map(str,argv)),check=True,env=ENV,**kw)
 def adb(*args,**kw):return command([SDK/'platform-tools/adb','-s',CONFIG['serial'],*args],**kw)
@@ -24,6 +24,7 @@ def owned():
     if not args.exists() or CONFIG['name'] not in args.read_bytes().decode(errors='replace'):
         raise RuntimeError('Recorded emulator process is no longer owned/alive')
 def verify():
+    owned()
     if output('shell','getprop','ro.kernel.qemu')!='1':raise RuntimeError('Refusing non-emulator target')
     if output('emu','avd','name').splitlines()[0]!=CONFIG['name']:raise RuntimeError('Target is not this workflow AVD')
 def doctor():
@@ -83,6 +84,7 @@ def install():
     adb('install','-r',apk)
     save('install.json',{'apk_sha256':hashlib.sha256(apk.read_bytes()).hexdigest(),'abi':'x86_64','native_libraries':libs,'target':CONFIG['serial']})
 def run(path):
+    print('+ '+shlex.join(['python3','tools/virtual_g8.py','run',str(path)]),file=sys.stderr)
     verify();raw=pathlib.Path(path).read_bytes()
     if len(raw)>48000:raise ValueError('Scenario exceeds 48KB')
     data=json.loads(raw)
@@ -105,7 +107,12 @@ def run(path):
     save(name+'.json',report);print(json.dumps({'id':name,'status':report['status'],'events':len(report.get('touch_trace',[])),'final_pointers':report.get('final_pointers'),'report':str((WORK/(name+'.json')).relative_to(ROOT))}))
     if report['status']!='PASS':raise RuntimeError(report.get('error','Scenario failed'))
 def smoke():
-    verify();result=adb('shell','am','instrument','-w','-e','smoke','true',PKG+'/xtr.keymapper.virtual.VirtualG8Instrumentation',capture_output=True,timeout=100).stdout
+    verify()
+    jni=adb('shell','am','instrument','-w','-e','suite','jni',PKG+'/xtr.keymapper.validation.HardwareValidationInstrumentation',capture_output=True,timeout=60).stdout
+    (WORK/'jni.instrumentation.txt').write_text(jni)
+    parity=json.loads(output('exec-out','run-as',PKG,'cat','files/validation/jni.json'));save('jni.json',parity)
+    if parity['status']!='PASS' or parity.get('result',{}).get('abi')!='x86_64':raise RuntimeError('Packaged x86_64 JNI parity/ABI check failed')
+    result=adb('shell','am','instrument','-w','-e','smoke','true',PKG+'/xtr.keymapper.virtual.VirtualG8Instrumentation',capture_output=True,timeout=100).stdout
     (WORK/'smoke.instrumentation.txt').write_text(result)
     report=json.loads(output('exec-out','run-as',PKG,'cat','files/virtual-g8/result.json'));save('smoke.json',report);print(json.dumps(report))
     if report['status']!='PASS':raise RuntimeError('UI smoke failed')

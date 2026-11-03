@@ -36,6 +36,9 @@ class VirtualG8Instrumentation:Instrumentation() {
         val activity=startActivitySync(Intent(targetContext,VirtualG8Activity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) as VirtualG8Activity
         var session:VirtualG8Session?=null;val observations=JSONArray()
         try {
+            val focusDeadline=SystemClock.elapsedRealtime()+10000
+            while(!activity.hasWindowFocus()&&SystemClock.elapsedRealtime()<focusDeadline)SystemClock.sleep(20)
+            check(activity.hasWindowFocus()){"Virtual surface never acquired focus"}
             onMain{activity.enable(false);session=activity.session}
             var previousTime=0L
             for(i in 0 until steps.length()) {

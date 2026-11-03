@@ -33,7 +33,8 @@ jobs:
         run: sudo chmod a+rw /dev/kvm
       - name: Install pinned AOSP image and check prerequisites
         run: |
-          sdkmanager 'emulator' 'system-images;android-36;default;x86_64'
+          sdk_root="${ANDROID_HOME:-${ANDROID_SDK_ROOT:?Android SDK path required}}"
+          "$sdk_root/cmdline-tools/latest/bin/sdkmanager" 'emulator' 'system-images;android-36;default;x86_64'
           python3 tools/virtual_g8.py doctor
           python3 tools/virtual_g8.py setup
       - name: Boot, install, run UI and deterministic mapping scenarios
@@ -43,10 +44,16 @@ jobs:
           python3 tools/virtual_g8.py smoke
       - name: Collect failure diagnostics
         if: failure()
-        run: python3 tools/virtual_g8.py collect
+        run: |
+          if [ -f app/build/virtual-g8/owned-process.json ]; then
+            python3 tools/virtual_g8.py collect
+          fi
       - name: Stop only this workflow emulator
         if: always()
-        run: python3 tools/virtual_g8.py stop
+        run: |
+          if [ -f app/build/virtual-g8/owned-process.json ]; then
+            python3 tools/virtual_g8.py stop
+          fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:
