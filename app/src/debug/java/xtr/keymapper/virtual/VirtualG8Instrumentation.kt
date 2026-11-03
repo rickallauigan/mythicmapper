@@ -28,6 +28,11 @@ class VirtualG8Instrumentation:Instrumentation() {
         runOnMainSync{try{action()}catch(e:Throwable){failure=e}}
         failure?.let{throw it}
     }
+    private fun awaitFocus(activity:Activity) {
+        val deadline=SystemClock.elapsedRealtime()+10000
+        while(!activity.hasWindowFocus()&&SystemClock.elapsedRealtime()<deadline)SystemClock.sleep(20)
+        check(activity.hasWindowFocus()){"Test surface never acquired focus: ${activity.javaClass.simpleName}"}
+    }
     private fun replay(scenario:JSONObject):JSONObject {
         require(scenario.getInt("schema")==1);require(scenario.getString("source")=="synthetic")
         val steps=scenario.getJSONArray("steps");require(steps.length() in 1..2000)
@@ -36,9 +41,7 @@ class VirtualG8Instrumentation:Instrumentation() {
         val activity=startActivitySync(Intent(targetContext,VirtualG8Activity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) as VirtualG8Activity
         var session:VirtualG8Session?=null;val observations=JSONArray()
         try {
-            val focusDeadline=SystemClock.elapsedRealtime()+10000
-            while(!activity.hasWindowFocus()&&SystemClock.elapsedRealtime()<focusDeadline)SystemClock.sleep(20)
-            check(activity.hasWindowFocus()){"Virtual surface never acquired focus"}
+            awaitFocus(activity)
             onMain{activity.enable(false);session=activity.session}
             var previousTime=0L
             for(i in 0 until steps.length()) {
@@ -68,9 +71,9 @@ class VirtualG8Instrumentation:Instrumentation() {
         fun launch(type:Class<out Activity>,extras:(Intent)->Unit={}) {
             val intent=Intent(targetContext,type).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);extras(intent)
             val activity=startActivitySync(intent)
-            try{waitForIdleSync();check(!activity.isFinishing){"Activity finished during smoke: ${type.simpleName}"};checks.put(type.simpleName)}finally{onMain{activity.finish()};waitForIdleSync()}
+            try{waitForIdleSync();check(activity.window.decorView.isShown){"Activity window not rendered: ${type.simpleName}"};check(!activity.isFinishing){"Activity finished during smoke: ${type.simpleName}"};checks.put(type.simpleName)}finally{onMain{activity.finish()};waitForIdleSync()}
         }
-        launch(xtr.keymapper.activity.MainActivity::class.java)
+        launch(VirtualHomeActivity::class.java)
         val store=xtr.keymapper.mythic.HeroLibraryStore(targetContext);val before=store.read()
         check(before.favorites.size==5);check(xtr.keymapper.mythic.HeroCatalog.presets.isNotEmpty());checks.put("offline-library-and-five-slots")
         launch(xtr.keymapper.tester.TesterActivity::class.java)
@@ -79,6 +82,7 @@ class VirtualG8Instrumentation:Instrumentation() {
         try{launch(xtr.keymapper.editor.EditorActivity::class.java){it.putExtra(xtr.keymapper.editor.EditorActivity.PROFILE_NAME,profile.id);it.putExtra(xtr.keymapper.editor.EditorActivity.VISUAL,true)}}finally{store.delete(profile.id)}
         val activity=startActivitySync(Intent(targetContext,VirtualG8Activity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) as VirtualG8Activity
         try {
+            awaitFocus(activity)
             onMain{activity.enable();activity.session!!.command(JSONObject().put("action","axis").put("code","ABS_RX").put("value",255))}
             waitForIdleSync();check(activity.session!!.snapshot().getInt("active_pointers")==1){"Virtual UI did not observe shooting contact"}
             onMain{activity.requestedOrientation=android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT};SystemClock.sleep(600)

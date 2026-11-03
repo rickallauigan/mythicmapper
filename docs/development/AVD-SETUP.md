@@ -43,6 +43,7 @@ claimed identical. Review image revision updates deliberately.
 python3 tools/virtual_g8.py boot                 # headless; reuses owned running AVD
 python3 tools/virtual_g8.py boot --gui           # GUI on next boot
 python3 tools/virtual_g8.py boot --gpu swiftshader # explicit software graphics fallback
+python3 tools/virtual_g8.py home               # real Home UI; root-free debug prompt adapter
 python3 tools/virtual_g8.py ui
 python3 tools/virtual_g8.py run tools/scenarios/kimmy-skill-resume.json
 python3 tools/virtual_g8.py run tools/scenarios/beatrix-bennett.json
@@ -102,3 +103,16 @@ current serial and stop any injecting mapper. Existing `tools/validate_s10e.py`
 requires `--serial` and a matching device model; choose its suites deliberately.
 The virtual CLI intentionally refuses physical targets. Never copy disposable
 simulation geometry into calibrated personal profiles as if it were verified.
+
+The debug-only `VirtualHomeActivity` subclasses the actual Home Activity. On an
+unrooted AVD it shows an informational toast instead of the blocking root-unavailable
+modal; root backend permissions and production Home remain unchanged. Offline
+profiles/favorites use the existing UI. The editor can show its existing backend
+unavailable advisory; smoke checks its window renders, not privileged capture.
+Only virtual input replay requires exclusive Activity window focus throughout.
+
+`smoke` and scenario startup check for a late SystemUI startup ANR too. At most
+one verified SystemUI Wait recovery is allowed per CLI invocation. If this occurs
+during UI smoke, the complete smoke is repeated and its prior result/output are
+retained. Mapping assertion failures and other application ANRs are never retried
+or dismissed. Repeated SystemUI ANRs fail the command.

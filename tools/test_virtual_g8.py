@@ -35,3 +35,12 @@ class VirtualWorkflowTests(unittest.TestCase):
         valid='INSTRUMENTATION_RESULT: virtual_g8={"status":"PASS"}\nINSTRUMENTATION_CODE: -1'
         self.assertEqual(module.instrument_report(valid,'virtual_g8')['status'],'PASS')
         with self.assertRaises(ValueError):module.instrument_report(valid+'\n'+valid,'virtual_g8')
+
+    def test_suite_recovery_is_bounded_and_never_recovers_an_app_failure(self):
+        with patch.object(module,'AUTO_RECOVERIES',0), patch.object(module,'output',return_value='Application Not Responding: com.android.systemui'), patch.object(module,'recover')as recover:
+            self.assertTrue(module.platform_ready())
+            with self.assertRaises(RuntimeError):module.platform_ready()
+            recover.assert_called_once()
+        with patch.object(module,'output',return_value='Application Not Responding: mythicmapper'), patch.object(module,'recover')as recover:
+            with self.assertRaises(RuntimeError):module.platform_ready()
+            recover.assert_not_called()

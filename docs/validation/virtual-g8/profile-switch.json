@@ -25,7 +25,7 @@
   "final_pointers": 0,
   "touch_trace": [
     {
-      "t_ms": 203,
+      "t_ms": 290,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 0,
       "pointer": 51,
@@ -34,7 +34,7 @@
       "active": 1
     },
     {
-      "t_ms": 203,
+      "t_ms": 290,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 2,
       "pointer": 51,
@@ -43,7 +43,7 @@
       "active": 1
     },
     {
-      "t_ms": 296,
+      "t_ms": 447,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 1,
       "pointer": 51,
@@ -52,7 +52,7 @@
       "active": 0
     },
     {
-      "t_ms": 314,
+      "t_ms": 465,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 0,
       "pointer": 51,
@@ -61,7 +61,7 @@
       "active": 1
     },
     {
-      "t_ms": 326,
+      "t_ms": 475,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 1,
       "pointer": 51,
@@ -70,7 +70,7 @@
       "active": 0
     },
     {
-      "t_ms": 352,
+      "t_ms": 503,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 0,
       "pointer": 51,
@@ -79,7 +79,7 @@
       "active": 1
     },
     {
-      "t_ms": 352,
+      "t_ms": 503,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 2,
       "pointer": 51,
@@ -88,7 +88,7 @@
       "active": 1
     },
     {
-      "t_ms": 363,
+      "t_ms": 514,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 1,
       "pointer": 51,
@@ -107,17 +107,17 @@
         "active_pointers": 1
       },
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 203
+      "observed_ms": 289
     },
     {
       "packet": "EV_ABS ABS_RX ff",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 203
+      "observed_ms": 290
     },
     {
       "packet": "EV_SYN SYN_REPORT 0",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 203
+      "observed_ms": 290
     },
     {
       "at_ms": 20,
@@ -127,7 +127,7 @@
         "active_pointers": 0
       },
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 296
+      "observed_ms": 446
     },
     {
       "at_ms": 30,
@@ -138,12 +138,12 @@
         "active_pointers": 1
       },
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 313
+      "observed_ms": 464
     },
     {
       "packet": "EV_KEY BTN_TL2 DOWN",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 313
+      "observed_ms": 464
     },
     {
       "at_ms": 40,
@@ -153,7 +153,7 @@
         "active_pointers": 0
       },
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 326
+      "observed_ms": 475
     },
     {
       "at_ms": 50,
@@ -161,17 +161,17 @@
       "value": 128,
       "action": "axis",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 341
+      "observed_ms": 492
     },
     {
       "packet": "EV_ABS ABS_RX 80",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 341
+      "observed_ms": 492
     },
     {
       "packet": "EV_SYN SYN_REPORT 0",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 341
+      "observed_ms": 492
     },
     {
       "at_ms": 60,
@@ -182,17 +182,17 @@
         "active_pointers": 1
       },
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 352
+      "observed_ms": 503
     },
     {
       "packet": "EV_ABS ABS_RX ff",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 352
+      "observed_ms": 503
     },
     {
       "packet": "EV_SYN SYN_REPORT 0",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 352
+      "observed_ms": 503
     },
     {
       "at_ms": 70,
@@ -201,12 +201,13 @@
         "active_pointers": 0
       },
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 362
+      "observed_ms": 514
     }
   ],
   "platform_touch_submissions": 0,
   "movement_note": "ABS_X/Y remain native/pass-through in production; no fake movement touch",
   "physical_gameplay": "UNVERIFIED; issue #20 deferred",
+  "request_id": "a7fbc37f49fc48a387f43ac44a6f4c23",
   "schema": 1,
   "id": "profile-switch",
   "status": "PASS",

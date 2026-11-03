@@ -21,7 +21,7 @@
   "ui_smoke": {
     "status": "PASS",
     "checks": [
-      "MainActivity",
+      "VirtualHomeActivity",
       "offline-library-and-five-slots",
       "TesterActivity",
       "EditorActivity",
@@ -92,7 +92,7 @@
   "lint_build_inventory": "PASS",
   "release_merged_manifest_virtual_entries": 0,
   "production_main_and_profiles_diff_from_base": false,
-  "apk_sha256": "7b022775046b5dec565fe0dc3fba2005ad7383a11779bae390b945c2b79171e9",
+  "apk_sha256": "691eb7db9892c03cbd0ceaa6233ba40fd7354d94adf4c22b63b3989b0a0c16e5",
   "physical_gameplay": "NOT TESTED; issue20 deferred",
   "avd_jni": {
     "suite": "jni",
@@ -119,7 +119,6 @@
     },
     "status": "PASS"
   },
-  "implementation_commit": "c20f709",
   "cold_stop_restart": "PASS, owned process only; Bennett/Kimmy replay passed again",
   "latest_boot_recovery": {
     "systemui_startup_anr_observed": true,
@@ -147,12 +146,13 @@
       "physical_device_dependency": false
     }
   },
-  "final_local_validation": "322 Android/11 Python; JNI/UI/7-case PASS with final APK",
+  "final_local_validation": "322 Android/12 Python; JNI/UI/7-case PASS; root-free debug Home adapter",
   "release_compile": "Kotlin and Java PASS; no simulator in release Kotlin classes or merged manifest",
   "duplicate_resume_regression": {
     "before_fix": "Reproduced Cleanup leaked contacts under held Bennett repeat",
     "after_fix": "PASS; idempotent owner and locked-resume cleanup; covered on host and AVD"
   },
   "fixture_inputs": "Declared as Gradle test inputs",
-  "robolectric_ci_http429": "Canonical Maven Central URL + scoped SDK jar cache; no tests disabled"
+  "robolectric_ci_http429": "Canonical Maven Central URL + scoped SDK jar cache; no tests disabled",
+  "jni_abi_fix_commit": "c20f709"
 }

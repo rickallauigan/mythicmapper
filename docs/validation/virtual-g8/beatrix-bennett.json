@@ -25,7 +25,7 @@
   "final_pointers": 0,
   "touch_trace": [
     {
-      "t_ms": 317,
+      "t_ms": 331,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 0,
       "pointer": 51,
@@ -34,7 +34,7 @@
       "active": 1
     },
     {
-      "t_ms": 358,
+      "t_ms": 372,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 2,
       "pointer": 51,
@@ -43,7 +43,7 @@
       "active": 1
     },
     {
-      "t_ms": 397,
+      "t_ms": 412,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 1,
       "pointer": 51,
@@ -52,7 +52,7 @@
       "active": 0
     },
     {
-      "t_ms": 717,
+      "t_ms": 732,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 0,
       "pointer": 51,
@@ -61,7 +61,7 @@
       "active": 1
     },
     {
-      "t_ms": 758,
+      "t_ms": 773,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 2,
       "pointer": 51,
@@ -70,7 +70,7 @@
       "active": 1
     },
     {
-      "t_ms": 769,
+      "t_ms": 783,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 2,
       "pointer": 51,
@@ -79,7 +79,7 @@
       "active": 1
     },
     {
-      "t_ms": 798,
+      "t_ms": 813,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 1,
       "pointer": 51,
@@ -88,7 +88,7 @@
       "active": 0
     },
     {
-      "t_ms": 1118,
+      "t_ms": 1134,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 0,
       "pointer": 51,
@@ -97,7 +97,7 @@
       "active": 1
     },
     {
-      "t_ms": 1158,
+      "t_ms": 1175,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 2,
       "pointer": 51,
@@ -106,7 +106,7 @@
       "active": 1
     },
     {
-      "t_ms": 1198,
+      "t_ms": 1214,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 1,
       "pointer": 51,
@@ -121,7 +121,7 @@
       "action": "profile",
       "profile": "BENNETT",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 29
+      "observed_ms": 16
     },
     {
       "at_ms": 10,
@@ -129,17 +129,17 @@
       "code": "ABS_RX",
       "value": 255,
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 193
+      "observed_ms": 212
     },
     {
       "packet": "EV_ABS ABS_RX ff",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 193
+      "observed_ms": 212
     },
     {
       "packet": "EV_SYN SYN_REPORT 0",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 193
+      "observed_ms": 212
     },
     {
       "at_ms": 20,
@@ -150,25 +150,25 @@
         "active_pointers": 1
       },
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 316
+      "observed_ms": 330
     },
     {
       "packet": "EV_KEY BTN_TL2 DOWN",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 317
+      "observed_ms": 330
     },
     {
       "at_ms": 200,
       "action": "screen_on",
       "unlocked": true,
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 498
+      "observed_ms": 512
     },
     {
       "at_ms": 210,
       "action": "diagnostics_off",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 509
+      "observed_ms": 523
     },
     {
       "at_ms": 470,
@@ -176,17 +176,17 @@
       "code": "ABS_RX",
       "value": 0,
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 769
+      "observed_ms": 783
     },
     {
       "packet": "EV_ABS ABS_RX 0",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 769
+      "observed_ms": 783
     },
     {
       "packet": "EV_SYN SYN_REPORT 0",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 769
+      "observed_ms": 783
     },
     {
       "at_ms": 1010,
@@ -197,23 +197,24 @@
         "active_pointers": 0
       },
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 1310
+      "observed_ms": 1328
     },
     {
       "packet": "EV_KEY BTN_TL2 UP",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 1310
+      "observed_ms": 1328
     },
     {
       "at_ms": 1010,
       "action": "checkpoint",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 1310
+      "observed_ms": 1329
     }
   ],
   "platform_touch_submissions": 0,
   "movement_note": "ABS_X/Y remain native/pass-through in production; no fake movement touch",
   "physical_gameplay": "UNVERIFIED; issue #20 deferred",
+  "request_id": "067250de02174261a494569218edd1b0",
   "schema": 1,
   "id": "beatrix-bennett",
   "status": "PASS",

@@ -158,3 +158,22 @@ SDK artifacts. Existing checks stay enabled. Configuration follows
 [Robolectric's documented runtime-repository option](https://robolectric.org/configuring/).
 Final APK installation and the complete fresh-result JNI/UI/seven-case AVD suite
 passed again; the later executable-head CI results are recorded in PR22.
+
+## Final root-free startup hardening
+
+Hosted executable head ab66e38 passed host run41632165307 but AVD run41632165539
+failed after a late SystemUI startup ANR appeared during orientation. Artifact
+logcat confirmed the platform failure. Startup now checks readiness before each
+scenario and after UI smoke, permitting only one verified SystemUI Wait per CLI
+invocation, retaining the earlier smoke evidence and repeating the full smoke.
+Other app ANRs and mapping assertion failures remain hard failures. Twelve Python
+checks cover fresh-output handling and bounded/target-specific recovery.
+
+The unrooted Home root-permission modal prevented interactive offline development.
+A debug-only Home subclass reuses the actual Home UI and replaces only that modal
+with an informational toast; it grants no privileges. Editor smoke checks that its
+window renders, allowing its existing backend-unavailable advisory. Virtual replay
+still requires exclusive window focus. Production source and personal data are
+unchanged. Final executable-head CI results are recorded in draft PR22.
+
+Final local rerun: JNI61,206 vectors/max error0, root-free Home/tester/editor window and orientation smoke PASS; all seven scenarios PASS, zero final pointers. No physical target commanded. Twelve tools tests PASS.

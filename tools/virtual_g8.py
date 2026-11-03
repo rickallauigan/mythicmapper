@@ -8,6 +8,7 @@ CONFIG=json.loads((ROOT/'tools/virtual-g8-avd.json').read_text())
 WORK=ROOT/'app/build/virtual-g8'
 SDK=pathlib.Path(os.environ.get('ANDROID_HOME',os.environ.get('ANDROID_SDK_ROOT',str(pathlib.Path.home()/'Android/Sdk'))))
 PKG='io.github.rickallauigan.mythicmapper.debug'
+AUTO_RECOVERIES=0
 ENV=dict(os.environ,ANDROID_AVD_HOME=str(WORK/'avd'))
 def command(argv, **kw):
     shown=[str(x) if len(str(x))<200 else '<argument '+str(len(str(x)))+' bytes>' for x in argv]
@@ -93,9 +94,11 @@ def install():
         if 'lib/x86_64/libmythicmapper_core_jni.so'not in libs:raise RuntimeError('x86_64 Rust JNI library missing')
     adb('install','-r',apk)
     save('install.json',{'apk_sha256':hashlib.sha256(apk.read_bytes()).hexdigest(),'abi':'x86_64','native_libraries':libs,'target':CONFIG['serial']})
+def home():
+    verify();adb('shell','am','start','-W','-n',PKG+'/xtr.keymapper.virtual.VirtualHomeActivity')
 def run(path):
     print('+ '+shlex.join(['python3','tools/virtual_g8.py','run',str(path)]),file=sys.stderr)
-    verify();raw=pathlib.Path(path).read_bytes()
+    verify();platform_ready();raw=pathlib.Path(path).read_bytes()
     if len(raw)>48000:raise ValueError('Scenario exceeds 48KB')
     data=json.loads(raw)
     if not isinstance(data,dict):raise ValueError('Scenario must be an object')
@@ -117,18 +120,35 @@ def run(path):
     save(name+'.json',report);print(json.dumps({'id':name,'status':report['status'],'events':len(report.get('touch_trace',[])),'final_pointers':report.get('final_pointers'),'report':str((WORK/(name+'.json')).relative_to(ROOT))}))
     if report['status']!='PASS':raise RuntimeError(report.get('error','Scenario failed'))
 def smoke():
-    verify()
+    verify();platform_ready()
     jni=adb('shell','am','instrument','-w','-e','suite','jni',PKG+'/xtr.keymapper.validation.HardwareValidationInstrumentation',capture_output=True,timeout=60).stdout
     (WORK/'jni.instrumentation.txt').write_text(jni)
     parity=instrument_report(jni,'validation');save('jni.json',parity)
     if parity['status']!='PASS' or parity.get('result',{}).get('abi')!='x86_64':raise RuntimeError('Packaged x86_64 JNI parity/ABI check failed')
-    result=adb('shell','am','instrument','-w','-e','smoke','true',PKG+'/xtr.keymapper.virtual.VirtualG8Instrumentation',capture_output=True,timeout=100).stdout
-    (WORK/'smoke.instrumentation.txt').write_text(result)
-    report=instrument_report(result,'virtual_g8');save('smoke.json',report);print(json.dumps(report))
+    def ui_attempt():
+        result=adb('shell','am','instrument','-w','-e','smoke','true',PKG+'/xtr.keymapper.virtual.VirtualG8Instrumentation',capture_output=True,timeout=100).stdout
+        (WORK/'smoke.instrumentation.txt').write_text(result)
+        return instrument_report(result,'virtual_g8')
+    report=ui_attempt()
+    if report['status']!='PASS' and 'focus'not in report.get('error','').lower():
+        save('smoke.json',report);raise RuntimeError('UI smoke assertion failed')
+    if platform_ready():
+        save('smoke-before-platform-recovery.json',report)
+        shutil.copyfile(WORK/'smoke.instrumentation.txt',WORK/'smoke-before-platform-recovery.instrumentation.txt')
+        report=ui_attempt();report['environment_recovered']=True
+    save('smoke.json',report);print(json.dumps(report))
     if report['status']!='PASS':raise RuntimeError('UI smoke failed')
     for p in sorted((ROOT/'tools/scenarios').glob('*.json')):run(p)
 def collect():
     verify();(WORK/'logcat.txt').write_text(output('logcat','-d','-t','1000'));adb('exec-out','screencap','-p',stdout=(WORK/'screenshot.png').open('wb'),text=False)
+def platform_ready():
+    global AUTO_RECOVERIES
+    windows=output('shell','dumpsys','window','displays')
+    if 'Application Not Responding: com.android.systemui' in windows:
+        if AUTO_RECOVERIES>=1:raise RuntimeError('Repeated SystemUI startup ANR; no further automatic recovery')
+        recover();AUTO_RECOVERIES+=1;return True
+    if 'Application Not Responding:'in windows:raise RuntimeError('Application ANR blocks tests; no automatic recovery')
+    return False
 def recover():
     """One explicit Wait on a verified owned-AVD SystemUI startup ANR, never an app ANR."""
     verify();windows=output('shell','dumpsys','window','displays')
@@ -161,7 +181,7 @@ def stop():
         time.sleep(.5)
     raise RuntimeError('Owned emulator shutdown timeout; marker retained')
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('command',choices=['doctor','setup','boot','wait','build','install','ui','run','smoke','collect','recover','stop']);p.add_argument('scenario',nargs='?');p.add_argument('--install-sdk',action='store_true');p.add_argument('--gui',action='store_true');p.add_argument('--gpu',default='auto');a=p.parse_args()
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('command',choices=['doctor','setup','boot','wait','build','install','ui','home','run','smoke','collect','recover','stop']);p.add_argument('scenario',nargs='?');p.add_argument('--install-sdk',action='store_true');p.add_argument('--gui',action='store_true');p.add_argument('--gpu',default='auto');a=p.parse_args()
     if a.command=='setup':create(a.install_sdk)
     elif a.command=='boot':boot(a.gui,a.gpu)
     elif a.command=='run':
