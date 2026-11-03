@@ -149,12 +149,27 @@ class UxInstrumentation:Instrumentation() {
             check(field<WindowManager.LayoutParams>(o,"params").let{it.x to it.y}==before)
             gesture(header);val list=field<LinearLayout>(o,"panel");val favorite=list.getChildAt(1)
             gesture(favorite);check(a.selections==1&&panel.visibility==View.GONE)
+            // Exercise the actual overlay editor tap and return, with one disposable UUID mirror.
+            val profile=field<xtr.keymapper.mythic.HeroProfile>(a,"profile")
+            val mappings=xtr.keymapper.keymap.KeymapProfiles(targetContext).sharedPref
+            check(!mappings.contains(profile.id))
+            mappings.edit().putStringSet(profile.id,xtr.keymapper.mythic.HeroTrainingProfiles.draft(xtr.keymapper.controller.HeroGameplayConfig.Hero.KIMMY)).commit()
+            val editorMonitor=addMonitor(xtr.keymapper.editor.EditorActivity::class.java.name,null,false)
+            try {
+                gesture(header);main{panel.fullScroll(View.FOCUS_DOWN)};waitForIdleSync();SystemClock.sleep(300)
+                gesture(field<LinearLayout>(o,"panel").getChildAt(6))
+                val editor=waitForMonitorWithTimeout(editorMonitor,10000)?:error("Overlay editor did not open")
+                check(panel.visibility==View.GONE)
+                check((root.background as android.graphics.drawable.ColorDrawable).color==android.graphics.Color.TRANSPARENT)
+                main{editor.finish()};waitForIdleSync();SystemClock.sleep(300)
+                check(!EditorSessionGuard.active)
+            }finally{removeMonitor(editorMonitor);mappings.edit().remove(profile.id).commit()}
             val owner=Any();try{main{EditorSessionGuard.acquire(owner)};waitForIdleSync();check(root.visibility==View.GONE)}finally{main{EditorSessionGuard.release(owner)}}
             waitForIdleSync();check(root.visibility==View.VISIBLE)
             main{a.requestedOrientation=android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT};SystemClock.sleep(1100)
             check(o.isAttached());shot("bubble-portrait")
             main{o.close()};waitForIdleSync();check(!root.isAttachedToWindow)
-            return JSONObject().put("status","PASS").put("checks","48dp target; real tap/drag; expand/collapse; no drag select; selection; recreation; position; ownership hide; rotation; cleanup").put("mapper_submissions",0).put("source","owned AVD UI; isolated preview data; no root")
+            return JSONObject().put("status","PASS").put("checks","48dp target; real tap/drag; expand/collapse; no drag select; selection; recreation; position; overlay editor return/backdrop; ownership hide; rotation; cleanup").put("mapper_submissions",0).put("source","owned AVD UI; isolated preview data; no root")
         }finally{main{a.finish()};waitForIdleSync()}
     }
 }
