@@ -106,3 +106,10 @@ Host tests replay the same JSON files with a virtual clock. Reproduction uses
 Optional future work: sanitized observed-frame import, backend-rejection scenarios,
 system-visible uinput feasibility, root-enabled AVD touch delivery, richer UI
 navigation assertions. These are not silently claimed by the recording passes.
+
+The emulator CLI may navigate ordinary AVD UI and acknowledge the specifically
+observed SystemUI boot ANR using Wait. Those host-side ADB UI actions are separate
+from mapper touch submissions, which remain a non-injecting recording stream.
+`smoke` also invokes the existing root-free JNI suite and requires an actual x86_64
+ABI report. The inherited debug report's hardcoded ARM64 label was corrected to
+read Android's supported ABI and process bitness; no Rust hot-path change was made.

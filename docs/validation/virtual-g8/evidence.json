@@ -88,10 +88,44 @@
   "actual_kotlin_jni": "PASS including missing-library",
   "historical_fixture_hashes": "12/12",
   "profile_generator_tests": 12,
-  "python_quality_tests": 9,
+  "python_quality_tests": 10,
   "lint_build_inventory": "PASS",
   "release_merged_manifest_virtual_entries": 0,
   "production_main_and_profiles_diff_from_base": false,
-  "apk_sha256": "4e66b70b240a214c936614bead67c7a69ee74be8b9a943f1a6238dc7fc8fa68c",
-  "physical_gameplay": "NOT TESTED; issue20 deferred"
+  "apk_sha256": "07056dd8e6a1b0394c4948a108edbfdebc5f39daeec52ac7dddb3836a1138daf",
+  "physical_gameplay": "NOT TESTED; issue20 deferred",
+  "avd_jni": {
+    "suite": "jni",
+    "result": {
+      "abi": "x86_64",
+      "process_64bit": true,
+      "parity_vectors": 61206,
+      "max_abs_error": 0,
+      "missing_library_error_caught": true,
+      "invalid_input_neutral": true,
+      "java_reference_math": {
+        "n": 20000,
+        "p50_ns": 426,
+        "p95_ns": 1007,
+        "p99_ns": 2917
+      },
+      "rust_jni_reference_math": {
+        "n": 20000,
+        "p50_ns": 109,
+        "p95_ns": 156,
+        "p99_ns": 176
+      },
+      "measurement": "Device math microbenchmark; timer/sink overhead included; no physical display latency or hot-path migration"
+    },
+    "status": "PASS"
+  },
+  "implementation_commit": "c20f709",
+  "cold_stop_restart": "PASS, owned process only; Bennett/Kimmy replay passed again",
+  "latest_boot_recovery": {
+    "systemui_startup_anr_observed": true,
+    "action": "Verified owned-AVD SystemUI Wait; full JNI/UI/7-case suite rerun PASS",
+    "platform_clean_boot": "NOT CLAIMED"
+  },
+  "mapper_submission_scope": "Recording sink only; ordinary ADB UI navigation/recovery is separate",
+  "hosted_ci": "First SDK PATH failure corrected; second doctor GUI-version exit127 under investigation/headless version correction; latest PR checks authoritative"
 }

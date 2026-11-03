@@ -25,7 +25,7 @@
   "final_pointers": 0,
   "touch_trace": [
     {
-      "t_ms": 201,
+      "t_ms": 194,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 0,
       "pointer": 51,
@@ -34,7 +34,7 @@
       "active": 1
     },
     {
-      "t_ms": 201,
+      "t_ms": 195,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 2,
       "pointer": 51,
@@ -43,7 +43,7 @@
       "active": 1
     },
     {
-      "t_ms": 295,
+      "t_ms": 294,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 1,
       "pointer": 51,
@@ -52,7 +52,7 @@
       "active": 0
     },
     {
-      "t_ms": 318,
+      "t_ms": 312,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 0,
       "pointer": 51,
@@ -61,7 +61,7 @@
       "active": 1
     },
     {
-      "t_ms": 329,
+      "t_ms": 323,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 1,
       "pointer": 51,
@@ -107,17 +107,17 @@
         "active_pointers": 1
       },
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 200
+      "observed_ms": 194
     },
     {
       "packet": "EV_ABS ABS_RX ff",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 200
+      "observed_ms": 194
     },
     {
       "packet": "EV_SYN SYN_REPORT 0",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 201
+      "observed_ms": 194
     },
     {
       "at_ms": 20,
@@ -127,7 +127,7 @@
         "active_pointers": 0
       },
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 295
+      "observed_ms": 294
     },
     {
       "at_ms": 30,
@@ -138,12 +138,12 @@
         "active_pointers": 1
       },
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 317
+      "observed_ms": 310
     },
     {
       "packet": "EV_KEY BTN_TL2 DOWN",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 317
+      "observed_ms": 310
     },
     {
       "at_ms": 40,
@@ -153,7 +153,7 @@
         "active_pointers": 0
       },
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 329
+      "observed_ms": 323
     },
     {
       "at_ms": 50,
@@ -182,17 +182,17 @@
         "active_pointers": 1
       },
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 353
+      "observed_ms": 352
     },
     {
       "packet": "EV_ABS ABS_RX ff",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 353
+      "observed_ms": 352
     },
     {
       "packet": "EV_SYN SYN_REPORT 0",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 353
+      "observed_ms": 352
     },
     {
       "at_ms": 70,

@@ -46,6 +46,7 @@ python3 tools/virtual_g8.py ui
 python3 tools/virtual_g8.py run tools/scenarios/kimmy-skill-resume.json
 python3 tools/virtual_g8.py run tools/scenarios/beatrix-bennett.json
 python3 tools/virtual_g8.py collect
+python3 tools/virtual_g8.py recover              # only an observed owned-AVD SystemUI startup ANR
 python3 tools/virtual_g8.py stop
 ```
 
@@ -84,3 +85,19 @@ the local script does not change host permissions. Failures are retained as arti
 
 Official references: [emulator command line](https://developer.android.com/studio/run/emulator-commandline),
 [AVD configuration](https://developer.android.com/studio/run/managing-avds).
+
+On this host, later cold boots sometimes showed a SystemUI startup ANR (`failed to
+complete startup`). `recover` records it and presses **Wait** only after verifying
+owned emulator identity, the exact SystemUI ANR window/title and Android Wait button.
+It refuses other application ANRs, never presses Close app and changes no settings.
+Run the full failed suite again after recovery; this is not a clean-platform pass.
+CI performs this explicit bounded pre-test check and retains recovery evidence when
+used. Repeated ANRs remain a host/platform limitation, not a mapper success.
+The doctor uses headless `-no-window -version` so a headless runner need not load
+unused GUI Qt/audio dependencies. Missing runtime libraries are reported on stderr.
+
+For later physical validation, first request a separate S10e/G8 session, verify its
+current serial and stop any injecting mapper. Existing `tools/validate_s10e.py`
+requires `--serial` and a matching device model; choose its suites deliberately.
+The virtual CLI intentionally refuses physical targets. Never copy disposable
+simulation geometry into calibrated personal profiles as if it were verified.

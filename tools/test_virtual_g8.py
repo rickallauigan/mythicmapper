@@ -24,3 +24,8 @@ class VirtualWorkflowTests(unittest.TestCase):
     def test_pin_is_aosp_api36_x86_64(self):
         self.assertEqual(module.CONFIG['image'],'system-images;android-36;default;x86_64')
         self.assertEqual(module.CONFIG['image_revision'],'2')
+
+    def test_recovery_refuses_non_systemui_anr_without_any_input(self):
+        with patch.object(module,'verify'), patch.object(module,'output',return_value='mCurrentFocus=Application Not Responding: example.other'), patch.object(module,'adb')as adb:
+            with self.assertRaises(RuntimeError):module.recover()
+            adb.assert_not_called()

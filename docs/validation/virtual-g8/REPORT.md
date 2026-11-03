@@ -41,7 +41,7 @@ Actual AVD UI capture: [Virtual G8](virtual-controller-avd.png).
 | HOST-01 | All inherited and new Android tests | 320 tests, zero failures/errors/skips | PASS | full testDebugUnitTest run; new10 source tests |
 | HOST-02 | Lint/build/dependency inventory/release manifest | All tasks passed; zero VirtualG8 release manifest entries | PASS | Gradle task logs; evidence.json |
 | HOST-03 | Rust/native/JNI parity | Rust5, native3, JNI242406 vectors and actual Kotlin missing-library handling pass | PASS | existing scripts rerun |
-| HOST-04 | Fixtures/profiles/quality tooling | 12/12 fixture hashes; 12 generator tests; nine Python quality tests | PASS | existing scripts + new workflow tests |
+| HOST-04 | Fixtures/profiles/quality tooling | 12/12 fixture hashes; 12 generator tests; ten Python quality tests | PASS | existing scripts + new workflow tests |
 | SAFE-01 | Production allowlist/profile preservation | No app/src/main or historical profile diff from base | PASS | git diff against7efcf35 |
 | HW-01 | Physical G8/Lineage/MLBB compatibility | Not exercised by this harness | PENDING PHYSICAL | Preserve previous reports; no new certification |
 | ROOT-01 | RootService / Android injected touch delivery on AVD | Recording sink only | NOT TESTED | Optional rooted integration, not required for daily workflow |
@@ -91,3 +91,28 @@ a claim that hosted CI passed. No merge or production release is authorized.
 Daily commands, failure reproduction and owned-emulator cleanup:
 [AVD setup](../../development/AVD-SETUP.md), [virtual source](../../development/VIRTUAL-G8.md),
 [test matrix](../../development/TEST-MATRIX.md).
+
+## Cold-restart, JNI and CI follow-up
+
+Owned stop/cold restart and Bennett/Kimmy reruns passed. Later local cold boots in
+both graphics configurations encountered a focused **SystemUI isn't responding**
+dialog; events recorded SystemUI failing to complete startup. Exact host/platform
+cause is unproven. Tests correctly refused that foreground rather than ignoring
+the guard. An explicit `recover` command records the condition and presses Wait
+only on that verified owned-AVD SystemUI dialog; other app ANRs are refused. After
+recovery, the entire JNI/UI/seven-case suite passed again. These are recovered runs,
+not claims of clean boot reliability. No phone/keyguard/security setting was touched.
+
+The emulator JNI suite executed 61,206 vectors with zero max error, missing-library
+handling and a real x86_64/64-bit report. It exposed an inherited hardcoded ARM64
+report label, now corrected in debug instrumentation. Root-free smoke automatically
+checks the reported ABI. A bounded initial-focus wait also corrects a startup race;
+actual unexpected focus loss still aborts and cleans up.
+
+Hosted run41625577976 failed because sdkmanager was not on PATH; the workflow now
+uses its SDK path. Run41626628456 reached installation but doctor's emulator-version
+probe exited127; captured stderr was not previously surfaced. Doctor now reports
+stderr and uses headless `-no-window -version`, avoiding unnecessary GUI dependencies.
+The updated CI result remains pending; neither failure is relabelled PASS. The
+workflow's conditional cleanup only avoids stopping an emulator never created; it
+does not bypass any failed test. PR: https://github.com/rickallauigan/mythicmapper/pull/22.

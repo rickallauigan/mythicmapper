@@ -13,7 +13,10 @@ def command(argv, **kw):
     shown=[str(x) if len(str(x))<200 else '<argument '+str(len(str(x)))+' bytes>' for x in argv]
     print('+ '+shlex.join(shown),file=sys.stderr,flush=True)
     kw.setdefault("text",True)
-    return subprocess.run(list(map(str,argv)),check=True,env=ENV,**kw)
+    try:return subprocess.run(list(map(str,argv)),check=True,env=ENV,**kw)
+    except subprocess.CalledProcessError as error:
+        if error.stderr:print(str(error.stderr)[-4000:],file=sys.stderr)
+        raise
 def adb(*args,**kw):return command([SDK/'platform-tools/adb','-s',CONFIG['serial'],*args],**kw)
 def output(*args):return adb(*args,capture_output=True).stdout.strip()
 def save(name,data):
@@ -33,7 +36,7 @@ def doctor():
     r['cpu_cores']=os.cpu_count();r['available_memory_kb']=next((int(line.split()[1])for line in pathlib.Path('/proc/meminfo').read_text().splitlines()if line.startswith('MemAvailable:')),0)
     r['free_storage_bytes']=shutil.disk_usage(ROOT).free
     r['ndk_versions']=[p.name for p in (SDK/'ndk').glob('*')]
-    r['emulator_version']=command([SDK/'emulator/emulator','-version'],capture_output=True).stdout.splitlines()[0]
+    r['emulator_version']=command([SDK/'emulator/emulator','-no-window','-version'],capture_output=True).stdout.splitlines()[0]
     command([SDK/'emulator/emulator','-accel-check']);save('doctor.json',r);print(json.dumps(r,indent=2))
     if not all(r['tools'].values()) or not r['kvm_access']:raise RuntimeError('Missing tools or KVM access; see doctor.json')
 def create(install=False):
@@ -119,6 +122,27 @@ def smoke():
     for p in sorted((ROOT/'tools/scenarios').glob('*.json')):run(p)
 def collect():
     verify();(WORK/'logcat.txt').write_text(output('logcat','-d','-t','1000'));adb('exec-out','screencap','-p',stdout=(WORK/'screenshot.png').open('wb'),text=False)
+def recover():
+    """One explicit Wait on a verified owned-AVD SystemUI startup ANR, never an app ANR."""
+    verify();windows=output('shell','dumpsys','window','displays')
+    title='Application Not Responding: com.android.systemui'
+    if title not in windows:
+        if 'Application Not Responding:'in windows:raise RuntimeError('Refusing recovery for a non-SystemUI ANR')
+        print('No SystemUI startup ANR to recover');return
+    adb('shell','uiautomator','dump','/data/local/tmp/mythicmapper-boot-recovery.xml')
+    tree=ET.fromstring(output('exec-out','cat','/data/local/tmp/mythicmapper-boot-recovery.xml'))
+    nodes=list(tree.iter('node'))
+    if not any(n.get('resource-id')=='android:id/alertTitle'and n.get('text')=="System UI isn't responding"for n in nodes):raise RuntimeError('Unrecognized SystemUI dialog')
+    button=next(n for n in nodes if n.get('resource-id')=='android:id/aerr_wait'and n.get('package')=='android')
+    bounds=list(map(int,re.findall(r'\d+',button.get('bounds',''))))
+    if len(bounds)!=4 or not(0<=bounds[0]<bounds[2]<=CONFIG['width']and 0<=bounds[1]<bounds[3]<=CONFIG['height']):raise RuntimeError('Unexpected Wait bounds')
+    if title not in output('shell','dumpsys','window','displays'):raise RuntimeError('Recovery focus changed; no tap submitted')
+    events=output('logcat','-d','-b','events','-s','am_anr')
+    save('boot-recovery.json',{'observed_systemui_startup_anr':True,'action':'Wait on verified owned AVD only','events':events})
+    adb('shell','input','tap',str((bounds[0]+bounds[2])//2),str((bounds[1]+bounds[3])//2))
+    time.sleep(1)
+    if title in output('shell','dumpsys','window','displays'):raise RuntimeError('SystemUI recovery did not dismiss dialog')
+    print('Observed SystemUI startup ANR acknowledged with Wait; rerun the complete failed suite')
 def stop():
     if not (WORK/'owned-process.json').exists():raise RuntimeError('No owned emulator process recorded')
     owned();verify();adb('emu','kill')
@@ -130,7 +154,7 @@ def stop():
         time.sleep(.5)
     raise RuntimeError('Owned emulator shutdown timeout; marker retained')
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('command',choices=['doctor','setup','boot','wait','build','install','ui','run','smoke','collect','stop']);p.add_argument('scenario',nargs='?');p.add_argument('--install-sdk',action='store_true');p.add_argument('--gui',action='store_true');p.add_argument('--gpu',default='auto');a=p.parse_args()
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('command',choices=['doctor','setup','boot','wait','build','install','ui','run','smoke','collect','recover','stop']);p.add_argument('scenario',nargs='?');p.add_argument('--install-sdk',action='store_true');p.add_argument('--gui',action='store_true');p.add_argument('--gpu',default='auto');a=p.parse_args()
     if a.command=='setup':create(a.install_sdk)
     elif a.command=='boot':boot(a.gui,a.gpu)
     elif a.command=='run':

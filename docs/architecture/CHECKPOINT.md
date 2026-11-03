@@ -355,3 +355,14 @@ infrastructure/docs commit, create stacked draft against feature/beatrix-kimmy-g
 observe CI, test owned stop/reboot, record PR/SHA. Do not merge or touch physicalphone.
 Migration bundle docs/MYTHICMAPPER-AVD.md and appended MIGRATION.md changed locally
 only; preserve unrelated migration changes, no commit/push of that separate repo.
+
+Issue21 follow-up: draftPR22 targets feature/beatrix-kimmy-gameplay. Sourcec20f709
+adds initial focus wait, real x86_64 JNI report and CLI ABI parity check.320 Android
+and Python10 tests pass; JNI61206 onAVD maxerror0. Owned stop/restart and fresh
+Bennett/Kimmy replay pass. Later local boots showed SystemUI startupANR onbothGPU
+modes; explicit verified AVD-only recover/Wait (refuses other appANRs) then full
+JNI/UI/seven-case replay PASS. Keep this platform caveat; not a clean boot pass.
+CIfirst failed SDKmanagerPATH (fixedSDKpath), second doctor-version127 lackedstderr.
+Doctor now printsstderr/headless-versionprobe; newCIpendingafterpush. No main source,
+physicalphone commands or profiles changed. Follow PRchecks until feasiblegreen;
+never merge. Migration docs remain localuncommitted in separate dirty repo.
