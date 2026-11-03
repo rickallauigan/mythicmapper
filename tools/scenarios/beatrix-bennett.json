@@ -2,7 +2,7 @@
   "schema": 1,
   "id": "beatrix-bennett",
   "source": "synthetic",
-  "description": "Disposable Bennett radius180/cadence400 fixture; actual personal profile untouched.",
+  "description": "Disposable Bennett radius180/cadence400 fixture; actual personal profile untouched. Duplicate resume notifications must retain the live runtime owner.",
   "steps": [
     {
       "at_ms": 0,
@@ -29,6 +29,15 @@
       "expect": {
         "last_x_min": 2100
       }
+    },
+    {
+      "at_ms": 200,
+      "action": "screen_on",
+      "unlocked": true
+    },
+    {
+      "at_ms": 210,
+      "action": "diagnostics_off"
     },
     {
       "at_ms": 470,

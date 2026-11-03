@@ -385,3 +385,14 @@ No main/profiles changed. Hostdocs-only rerun41628617412 hitRobolectric SDKHTTP 
 errors, not mapping asserts; inspect capturedartifact underignoredhost-ci-network-
 failure. Finalsourcecommit/push andCIretry pending. Existing3d host/AVDbothgreen;
 newheadneedsgreen. Do notskip tests. KeepPR22draft andphoneuntouched.
+
+Final issue21 candidate:322 Android +11 Python; final APK JNI/UI/7 AVD cases PASS.
+Duplicate resume bug reproduced with Cleanup leaked contacts on heldBennett; debug
+start is idempotent and locked resume halts actors. ScenarioB includesduplicates.
+Moved harness tests to src/testDebug; all12 still run. ScenarioJSON declaredTest
+inputs. ReleaseKotlin+Java compilePASS, no simulatorclasses/manifest entries. No
+releaseUTtasks exist inthisproject (observedtaskslist); don'tclaimranthose.
+CIHTTP429 onrepo1 Android15SDKjar: canonicalMavenCentral configured +publicSDKcache
+added to existinghostworkflow, no checks removed. Head sourcea68 previouslybothCI
+success, nowfinalcommit/push/checks pending. No sourcechanges afterthiscandidate
+exceptdeliveryevidence. No S10ecommands; runtime/profilepathsidenticaltobase.

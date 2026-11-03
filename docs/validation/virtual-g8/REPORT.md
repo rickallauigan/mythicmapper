@@ -38,7 +38,7 @@ Actual AVD UI capture: [Virtual G8](virtual-controller-avd.png).
 | F | Switch disposable hero while held | Eight recording events; old ownership released; final zero | PASS | profile-switch.json |
 | G | Virtual diagnostics excludes mapping | Six recording events; frames blocked while owned; final zero | PASS (recording gate) | diagnostics-exclusive.json; real root Binder gate separate |
 | H | UI smoke | Home, catalog/five-slot model, real tester, editor and Virtual G8 Activities open; virtual orientation survives | PASS | evidence.json; presence/render smoke, not complete interaction/gameplay acceptance |
-| HOST-01 | All inherited and new Android tests | 321 tests, zero failures/errors/skips | PASS | full testDebugUnitTest run; new11 source tests |
+| HOST-01 | All inherited and new Android tests | 322 tests, zero failures/errors/skips | PASS | full testDebugUnitTest run; new12 debug-variant source tests |
 | HOST-02 | Lint/build/dependency inventory/release manifest | All tasks passed; zero VirtualG8 release manifest entries | PASS | Gradle task logs; evidence.json |
 | HOST-03 | Rust/native/JNI parity | Rust5, native3, JNI242406 vectors and actual Kotlin missing-library handling pass | PASS | existing scripts rerun |
 | HOST-04 | Fixtures/profiles/quality tooling | 12/12 fixture hashes; 12 generator tests; eleven Python quality tests | PASS | existing scripts + new workflow tests |
@@ -139,3 +139,22 @@ lint/build and full AVD JNI/UI/seven-case validation passed with the new APK.
 The later local boot required the recorded SystemUI Wait recovery again. A separate
 hosted rerun encountered a Robolectric MavenArtifactFetcher HTTP dependency failure;
 no tests were disabled. Subsequent executable-head checks are authoritative in PR22.
+
+Final lifecycle fault coverage reproduced `Cleanup leaked contacts` when duplicate
+resume notifications replaced a held Bennett runtime. Startup is now idempotent,
+and a locked screen-on also disposes the prior runtime. Host regression and the
+AVD Bennett replay cover duplicate notifications without changing production
+Bennett or Kimmy code. All322 Android tests and11 Python tests pass. Scenario JSON
+files are declared Gradle test inputs, preventing stale UP-TO-DATE results after
+fixture edits. Debug harness tests live in src/testDebug, not release/common tests.
+Release Kotlin/Java compilation passed and compiled release classes contain no
+simulator. This project has no compileReleaseUnitTest tasks; none were silently
+claimed executed or disabled.
+
+The transient hosted failure was HTTP429 for Robolectric's Android15 SDK jar from
+repo1.maven.org. Tests now use the canonical repo.maven.apache.org Maven Central
+endpoint (HEAD200 verified), and the host workflow caches only public Robolectric
+SDK artifacts. Existing checks stay enabled. Configuration follows
+[Robolectric's documented runtime-repository option](https://robolectric.org/configuring/).
+Final APK installation and the complete fresh-result JNI/UI/seven-case AVD suite
+passed again; the later executable-head CI results are recorded in PR22.

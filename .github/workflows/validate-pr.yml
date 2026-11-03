@@ -28,6 +28,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
+      - name: Cache Robolectric Android runtime jars
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository/org/robolectric
+          key: robolectric-${{ runner.os }}-${{ hashFiles('app/build.gradle') }}
+          restore-keys: robolectric-${{ runner.os }}-
+
       - name: Validate profile generators and rollback fixtures
         env:
           PYTHONDONTWRITEBYTECODE: '1'

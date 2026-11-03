@@ -80,7 +80,7 @@ class VirtualG8Session(private val changed:()->Unit={}) : AutoCloseable {
         return text+"\nENABLED" // disposable in-memory fixture, never a claim of gameplay calibration
     }
     private fun start() {
-        if(closed||paused||diagnostics||!unlocked||!gameForeground)return
+        if(runtime!=null||closed||paused||diagnostics||!unlocked||!gameForeground)return
         val config=KeymapConfig(null).apply{pointerMode=KeymapConfig.POINTER_OVERLAY}
         val callback=java.lang.reflect.Proxy.newProxyInstance(javaClass.classLoader,arrayOf(xtr.keymapper.IRemoteServiceCallback::class.java)){_,method,_->
             when(method.name){"asBinder"->Binder();"requestKeymapProfile"->ProfileConfiguration.parse(profileText());"requestKeymapConfig"->config;else->null}
@@ -126,7 +126,7 @@ class VirtualG8Session(private val changed:()->Unit={}) : AutoCloseable {
                 start()}
             "syn_dropped"->{packet("EV_SYN SYN_DROPPED 0");held.clear();neutralState()}
             "screen_off"->{halt();paused=true;unlocked=false}
-            "screen_on"->{unlocked=step.optBoolean("unlocked",false);if(unlocked){paused=false;start()}}
+            "screen_on"->{unlocked=step.optBoolean("unlocked",false);if(unlocked){paused=false;start()}else{halt();paused=true}}
             "foreground"->{halt();gameForeground=step.getBoolean("game");start()}
             "diagnostics_on"->{halt();diagnostics=true}
             "diagnostics_off"->{diagnostics=false;start()}

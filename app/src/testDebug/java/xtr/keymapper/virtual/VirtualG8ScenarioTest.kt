@@ -78,4 +78,21 @@ class VirtualG8ScenarioTest {
         finally{controller.pause().stop().destroy();shadowOf(manager).setServices(emptyList())}
     }
 
+    @Test fun duplicateResumeNotificationsDoNotReplaceTheLiveOwner() {
+        val session=VirtualG8Session()
+        session.command(JSONObject("""{"action":"profile","profile":"BENNETT"}"""))
+        session.axis("ABS_RX",255);session.key("BTN_TL2",true)
+        val before=session.totalTouches
+        try {
+            session.command(JSONObject("""{"action":"screen_on","unlocked":true}"""))
+            session.command(JSONObject("""{"action":"diagnostics_off"}"""))
+            assertEquals(before,session.totalTouches)
+            session.command(JSONObject("""{"action":"screen_on","unlocked":false}"""))
+            assertEquals(0,session.snapshot().getInt("active_pointers"))
+        } finally {session.close()}
+        assertEquals(0,session.report().getInt("final_pointers"))
+        shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(1))
+        assertEquals(0,session.report().getInt("final_pointers"))
+    }
+
 }

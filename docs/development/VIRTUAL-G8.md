@@ -119,3 +119,10 @@ stdout. JNI/smoke cannot reuse a saved PASS after a process failure; replay also
 checks its per-request token. Intent-based activation while a real mapping service
 is started reports the refusal in the UI, preserving the running app rather than
 crashing it. These boundaries have dedicated regressions.
+
+Duplicate resume notifications retain the current runtime owner; a locked resume
+releases it. Host and AVD Bennett cases protect repeat cancellation across these
+notifications. Debug-only host tests are in src/testDebug. Gradle tracks scenario
+JSON as test inputs, so edits cannot silently reuse an older test result. Tests
+use canonical Maven Central for Robolectric runtime SDKs; CI caches that public
+artifact subtree without disabling tests or changing app runtime dependencies.

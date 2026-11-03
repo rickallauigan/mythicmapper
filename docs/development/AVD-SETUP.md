@@ -80,8 +80,8 @@ uses exact virtual time; AVD playback preserves inter-step minimum gaps and reco
 observed monotonic timestamps. It cannot guarantee exact wall-clock timing under
 host load and does not measure physical controller-to-display latency.
 
-One bounded API/ABI CI job runs the same local commands. The existing host workflow
-is preserved. CI's KVM permission adjustment applies only to its disposable runner;
+One bounded API/ABI CI job runs the same local commands. The existing host checks
+are preserved; their public Robolectric SDK jars are cached to reduce dependency-download rate limits. CI's KVM permission adjustment applies only to its disposable runner;
 the local script does not change host permissions. Failures are retained as artifacts.
 
 Official references: [emulator command line](https://developer.android.com/studio/run/emulator-commandline),

@@ -13,7 +13,7 @@
     "physical_g8_names_in_emulator_input": 0
   },
   "android_unit_tests": {
-    "tests": 321,
+    "tests": 322,
     "failures": 0,
     "errors": 0,
     "skipped": 0
@@ -92,7 +92,7 @@
   "lint_build_inventory": "PASS",
   "release_merged_manifest_virtual_entries": 0,
   "production_main_and_profiles_diff_from_base": false,
-  "apk_sha256": "80a85b578a9fbb9772e983eb746f335bebbe472d4b203407ee70b5b180721bb4",
+  "apk_sha256": "7b022775046b5dec565fe0dc3fba2005ad7383a11779bae390b945c2b79171e9",
   "physical_gameplay": "NOT TESTED; issue20 deferred",
   "avd_jni": {
     "suite": "jni",
@@ -147,5 +147,12 @@
       "physical_device_dependency": false
     }
   },
-  "final_local_validation": "Fresh-report reader, guarded intent refusal: full JNI/UI/7-case PASS after recorded SystemUI recovery"
+  "final_local_validation": "322 Android/11 Python; JNI/UI/7-case PASS with final APK",
+  "release_compile": "Kotlin and Java PASS; no simulator in release Kotlin classes or merged manifest",
+  "duplicate_resume_regression": {
+    "before_fix": "Reproduced Cleanup leaked contacts under held Bennett repeat",
+    "after_fix": "PASS; idempotent owner and locked-resume cleanup; covered on host and AVD"
+  },
+  "fixture_inputs": "Declared as Gradle test inputs",
+  "robolectric_ci_http429": "Canonical Maven Central URL + scoped SDK jar cache; no tests disabled"
 }
