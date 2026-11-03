@@ -1,0 +1,97 @@
+{
+  "date": "2026-11-03",
+  "base_commit": "7efcf3540038dc1e72055688084572c18ea57478",
+  "target": "owned AVD only; no S10e commands",
+  "avd_name": "MythicMapper_API36_G8",
+  "emulator_version": "37.1.11.0",
+  "image": "system-images;android-36;default;x86_64",
+  "image_revision": 2,
+  "android": {
+    "api": "36",
+    "abi": "x86_64",
+    "qemu": "1",
+    "physical_g8_names_in_emulator_input": 0
+  },
+  "android_unit_tests": {
+    "tests": 320,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "ui_smoke": {
+    "status": "PASS",
+    "checks": [
+      "MainActivity",
+      "offline-library-and-five-slots",
+      "TesterActivity",
+      "EditorActivity",
+      "virtual-ui-orientation"
+    ],
+    "source": "AVD UI and recording sink; not physical gameplay",
+    "platform_touch_submissions": 0,
+    "root_required": false
+  },
+  "cases": [
+    {
+      "id": "basic-input",
+      "status": "PASS",
+      "recorded_touches": 36,
+      "final_pointers": 0,
+      "platform_submissions": 0
+    },
+    {
+      "id": "beatrix-bennett",
+      "status": "PASS",
+      "recorded_touches": 10,
+      "final_pointers": 0,
+      "platform_submissions": 0
+    },
+    {
+      "id": "diagnostics-exclusive",
+      "status": "PASS",
+      "recorded_touches": 6,
+      "final_pointers": 0,
+      "platform_submissions": 0
+    },
+    {
+      "id": "disconnect-reconnect",
+      "status": "PASS",
+      "recorded_touches": 9,
+      "final_pointers": 0,
+      "platform_submissions": 0
+    },
+    {
+      "id": "kimmy-skill-resume",
+      "status": "PASS",
+      "recorded_touches": 12,
+      "final_pointers": 0,
+      "platform_submissions": 0
+    },
+    {
+      "id": "lock-unlock",
+      "status": "PASS",
+      "recorded_touches": 6,
+      "final_pointers": 0,
+      "platform_submissions": 0
+    },
+    {
+      "id": "profile-switch",
+      "status": "PASS",
+      "recorded_touches": 8,
+      "final_pointers": 0,
+      "platform_submissions": 0
+    }
+  ],
+  "rust_tests": 5,
+  "native_suites": 3,
+  "jni_vectors": 242406,
+  "actual_kotlin_jni": "PASS including missing-library",
+  "historical_fixture_hashes": "12/12",
+  "profile_generator_tests": 12,
+  "python_quality_tests": 9,
+  "lint_build_inventory": "PASS",
+  "release_merged_manifest_virtual_entries": 0,
+  "production_main_and_profiles_diff_from_base": false,
+  "apk_sha256": "4e66b70b240a214c936614bead67c7a69ee74be8b9a943f1a6238dc7fc8fa68c",
+  "physical_gameplay": "NOT TESTED; issue20 deferred"
+}

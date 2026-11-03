@@ -332,3 +332,26 @@ ADB confirms screen_suspendedfalse/unlocked/sessionrunning/overlayattached/mappi
 active after SCREEN_ON. Existing gameplay firing-during-lock bug remains OPEN.
 Keep current Kimmy session; user asked to center after test. No more physical test
 needed for the scoped restoration request. Draft14 updated; no merge/release.
+
+### Issue #21: AVD + Virtual G8 development
+
+Separate branch feature/21-virtual-g8-avd based on7efcf35 (#14→#13→#12→dev).
+Debug-only VirtualG8Session/UI/Instrumentation feed existing ControllerDeviceMonitor,
+Hero/Aim/Bindings and InputService ledger using injected discovery + recording
+TouchBackend, Wayland/test mode. No production source or allowlist changes; no real
+reader, root requirement, game input or personal profile/favorite mutation. Bennett
+in-memory fixture180/400; Kimmy/unlock production behavior preserved; issue20 deferred.
+Actual AOSP API36 default x86_64 image revision2 installed; emulator37.1.11 KVM
+headless boot works at2280x1080/4GB/4cores, owned emulator-5580. Only that explicit
+serial used; no S10e commands. Local320 Android tests (zero skips/failures), lint,
+APK/inventory/release manifest, Rust5/native3/JNI242406/Kotlin/Python9/generator12
+and12/12 historical fixtures pass. Seven AVD JSON cases + real UI/orientation smoke
+pass; every recording trace final0 pointers/platform submissions0 by sink design.
+See docs/development/AVD-SETUP.md, VIRTUAL-G8.md, TEST-MATRIX.md and virtual-g8 report.
+Tools CLI manages only owned AVD/process and saves JSON/JUnit/traces under ignored
+app/build/virtual-g8. New one-API CI workflow; remote CI pending until PR created.
+Code commitbc2ce5b. Runtime and backend classes in main unchanged. Need finish
+infrastructure/docs commit, create stacked draft against feature/beatrix-kimmy-gameplay,
+observe CI, test owned stop/reboot, record PR/SHA. Do not merge or touch physicalphone.
+Migration bundle docs/MYTHICMAPPER-AVD.md and appended MIGRATION.md changed locally
+only; preserve unrelated migration changes, no commit/push of that separate repo.

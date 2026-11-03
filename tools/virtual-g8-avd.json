@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "name": "MythicMapper_API36_G8",
+  "image": "system-images;android-36;default;x86_64",
+  "image_revision": "2",
+  "api": 36,
+  "abi": "x86_64",
+  "ram_mb": 4096,
+  "cores": 4,
+  "width": 2280,
+  "height": 1080,
+  "density": 420,
+  "serial": "emulator-5580"
+}
