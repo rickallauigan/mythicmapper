@@ -41,3 +41,5 @@ latency or isolated workload CPU from sampled dumpsys. Compare only like orienta
 data, emulator graphics and host conditions; this is not a release performance gate.
 
 Final local:324 Android tests / zero failures/errors/skips;12 Python tests; lint, debug APK and release manifest PASS. Actual AVD bubble suite PASS, JNI61,206 vectors and all seven virtual scenarios PASS / zero final pointers. A cold-boot SystemUI startup ANR was acknowledged by the existing bounded recovery; no security policy changed.
+
+Final review follow-up: editor navigation now uses the same collapse helper as tap/selection, restoring transparent background immediately. Regression checks panel closure and transparent collapsed backdrop. Final-head checks are linked in draft23; prior57d928a green results are historical.
