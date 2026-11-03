@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "id": "disconnect-reconnect",
+  "source": "synthetic",
+  "description": "Disconnect releases held contacts and source axes; held reconnect/reset needs neutral before shoot.",
+  "steps": [
+    {
+      "at_ms": 10,
+      "action": "axis",
+      "code": "ABS_RX",
+      "value": 255,
+      "expect": {
+        "active_pointers": 1
+      }
+    },
+    {
+      "at_ms": 20,
+      "action": "disconnect",
+      "expect": {
+        "active_pointers": 0,
+        "connected": false
+      }
+    },
+    {
+      "at_ms": 30,
+      "action": "button",
+      "code": "BTN_TR2",
+      "down": true,
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 40,
+      "action": "connect",
+      "right_x": 255,
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 50,
+      "action": "axis",
+      "code": "ABS_RX",
+      "value": 255,
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 60,
+      "action": "axis",
+      "code": "ABS_RX",
+      "value": 128
+    },
+    {
+      "at_ms": 70,
+      "action": "axis",
+      "code": "ABS_RX",
+      "value": 255,
+      "expect": {
+        "active_pointers": 1
+      }
+    },
+    {
+      "at_ms": 80,
+      "action": "syn_dropped",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 90,
+      "action": "reset",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 100,
+      "action": "axis",
+      "code": "ABS_RX",
+      "value": 128
+    },
+    {
+      "at_ms": 110,
+      "action": "axis",
+      "code": "ABS_RX",
+      "value": 255,
+      "expect": {
+        "active_pointers": 1
+      }
+    },
+    {
+      "at_ms": 120,
+      "action": "release_all",
+      "expect": {
+        "active_pointers": 0
+      }
+    }
+  ]
+}

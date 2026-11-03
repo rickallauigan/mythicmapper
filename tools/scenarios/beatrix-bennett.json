@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "id": "beatrix-bennett",
+  "source": "synthetic",
+  "description": "Disposable Bennett radius180/cadence400 fixture; actual personal profile untouched.",
+  "steps": [
+    {
+      "at_ms": 0,
+      "action": "profile",
+      "profile": "BENNETT"
+    },
+    {
+      "at_ms": 10,
+      "action": "axis",
+      "code": "ABS_RX",
+      "value": 255
+    },
+    {
+      "at_ms": 20,
+      "action": "button",
+      "code": "BTN_TL2",
+      "down": true,
+      "expect": {
+        "active_pointers": 1
+      }
+    },
+    {
+      "at_ms": 80,
+      "expect": {
+        "last_x_min": 2100
+      }
+    },
+    {
+      "at_ms": 470,
+      "action": "axis",
+      "code": "ABS_RX",
+      "value": 0
+    },
+    {
+      "at_ms": 1000,
+      "expect": {
+        "last_x_max": 1900,
+        "min_downs": 3
+      }
+    },
+    {
+      "at_ms": 1010,
+      "action": "button",
+      "code": "BTN_TL2",
+      "down": false,
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 1010,
+      "action": "checkpoint"
+    },
+    {
+      "at_ms": 1500,
+      "expect": {
+        "active_pointers": 0,
+        "touches_since_checkpoint": 0
+      }
+    }
+  ]
+}

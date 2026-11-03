@@ -1,0 +1,93 @@
+{
+  "schema": 1,
+  "id": "lock-unlock",
+  "source": "synthetic",
+  "description": "Logical lifecycle only: issue20 game effects UNVERIFIED/deferred. Actual TouchPointer lifecycle remains separately tested.",
+  "steps": [
+    {
+      "at_ms": 10,
+      "code": "ABS_RX",
+      "value": 255,
+      "action": "axis",
+      "expect": {
+        "active_pointers": 1
+      }
+    },
+    {
+      "at_ms": 20,
+      "action": "screen_off",
+      "expect": {
+        "active_pointers": 0,
+        "paused": true
+      }
+    },
+    {
+      "at_ms": 30,
+      "code": "ABS_RX",
+      "value": 0,
+      "action": "axis",
+      "expect": {
+        "active_pointers": 0,
+        "min_blocked": 1
+      }
+    },
+    {
+      "at_ms": 40,
+      "unlocked": false,
+      "action": "screen_on",
+      "expect": {
+        "active_pointers": 0,
+        "paused": true
+      }
+    },
+    {
+      "at_ms": 50,
+      "game": false,
+      "action": "foreground"
+    },
+    {
+      "at_ms": 60,
+      "unlocked": true,
+      "action": "screen_on",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 70,
+      "game": true,
+      "action": "foreground"
+    },
+    {
+      "at_ms": 80,
+      "code": "ABS_RX",
+      "value": 0,
+      "action": "axis",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 90,
+      "code": "ABS_RX",
+      "value": 128,
+      "action": "axis"
+    },
+    {
+      "at_ms": 100,
+      "code": "ABS_RX",
+      "value": 255,
+      "action": "axis",
+      "expect": {
+        "active_pointers": 1
+      }
+    },
+    {
+      "at_ms": 110,
+      "action": "release_all",
+      "expect": {
+        "active_pointers": 0
+      }
+    }
+  ]
+}

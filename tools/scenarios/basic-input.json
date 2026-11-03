@@ -1,0 +1,518 @@
+{
+  "schema": 1,
+  "id": "basic-input",
+  "source": "synthetic",
+  "description": "All logical buttons, analog raw ranges, native-left-stick pass-through and simultaneous ownership.",
+  "steps": [
+    {
+      "at_ms": 0,
+      "profile": "BASIC",
+      "action": "profile"
+    },
+    {
+      "at_ms": 10,
+      "code": "BTN_GAMEPAD",
+      "down": true,
+      "action": "button",
+      "expect": {
+        "active_pointers": 1,
+        "last_x_min": 100,
+        "last_x_max": 100
+      }
+    },
+    {
+      "at_ms": 20,
+      "code": "BTN_GAMEPAD",
+      "down": false,
+      "action": "button",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 35,
+      "code": "BTN_EAST",
+      "down": true,
+      "action": "button",
+      "expect": {
+        "active_pointers": 1,
+        "last_x_min": 160,
+        "last_x_max": 160
+      }
+    },
+    {
+      "at_ms": 45,
+      "code": "BTN_EAST",
+      "down": false,
+      "action": "button",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 60,
+      "code": "BTN_WEST",
+      "down": true,
+      "action": "button",
+      "expect": {
+        "active_pointers": 1,
+        "last_x_min": 220,
+        "last_x_max": 220
+      }
+    },
+    {
+      "at_ms": 70,
+      "code": "BTN_WEST",
+      "down": false,
+      "action": "button",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 85,
+      "code": "BTN_NORTH",
+      "down": true,
+      "action": "button",
+      "expect": {
+        "active_pointers": 1,
+        "last_x_min": 280,
+        "last_x_max": 280
+      }
+    },
+    {
+      "at_ms": 95,
+      "code": "BTN_NORTH",
+      "down": false,
+      "action": "button",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 110,
+      "code": "BTN_TL",
+      "down": true,
+      "action": "button",
+      "expect": {
+        "active_pointers": 1,
+        "last_x_min": 340,
+        "last_x_max": 340
+      }
+    },
+    {
+      "at_ms": 120,
+      "code": "BTN_TL",
+      "down": false,
+      "action": "button",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 135,
+      "code": "BTN_TR",
+      "down": true,
+      "action": "button",
+      "expect": {
+        "active_pointers": 1,
+        "last_x_min": 400,
+        "last_x_max": 400
+      }
+    },
+    {
+      "at_ms": 145,
+      "code": "BTN_TR",
+      "down": false,
+      "action": "button",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 160,
+      "code": "BTN_TL2",
+      "down": true,
+      "action": "button",
+      "expect": {
+        "active_pointers": 1,
+        "last_x_min": 460,
+        "last_x_max": 460
+      }
+    },
+    {
+      "at_ms": 170,
+      "code": "BTN_TL2",
+      "down": false,
+      "action": "button",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 185,
+      "code": "BTN_TR2",
+      "down": true,
+      "action": "button",
+      "expect": {
+        "active_pointers": 1,
+        "last_x_min": 520,
+        "last_x_max": 520
+      }
+    },
+    {
+      "at_ms": 195,
+      "code": "BTN_TR2",
+      "down": false,
+      "action": "button",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 210,
+      "code": "BTN_THUMBL",
+      "down": true,
+      "action": "button",
+      "expect": {
+        "active_pointers": 1,
+        "last_x_min": 580,
+        "last_x_max": 580
+      }
+    },
+    {
+      "at_ms": 220,
+      "code": "BTN_THUMBL",
+      "down": false,
+      "action": "button",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 235,
+      "code": "BTN_THUMBR",
+      "down": true,
+      "action": "button",
+      "expect": {
+        "active_pointers": 1,
+        "last_x_min": 640,
+        "last_x_max": 640
+      }
+    },
+    {
+      "at_ms": 245,
+      "code": "BTN_THUMBR",
+      "down": false,
+      "action": "button",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 260,
+      "code": "BTN_START",
+      "down": true,
+      "action": "button",
+      "expect": {
+        "active_pointers": 1,
+        "last_x_min": 700,
+        "last_x_max": 700
+      }
+    },
+    {
+      "at_ms": 270,
+      "code": "BTN_START",
+      "down": false,
+      "action": "button",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 285,
+      "code": "BTN_SELECT",
+      "down": true,
+      "action": "button",
+      "expect": {
+        "active_pointers": 1,
+        "last_x_min": 760,
+        "last_x_max": 760
+      }
+    },
+    {
+      "at_ms": 295,
+      "code": "BTN_SELECT",
+      "down": false,
+      "action": "button",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 310,
+      "code": "DPAD_UP",
+      "down": true,
+      "action": "button",
+      "expect": {
+        "active_pointers": 1,
+        "last_x_min": 820,
+        "last_x_max": 820
+      }
+    },
+    {
+      "at_ms": 320,
+      "code": "DPAD_UP",
+      "down": false,
+      "action": "button",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 335,
+      "code": "DPAD_DOWN",
+      "down": true,
+      "action": "button",
+      "expect": {
+        "active_pointers": 1,
+        "last_x_min": 880,
+        "last_x_max": 880
+      }
+    },
+    {
+      "at_ms": 345,
+      "code": "DPAD_DOWN",
+      "down": false,
+      "action": "button",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 360,
+      "code": "DPAD_LEFT",
+      "down": true,
+      "action": "button",
+      "expect": {
+        "active_pointers": 1,
+        "last_x_min": 940,
+        "last_x_max": 940
+      }
+    },
+    {
+      "at_ms": 370,
+      "code": "DPAD_LEFT",
+      "down": false,
+      "action": "button",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 385,
+      "code": "DPAD_RIGHT",
+      "down": true,
+      "action": "button",
+      "expect": {
+        "active_pointers": 1,
+        "last_x_min": 1000,
+        "last_x_max": 1000
+      }
+    },
+    {
+      "at_ms": 395,
+      "code": "DPAD_RIGHT",
+      "down": false,
+      "action": "button",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 410,
+      "code": "ABS_X",
+      "value": 0,
+      "action": "axis",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 415,
+      "code": "ABS_X",
+      "value": 255,
+      "action": "axis",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 420,
+      "code": "ABS_X",
+      "value": 128,
+      "action": "axis",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 425,
+      "code": "ABS_Y",
+      "value": 0,
+      "action": "axis",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 430,
+      "code": "ABS_Y",
+      "value": 255,
+      "action": "axis",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 435,
+      "code": "ABS_Y",
+      "value": 128,
+      "action": "axis",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 440,
+      "code": "ABS_RX",
+      "value": 0,
+      "action": "axis",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 445,
+      "code": "ABS_RX",
+      "value": 255,
+      "action": "axis",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 450,
+      "code": "ABS_RX",
+      "value": 128,
+      "action": "axis",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 455,
+      "code": "ABS_RY",
+      "value": 0,
+      "action": "axis",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 460,
+      "code": "ABS_RY",
+      "value": 255,
+      "action": "axis",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 465,
+      "code": "ABS_RY",
+      "value": 128,
+      "action": "axis",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 470,
+      "code": "ABS_Z",
+      "value": 0,
+      "action": "axis",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 475,
+      "code": "ABS_Z",
+      "value": 255,
+      "action": "axis",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 480,
+      "code": "ABS_Z",
+      "value": 128,
+      "action": "axis",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 485,
+      "code": "ABS_RZ",
+      "value": 0,
+      "action": "axis",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 490,
+      "code": "ABS_RZ",
+      "value": 255,
+      "action": "axis",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 495,
+      "code": "ABS_RZ",
+      "value": 128,
+      "action": "axis",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 500,
+      "code": "BTN_GAMEPAD",
+      "down": true,
+      "action": "button"
+    },
+    {
+      "at_ms": 501,
+      "code": "BTN_EAST",
+      "down": true,
+      "action": "button",
+      "expect": {
+        "active_pointers": 2
+      }
+    },
+    {
+      "at_ms": 502,
+      "action": "release_all",
+      "expect": {
+        "active_pointers": 0,
+        "min_max_pointers": 2
+      }
+    }
+  ]
+}
