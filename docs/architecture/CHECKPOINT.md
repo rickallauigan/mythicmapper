@@ -375,3 +375,13 @@ APK/data retained. PR22 draft correctbase14; no main/profile changes or phone ac
 Final documentation commit only records this evidence; no runtime change afterward.
 Only unrelated untracked designPNG left in project. MigrationMIGRATION.md and
 newdocs/MYTHICMAPPER-AVD.md remain localuncommitted, preserving unrelatedwork.
+
+Delivery guards:321 Android +11 Python pass locally. Final debugAPK UI intent
+refusal catches guard error instead of appcrash when realmapperstarted; regression
+checksno session/no lease. All suites now parse fresh instrumentation stdout, so
+JNI/UI cannotreuseoldsavedPASS; replaystillchecksnonce. Parser verified against9
+actualhostedreports. New APK fullJNI/UI/sevencasespassed afterSystemUIWait again.
+No main/profiles changed. Hostdocs-only rerun41628617412 hitRobolectric SDKHTTP fetch
+errors, not mapping asserts; inspect capturedartifact underignoredhost-ci-network-
+failure. Finalsourcecommit/push andCIretry pending. Existing3d host/AVDbothgreen;
+newheadneedsgreen. Do notskip tests. KeepPR22draft andphoneuntouched.

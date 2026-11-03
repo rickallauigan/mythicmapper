@@ -38,10 +38,10 @@ Actual AVD UI capture: [Virtual G8](virtual-controller-avd.png).
 | F | Switch disposable hero while held | Eight recording events; old ownership released; final zero | PASS | profile-switch.json |
 | G | Virtual diagnostics excludes mapping | Six recording events; frames blocked while owned; final zero | PASS (recording gate) | diagnostics-exclusive.json; real root Binder gate separate |
 | H | UI smoke | Home, catalog/five-slot model, real tester, editor and Virtual G8 Activities open; virtual orientation survives | PASS | evidence.json; presence/render smoke, not complete interaction/gameplay acceptance |
-| HOST-01 | All inherited and new Android tests | 320 tests, zero failures/errors/skips | PASS | full testDebugUnitTest run; new10 source tests |
+| HOST-01 | All inherited and new Android tests | 321 tests, zero failures/errors/skips | PASS | full testDebugUnitTest run; new11 source tests |
 | HOST-02 | Lint/build/dependency inventory/release manifest | All tasks passed; zero VirtualG8 release manifest entries | PASS | Gradle task logs; evidence.json |
 | HOST-03 | Rust/native/JNI parity | Rust5, native3, JNI242406 vectors and actual Kotlin missing-library handling pass | PASS | existing scripts rerun |
-| HOST-04 | Fixtures/profiles/quality tooling | 12/12 fixture hashes; 12 generator tests; ten Python quality tests | PASS | existing scripts + new workflow tests |
+| HOST-04 | Fixtures/profiles/quality tooling | 12/12 fixture hashes; 12 generator tests; eleven Python quality tests | PASS | existing scripts + new workflow tests |
 | SAFE-01 | Production allowlist/profile preservation | No app/src/main or historical profile diff from base | PASS | git diff against7efcf35 |
 | HW-01 | Physical G8/Lineage/MLBB compatibility | Not exercised by this harness | PENDING PHYSICAL | Preserve previous reports; no new certification |
 | ROOT-01 | RootService / Android injected touch delivery on AVD | Recording sink only | NOT TESTED | Optional rooted integration, not required for daily workflow |
@@ -128,3 +128,14 @@ independent hosted VM without the S10e/G8, not physical compatibility. Local
 emulator37.1.11 startup caveats remain documented; remote success does not erase them.
 The local owned emulator was stopped successfully after validation; guest data and
 APK remain available for the next boot. No physical device was stopped or changed.
+
+Final delivery review added a fresh instrumentation-output requirement for JNI,
+UI smoke and scenario results, so a crashed runner cannot reuse a saved PASS.
+Eleven Python tests cover stale/ambiguous rejection and validate actual captured
+hosted output. Virtual Activity intent activation now reports refusal instead of
+crashing when a real mapping service is started; an Android regression covers the
+case without acquiring a lease or changing the mapper. Final local321 Android tests,
+lint/build and full AVD JNI/UI/seven-case validation passed with the new APK.
+The later local boot required the recorded SystemUI Wait recovery again. A separate
+hosted rerun encountered a Robolectric MavenArtifactFetcher HTTP dependency failure;
+no tests were disabled. Subsequent executable-head checks are authoritative in PR22.

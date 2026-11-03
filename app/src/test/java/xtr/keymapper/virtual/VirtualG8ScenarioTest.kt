@@ -65,4 +65,17 @@ class VirtualG8ScenarioTest {
         assertEquals(0,session.report().getInt("final_pointers"))
     }
 
+    @Test fun intentActivationRefusesRunningMapperWithoutCrashingOrAcquiringLease() {
+        val app=RuntimeEnvironment.getApplication()
+        val manager=app.getSystemService(android.app.ActivityManager::class.java)
+        val service=android.app.ActivityManager.RunningServiceInfo().apply{
+            this.service=android.content.ComponentName(app.packageName,"xtr.keymapper.TouchPointer");started=true
+        }
+        shadowOf(manager).setServices(listOf(service))
+        val controller=org.robolectric.Robolectric.buildActivity(VirtualG8Activity::class.java,
+            android.content.Intent(app,VirtualG8Activity::class.java).putExtra("enable_virtual_g8",true))
+        try{val activity=controller.create().start().resume().get();assertNull(activity.session);assertFalse(activity.isFinishing);assertFalse(xtr.keymapper.editor.EditorSessionGuard.active)}
+        finally{controller.pause().stop().destroy();shadowOf(manager).setServices(emptyList())}
+    }
+
 }

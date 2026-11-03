@@ -29,3 +29,9 @@ class VirtualWorkflowTests(unittest.TestCase):
         with patch.object(module,'verify'), patch.object(module,'output',return_value='mCurrentFocus=Application Not Responding: example.other'), patch.object(module,'adb')as adb:
             with self.assertRaises(RuntimeError):module.recover()
             adb.assert_not_called()
+
+    def test_fresh_report_required_even_if_a_prior_saved_report_passed(self):
+        with self.assertRaises(ValueError):module.instrument_report('INSTRUMENTATION_FAILED: process crashed','virtual_g8')
+        valid='INSTRUMENTATION_RESULT: virtual_g8={"status":"PASS"}\nINSTRUMENTATION_CODE: -1'
+        self.assertEqual(module.instrument_report(valid,'virtual_g8')['status'],'PASS')
+        with self.assertRaises(ValueError):module.instrument_report(valid+'\n'+valid,'virtual_g8')

@@ -19,6 +19,13 @@ def command(argv, **kw):
         raise
 def adb(*args,**kw):return command([SDK/'platform-tools/adb','-s',CONFIG['serial'],*args],**kw)
 def output(*args):return adb(*args,capture_output=True).stdout.strip()
+def instrument_report(log, key):
+    prefix='INSTRUMENTATION_RESULT: '+key+'='
+    lines=[line[len(prefix):]for line in log.splitlines()if line.startswith(prefix)]
+    if len(lines)!=1:raise ValueError('No unique fresh instrumentation report; persisted results are not accepted')
+    report=json.loads(lines[0])
+    if not isinstance(report,dict)or 'status'not in report:raise ValueError('Invalid fresh report')
+    return report
 def save(name,data):
     WORK.mkdir(parents=True,exist_ok=True);(WORK/name).write_text(json.dumps(data,indent=2)+'\n')
 def owned():
@@ -99,7 +106,7 @@ def run(path):
     result=adb('shell','am','instrument','-w','-e','scenario',encoded,PKG+'/xtr.keymapper.virtual.VirtualG8Instrumentation',capture_output=True,timeout=100).stdout
     WORK.mkdir(parents=True,exist_ok=True);(WORK/(name+'.instrumentation.txt')).write_text(result)
     try:
-        report=json.loads(output('exec-out','run-as',PKG,'cat','files/virtual-g8/result.json'))
+        report=instrument_report(result,'virtual_g8')
         if report.get('request_id')!=request_id:raise ValueError('Stale result/request mismatch')
     except ValueError as e:report={'status':'FAIL','error':str(e),'request_id':request_id}
     report['scenario_sha256']=hashlib.sha256(raw).hexdigest()
@@ -113,11 +120,11 @@ def smoke():
     verify()
     jni=adb('shell','am','instrument','-w','-e','suite','jni',PKG+'/xtr.keymapper.validation.HardwareValidationInstrumentation',capture_output=True,timeout=60).stdout
     (WORK/'jni.instrumentation.txt').write_text(jni)
-    parity=json.loads(output('exec-out','run-as',PKG,'cat','files/validation/jni.json'));save('jni.json',parity)
+    parity=instrument_report(jni,'validation');save('jni.json',parity)
     if parity['status']!='PASS' or parity.get('result',{}).get('abi')!='x86_64':raise RuntimeError('Packaged x86_64 JNI parity/ABI check failed')
     result=adb('shell','am','instrument','-w','-e','smoke','true',PKG+'/xtr.keymapper.virtual.VirtualG8Instrumentation',capture_output=True,timeout=100).stdout
     (WORK/'smoke.instrumentation.txt').write_text(result)
-    report=json.loads(output('exec-out','run-as',PKG,'cat','files/virtual-g8/result.json'));save('smoke.json',report);print(json.dumps(report))
+    report=instrument_report(result,'virtual_g8');save('smoke.json',report);print(json.dumps(report))
     if report['status']!='PASS':raise RuntimeError('UI smoke failed')
     for p in sorted((ROOT/'tools/scenarios').glob('*.json')):run(p)
 def collect():

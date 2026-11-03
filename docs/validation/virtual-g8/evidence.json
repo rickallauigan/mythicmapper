@@ -13,7 +13,7 @@
     "physical_g8_names_in_emulator_input": 0
   },
   "android_unit_tests": {
-    "tests": 320,
+    "tests": 321,
     "failures": 0,
     "errors": 0,
     "skipped": 0
@@ -88,11 +88,11 @@
   "actual_kotlin_jni": "PASS including missing-library",
   "historical_fixture_hashes": "12/12",
   "profile_generator_tests": 12,
-  "python_quality_tests": 10,
+  "python_quality_tests": 11,
   "lint_build_inventory": "PASS",
   "release_merged_manifest_virtual_entries": 0,
   "production_main_and_profiles_diff_from_base": false,
-  "apk_sha256": "07056dd8e6a1b0394c4948a108edbfdebc5f39daeec52ac7dddb3836a1138daf",
+  "apk_sha256": "80a85b578a9fbb9772e983eb746f335bebbe472d4b203407ee70b5b180721bb4",
   "physical_gameplay": "NOT TESTED; issue20 deferred",
   "avd_jni": {
     "suite": "jni",
@@ -146,5 +146,6 @@
       "systemui_recovery_used": false,
       "physical_device_dependency": false
     }
-  }
+  },
+  "final_local_validation": "Fresh-report reader, guarded intent refusal: full JNI/UI/7-case PASS after recorded SystemUI recovery"
 }

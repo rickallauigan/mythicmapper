@@ -113,3 +113,9 @@ from mapper touch submissions, which remain a non-injecting recording stream.
 `smoke` also invokes the existing root-free JNI suite and requires an actual x86_64
 ABI report. The inherited debug report's hardcoded ARM64 label was corrected to
 read Android's supported ABI and process bitness; no Rust hot-path change was made.
+
+All suite readers require exactly one fresh result in the current instrumentation
+stdout. JNI/smoke cannot reuse a saved PASS after a process failure; replay also
+checks its per-request token. Intent-based activation while a real mapping service
+is started reports the refusal in the UI, preserving the running app rather than
+crashing it. These boundaries have dedicated regressions.

@@ -44,7 +44,7 @@ class VirtualG8Activity:ComponentActivity() {
         window.navigationBarColor=android.graphics.Color.rgb(8,12,23)
         androidx.core.view.WindowInsetsControllerCompat(window,window.decorView).isAppearanceLightStatusBars=false
         setContent{revision;VirtualScreen()}
-        if(intent.getBooleanExtra("enable_virtual_g8",false))enable()
+        if(intent.getBooleanExtra("enable_virtual_g8",false))runCatching{enable()}.onFailure{message=it.message?:"Virtual activation unavailable"}
     }
     fun disable(){session?.close();session=null;EditorSessionGuard.release(this)}
     override fun onStop(){disable();super.onStop()}

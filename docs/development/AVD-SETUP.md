@@ -16,8 +16,9 @@ No global SDK/emulator upgrade, root policy or host service change is needed.
 ```sh
 python3 tools/virtual_g8.py doctor
 python3 tools/virtual_g8.py setup --install-sdk
-python3 tools/virtual_g8.py boot
 python3 tools/virtual_g8.py build
+python3 tools/virtual_g8.py boot
+python3 tools/virtual_g8.py recover
 python3 tools/virtual_g8.py install
 python3 tools/virtual_g8.py smoke
 ```
