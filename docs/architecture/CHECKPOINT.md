@@ -366,3 +366,12 @@ CIfirst failed SDKmanagerPATH (fixedSDKpath), second doctor-version127 lackedstd
 Doctor now printsstderr/headless-versionprobe; newCIpendingafterpush. No main source,
 physicalphone commands or profiles changed. Follow PRchecks until feasiblegreen;
 never merge. Migration docs remain localuncommitted in separate dirty repo.
+
+Issue21 delivery: source3d985e3 passed remote host41627465766 and AVD41627465742.
+Downloaded CI artifacts confirmed emulator37.2.13/KVM, x86_64 JNI61206 zeroerror,
+UI + seven cases PASS final0 pointers; hosted clean boot needed no SystemUI recovery.
+Local37.1.11 recovery caveat retained. Local owned emulator stopped; virtual guest
+APK/data retained. PR22 draft correctbase14; no main/profile changes or phone access.
+Final documentation commit only records this evidence; no runtime change afterward.
+Only unrelated untracked designPNG left in project. MigrationMIGRATION.md and
+newdocs/MYTHICMAPPER-AVD.md remain localuncommitted, preserving unrelatedwork.

@@ -127,5 +127,24 @@
     "platform_clean_boot": "NOT CLAIMED"
   },
   "mapper_submission_scope": "Recording sink only; ordinary ADB UI navigation/recovery is separate",
-  "hosted_ci": "First SDK PATH failure corrected; second doctor GUI-version exit127 under investigation/headless version correction; latest PR checks authoritative"
+  "hosted_ci": {
+    "source_commit": "3d985e3f6172d1f1ced160ecc45a961c44226fcd",
+    "host_validation": {
+      "status": "PASS",
+      "run": "https://github.com/rickallauigan/mythicmapper/actions/runs/41627465766"
+    },
+    "avd_validation": {
+      "status": "PASS",
+      "run": "https://github.com/rickallauigan/mythicmapper/actions/runs/41627465742",
+      "emulator_version": "Android emulator version 37.2.13.0 (build_id 16740729) (CL:N/A)",
+      "api": 36,
+      "abi": "x86_64",
+      "jni_vectors": 61206,
+      "jni_max_error": 0,
+      "ui_smoke": "PASS",
+      "all_seven_cases": "PASS; zero final pointers",
+      "systemui_recovery_used": false,
+      "physical_device_dependency": false
+    }
+  }
 }

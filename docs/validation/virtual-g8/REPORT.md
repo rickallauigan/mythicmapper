@@ -116,3 +116,15 @@ stderr and uses headless `-no-window -version`, avoiding unnecessary GUI depende
 The updated CI result remains pending; neither failure is relabelled PASS. The
 workflow's conditional cleanup only avoids stopping an emulator never created; it
 does not bypass any failed test. PR: https://github.com/rickallauigan/mythicmapper/pull/22.
+
+## Hosted acceptance
+
+Source **3d985e3** passed both [host validation](https://github.com/rickallauigan/mythicmapper/actions/runs/41627465766)
+and [API36 AVD validation](https://github.com/rickallauigan/mythicmapper/actions/runs/41627465742).
+Downloaded artifacts were inspected: emulator37.2.13.0/KVM, x86_64 JNI61,206 vectors
+with zero error, real UI smoke and all seven cases PASS with zero final pointers.
+The hosted AVD needed no SystemUI recovery. This establishes execution on an
+independent hosted VM without the S10e/G8, not physical compatibility. Local
+emulator37.1.11 startup caveats remain documented; remote success does not erase them.
+The local owned emulator was stopped successfully after validation; guest data and
+APK remain available for the next boot. No physical device was stopped or changed.
