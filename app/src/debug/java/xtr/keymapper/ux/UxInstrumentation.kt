@@ -161,8 +161,10 @@ class UxInstrumentation:Instrumentation() {
                 val editor=waitForMonitorWithTimeout(editorMonitor,10000)?:error("Overlay editor did not open")
                 check(panel.visibility==View.GONE)
                 check((root.background as android.graphics.drawable.ColorDrawable).color==android.graphics.Color.TRANSPARENT)
-                main{editor.finish()};waitForIdleSync();SystemClock.sleep(300)
-                check(!EditorSessionGuard.active)
+                main{editor.finish()};waitForIdleSync()
+                val deadline=SystemClock.uptimeMillis()+5000
+                while((!editor.isDestroyed||EditorSessionGuard.active)&&SystemClock.uptimeMillis()<deadline)SystemClock.sleep(25)
+                check(editor.isDestroyed&&!EditorSessionGuard.active){"Editor lifecycle/lease did not finish"}
             }finally{removeMonitor(editorMonitor);mappings.edit().remove(profile.id).commit()}
             val owner=Any();try{main{EditorSessionGuard.acquire(owner)};waitForIdleSync();check(root.visibility==View.GONE)}finally{main{EditorSessionGuard.release(owner)}}
             waitForIdleSync();check(root.visibility==View.VISIBLE)
