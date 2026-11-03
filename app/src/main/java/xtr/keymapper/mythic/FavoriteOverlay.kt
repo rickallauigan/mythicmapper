@@ -58,7 +58,8 @@ class FavoriteOverlay(private val service: TouchPointer, private val select: (St
         handler.postDelayed(this,750)
     } }
     fun show() {
-        if(!Settings.canDrawOverlays(service)) return
+        if(attached || !Settings.canDrawOverlays(service)) return
+        root.removeAllViews();panelScroll.visibility=View.GONE
         root.addView(header);root.addView(panelScroll)
         EditorSessionGuard.listen(editorVisibility)
         header.setOnClickListener { if(panelScroll.visibility==View.VISIBLE)panelScroll.visibility=View.GONE else openPanel() }

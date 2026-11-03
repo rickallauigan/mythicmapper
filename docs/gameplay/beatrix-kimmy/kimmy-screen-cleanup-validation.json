@@ -28,7 +28,8 @@
     },
     "status": "PASS"
   },
-  "gameplay_screen_off_retest": "PENDING",
+  "gameplay_screen_off_retest": "FAIL: user reported same stuck-firing behavior on candidate 5e0f17a",
   "profiles_and_favorites_unchanged": true,
-  "bennett_unchanged": true
+  "bennett_unchanged": true,
+  "scope": "Blue-surface cancellation passed; does not establish MLBB cleanup. Lock/unlock session retention is a separate follow-up."
 }

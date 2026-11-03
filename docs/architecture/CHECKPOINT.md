@@ -288,3 +288,21 @@ only controlled blue surface, awaits manual unlock, requires same surface eviden
 Read current private continuation and instrumentation report before any activation.
 Real Training screen-off retest remains mandatory; do not claim fixed from logical
 zero. No global touch cancellation, automatic game recovery tap or keyguard bypass.
+
+### Retain foreground service across lock/unlock
+
+User now prioritizes keeping MM running rather than restarting via Use after unlock.
+TouchPointer SCREEN_OFF no longer calls stopPointer/stopSelf. It invalidates queued
+activation, pauses runtime, hides overlay and retains session/profile/foreground
+service. Normal unlock re-registers existing root task observer for a fresh package;
+keyguard/off-screen/editor/diagnostic gates remain. Overlay show is idempotent.
+308 Android tests, lint, debug build and release-manifest pass. Actual S10e safe
+screen suite verified service still started+foreground while locked/root paused;
+heroes_touch and heroes passed. All profiles/favorites/settings compared unchanged.
+Current installed APK hash is in lock-session-validation.json. Candidate 5e0f17a
+DID NOT fix gameplay stuck firing; user reported same behavior, separate known bug.
+Device is normally awake but keyguard may be locked after safe screen test; async
+unlock request pending. Mapping is stopped. After manual unlock activate only
+existing Kimmy copy; test lock with sticks CENTERED first, then unlock without Use
+and check right-stick shooting/skills. Do not inject automated touches into MLBB.
+Preserve Bennett400/180, open neighboring-skill regression, draft PR14 dependency.

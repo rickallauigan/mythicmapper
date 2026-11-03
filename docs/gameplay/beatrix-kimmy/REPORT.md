@@ -350,3 +350,31 @@ The subsequent real Training screen-off retest remains pending.
 No automated recovery touch has been injected into MLBB. Profiles, favorites and
 Bennett configuration were compared unchanged after installation. Exact Ultimate
 casting/charge semantics, profile switching and leaving MLBB remain separate gates.
+
+### Retain mapping session across lock/unlock
+
+The user reported the same stuck-firing behavior on candidate 5e0f17a. The blue
+surface cancellation pass therefore does not resolve the gameplay cleanup failure.
+The user then identified that MM required returning to Home and pressing Use after
+unlock. Source inspection confirms SCREEN_OFF explicitly called stopPointer and
+stopSelf; this was intentional teardown, not evidence of an app crash.
+
+The new change retains the foreground mapping service, chosen profile and root
+connection while screen-off pauses the input runtime and removes the overlay.
+SCREEN_ON cannot resume through keyguard. After USER_PRESENT (or unlocked wake),
+the observer is re-registered for a fresh foreground package. Existing profile and
+editor/diagnostic gates govern activation; a cached pre-lock package cannot start
+mapping into another app. Stop/destroy or another lock invalidates queued callbacks.
+The existing hero startup neutral guard is retained. No screen timeout, keyguard,
+battery optimization, SELinux or global performance setting is changed.
+
+Overlay reattachment is idempotent and restores a collapsed selector. The complete
+Android suite passes 308 tests, including lock retention, locked-start rejection,
+fresh-foreground resume, unlock into another app, relock invalidation, editor
+exclusivity, explicit-stop cancellation and overlay close/show. On the actual S10e, the safe-screen suite verified that the service remained
+started and foreground while locked and the root mapping was paused. Guarded touch
+replay and diagnostic exclusivity also passed. Profile/library/settings snapshots
+matched before and after the disposable tests. Actual Training unlock resumption
+remains pending; see lock-session-validation.json. Bennett configuration and
+firing logic are unchanged. This service-lifecycle change does not itself prove
+that MLBB receives cleanup after screen-off.

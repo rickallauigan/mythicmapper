@@ -314,10 +314,15 @@ class HardwareValidationInstrumentation: Instrumentation() {
                 try {
                     repeat(150){if(root.isAttachedToWindow)SystemClock.sleep(20)}
                     check(!root.isAttachedToWindow){"Screen-off left selector attached after 3s"}
+                    val running=targetContext.getSystemService(android.app.ActivityManager::class.java)
+                        .getRunningServices(100).singleOrNull{it.service.className==xtr.keymapper.TouchPointer::class.java.name}
+                    check(running!=null&&running.started&&running.foreground){"Screen-off stopped the mapping foreground service"}
+                    check(service!!.mService?.isMappingPaused==true){"Locked mapping was not paused"}
                 } finally { key(224) }
                 repeat(100){if(!power.isInteractive)SystemClock.sleep(20)}
                 check(power.isInteractive){"Screen did not wake"}
                 screenResult=JSONObject().put("screen_off_on",true).put("overlay_removed_on_screen_off",true)
+                    .put("mapping_foreground_service_retained_while_locked",true).put("mapping_paused_while_locked",true)
                     .put("keyguard_locked_after_wake",targetContext.getSystemService(android.app.KeyguardManager::class.java).isKeyguardLocked)
             }
             return JSONObject().put("screen",screenResult ?: JSONObject.NULL).put("foreground_service_notification",true).put("notification_flags",notificationFlags).put("attached",true).put("favorite_slots",slots)
