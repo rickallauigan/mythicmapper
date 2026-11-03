@@ -403,3 +403,11 @@ restarted, a fresh foreground callback was observed, and mapping remained paused
 outside MLBB. Guarded touch and diagnostic exclusivity passed with zero gameplay
 submissions. All profiles/favorites/settings compared unchanged. Actual centered-
 stick Training lock/unlock resumption is pending; see unlock-settling-validation.json.
+
+**Physical acceptance on source 51209f0:** the user confirmed the centered-stick
+lock/unlock test works: M icon returns, right-stick shooting and RT respond without
+opening MM or pressing Use. ADB independently observed screen_suspended=false,
+unlocked display, session_running=true, overlay_attached=true and mapping_paused=false.
+This passes session restoration for the tested Training path. It does not certify
+cleanup when locking during an active firing contact, which remains open. Bennett,
+profiles and favorites remain unchanged. No online matches or releases were used.

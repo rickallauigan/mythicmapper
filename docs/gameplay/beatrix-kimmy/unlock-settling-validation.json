@@ -32,7 +32,18 @@
   "diagnostic_gameplay_submissions": 0,
   "profiles_favorites_settings_unchanged": true,
   "apk_sha256": "9b2f27389779cea66f23c36a1a07b7482857ad9483ab91b638787ab43564f98c",
-  "physical_training_centered_lock_test": "PENDING",
+  "physical_training_centered_lock_test": "PASS, user confirmed M icon returns, right-stick shooting and RT work after centered-stick lock/unlock without opening MM or pressing Use",
   "prior_firing_during_lock": "FAIL, separate game cleanup issue",
-  "cause": "Ordering/stale foreground hypotheses, exact prior failure cause unproven"
+  "cause": "Ordering/stale foreground hypotheses, exact prior failure cause unproven",
+  "adb_post_unlock": {
+    "screen_suspended": false,
+    "interactive": true,
+    "keyguard_locked": false,
+    "session_running": true,
+    "profile_selected": true,
+    "overlay_attached": true,
+    "root_alive": true,
+    "mapping_paused": false
+  },
+  "installed_source_commit": "51209f0"
 }

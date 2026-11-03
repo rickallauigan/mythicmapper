@@ -325,3 +325,10 @@ right-stick and RT checks without Use. If failed, first collect dumpsys activity
 service PACKAGE/xtr.keymapper.TouchPointer while leaving game foreground; do not
 restart instrumentation with possible active game contacts. Existing Bennett and
 favorites untouched. Firing-during-lock cleanup remains a separate open failure.
+
+User confirmed "yes it works" to centered-sticks lock/unlock, M return, right-stick
+and RT without Use on installed source51209f0. Physical session restoration PASS.
+ADB confirms screen_suspendedfalse/unlocked/sessionrunning/overlayattached/mapping
+active after SCREEN_ON. Existing gameplay firing-during-lock bug remains OPEN.
+Keep current Kimmy session; user asked to center after test. No more physical test
+needed for the scoped restoration request. Draft14 updated; no merge/release.
