@@ -366,3 +366,26 @@ ignored. Migration MIGRATION.md and docs/MYTHICMAPPER-AVD.md were updated locall
 in the separate dirty migration repository; no commit/push there. Keep PR22 draft,
 preserve unrelated design PNG and all stack branches. Never merge or touch phone
 without a separate physical request.
+
+### Issues16/18 UI modernization
+
+Issue16 branch feature/16-floating-bubble, source57d928a, draft23 based on22.
+324 Android tests,12 tools tests, lint/build and actual AVD bubble gestures pass.
+Hosted host41640377835 and AVD41640377837 green. Original44dp circular M on48dp
+transparent target; five slots/switch gates preserved. No gameplay/fixture changes.
+
+Issue18 branch feature/18-home-redesign stacks on23. Shared Tester palette, actual
+status/actions, horizontal five-favorite strip, searchable library, confirmation
+for delete/occupied replacement and explicit starter-based creation. No fake folder
+sync or universal editor. Virtual entry remains debug-only/SIMULATED. Library
+refresh no longer parses every750ms; calibration reads run on IO. Final327 Android
+and12 Python tests, lint/debug/release compilation, native/Rust/JNI/schema/fixtures
+pass. Actual AVD Home accessibility/rotation/navigation and all seven replays pass.
+See docs/validation/ui-16 and ui-18 for APK screenshots/results. Debug SwiftShader
+scroll jank remains worse than baseline (26.71% →36.49% final repeat); no release
+performance acceptance claimed. Hosted final-head status is in the draft PR.
+
+Only emulator-5580 was commanded. Real S10e/profile/favorites, Bennett180/400,
+Kimmy/unlock and issue20 deferred scope remain untouched. Preserve both untracked
+reference PNGs. Keep feature PRs draft; do not merge or publish. Recommended next
+work is accelerated/release-like profiling and separate physical overlay acceptance.
