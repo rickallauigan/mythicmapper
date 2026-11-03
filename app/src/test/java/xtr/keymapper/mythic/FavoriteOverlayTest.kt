@@ -89,6 +89,20 @@ class FavoriteOverlayTest {
             assertFalse(overlay.isAttached())
         }finally{EditorSessionGuard.release(owner);overlay.close();controller.destroy();ShadowSettings.setCanDrawOverlays(false)}
     }
+    @Test fun editorNavigationRestoresTransparentCollapsedBackground() {
+        ShadowSettings.setCanDrawOverlays(true)
+        val controller=Robolectric.buildService(TouchPointer::class.java).create()
+        val overlay=FavoriteOverlay(controller.get(),{"preview-only"},{},{true})
+        try {
+            overlay.show();ReflectionHelpers.getField<Button>(overlay,"header").performClick()
+            val panel=ReflectionHelpers.getField<LinearLayout>(overlay,"panel")
+            (panel.getChildAt(6)as Button).performClick()
+            val root=ReflectionHelpers.getField<LinearLayout>(overlay,"root")
+            assertEquals(View.GONE,ReflectionHelpers.getField<ScrollView>(overlay,"panelScroll").visibility)
+            assertTrue(root.background is android.graphics.drawable.ColorDrawable)
+            assertEquals(android.graphics.Color.TRANSPARENT,(root.background as android.graphics.drawable.ColorDrawable).color)
+        }finally{overlay.close();controller.destroy();ShadowSettings.setCanDrawOverlays(false)}
+    }
     @Test fun missingPermissionDoesNotAttachAWindow() {
         ShadowSettings.setCanDrawOverlays(false)
         val controller=Robolectric.buildService(TouchPointer::class.java).create()

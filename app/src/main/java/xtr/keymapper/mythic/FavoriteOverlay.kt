@@ -135,7 +135,7 @@ class FavoriteOverlay internal constructor(private val service: Context, private
                 })
             }
             panel.addView(panelButton().apply {text="Visual mapping editor";isEnabled=selected()!=null;setOnClickListener {
-                panelScroll.visibility=View.GONE
+                collapse()
                 service.startActivity(Intent(service,EditorActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     .putExtra(EditorActivity.PROFILE_NAME,selected()).putExtra(EditorActivity.VISUAL,true))
             }})
