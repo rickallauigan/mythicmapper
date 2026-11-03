@@ -335,64 +335,34 @@ needed for the scoped restoration request. Draft14 updated; no merge/release.
 
 ### Issue #21: AVD + Virtual G8 development
 
-Separate branch feature/21-virtual-g8-avd based on7efcf35 (#14→#13→#12→dev).
-Debug-only VirtualG8Session/UI/Instrumentation feed existing ControllerDeviceMonitor,
-Hero/Aim/Bindings and InputService ledger using injected discovery + recording
-TouchBackend, Wayland/test mode. No production source or allowlist changes; no real
-reader, root requirement, game input or personal profile/favorite mutation. Bennett
-in-memory fixture180/400; Kimmy/unlock production behavior preserved; issue20 deferred.
-Actual AOSP API36 default x86_64 image revision2 installed; emulator37.1.11 KVM
-headless boot works at2280x1080/4GB/4cores, owned emulator-5580. Only that explicit
-serial used; no S10e commands. Local320 Android tests (zero skips/failures), lint,
-APK/inventory/release manifest, Rust5/native3/JNI242406/Kotlin/Python9/generator12
-and12/12 historical fixtures pass. Seven AVD JSON cases + real UI/orientation smoke
-pass; every recording trace final0 pointers/platform submissions0 by sink design.
-See docs/development/AVD-SETUP.md, VIRTUAL-G8.md, TEST-MATRIX.md and virtual-g8 report.
-Tools CLI manages only owned AVD/process and saves JSON/JUnit/traces under ignored
-app/build/virtual-g8. New one-API CI workflow; remote CI pending until PR created.
-Code commitbc2ce5b. Runtime and backend classes in main unchanged. Need finish
-infrastructure/docs commit, create stacked draft against feature/beatrix-kimmy-gameplay,
-observe CI, test owned stop/reboot, record PR/SHA. Do not merge or touch physicalphone.
-Migration bundle docs/MYTHICMAPPER-AVD.md and appended MIGRATION.md changed locally
-only; preserve unrelated migration changes, no commit/push of that separate repo.
+Branch `feature/21-virtual-g8-avd`, draft PR22, base7efcf35 on
+#14 → #13 → #12 → dev. Main/controller/hero source and profiles are unchanged.
+No physical S10e commands were issued. Bennett180/400, Kimmy and screen-unlock
+restoration remain preserved; gameplay issue20 remains deferred.
 
-Issue21 follow-up: draftPR22 targets feature/beatrix-kimmy-gameplay. Sourcec20f709
-adds initial focus wait, real x86_64 JNI report and CLI ABI parity check.320 Android
-and Python10 tests pass; JNI61206 onAVD maxerror0. Owned stop/restart and fresh
-Bennett/Kimmy replay pass. Later local boots showed SystemUI startupANR onbothGPU
-modes; explicit verified AVD-only recover/Wait (refuses other appANRs) then full
-JNI/UI/seven-case replay PASS. Keep this platform caveat; not a clean boot pass.
-CIfirst failed SDKmanagerPATH (fixedSDKpath), second doctor-version127 lackedstderr.
-Doctor now printsstderr/headless-versionprobe; newCIpendingafterpush. No main source,
-physicalphone commands or profiles changed. Follow PRchecks until feasiblegreen;
-never merge. Migration docs remain localuncommitted in separate dirty repo.
+Debug-only VirtualG8Session/UI/Instrumentation use the existing monitor,
+InputService/Hero/Aim/Bindings/ledger and a recording TouchBackend. No privileged
+reader, root requirement, USB identity spoofing or game touch submission. The
+root-free debug Home adapter reuses Home and changes only the root-warning UI.
+Simulation is explicit, labeled, default off, bounded and unavailable in release.
 
-Issue21 delivery: source3d985e3 passed remote host41627465766 and AVD41627465742.
-Downloaded CI artifacts confirmed emulator37.2.13/KVM, x86_64 JNI61206 zeroerror,
-UI + seven cases PASS final0 pointers; hosted clean boot needed no SystemUI recovery.
-Local37.1.11 recovery caveat retained. Local owned emulator stopped; virtual guest
-APK/data retained. PR22 draft correctbase14; no main/profile changes or phone access.
-Final documentation commit only records this evidence; no runtime change afterward.
-Only unrelated untracked designPNG left in project. MigrationMIGRATION.md and
-newdocs/MYTHICMAPPER-AVD.md remain localuncommitted, preserving unrelatedwork.
+Actual owned AOSP API36 default x86_64 revision2 AVD runs headless with KVM,
+2280×1080/4GB/four cores, explicit emulator-5580. Local37.1.11 and hosted37.2.13
+executed. Local322 Android and12 tools tests, lint/debug build/release compilation,
+Rust5/native3/hostJNI242406/Kotlin bridge/generator12 and12 protected hashes pass.
+AVD JNI61206 zero error, UI/orientation smoke and seven replays pass with final
+zero recording pointers. This does not establish physical or MLBB compatibility.
 
-Delivery guards:321 Android +11 Python pass locally. Final debugAPK UI intent
-refusal catches guard error instead of appcrash when realmapperstarted; regression
-checksno session/no lease. All suites now parse fresh instrumentation stdout, so
-JNI/UI cannotreuseoldsavedPASS; replaystillchecksnonce. Parser verified against9
-actualhostedreports. New APK fullJNI/UI/sevencasespassed afterSystemUIWait again.
-No main/profiles changed. Hostdocs-only rerun41628617412 hitRobolectric SDKHTTP fetch
-errors, not mapping asserts; inspect capturedartifact underignoredhost-ci-network-
-failure. Finalsourcecommit/push andCIretry pending. Existing3d host/AVDbothgreen;
-newheadneedsgreen. Do notskip tests. KeepPR22draft andphoneuntouched.
+CLI verifies owned process/serial/name; reports require fresh stdout, replay nonce
+and scenario hashes. Local cold boots and one later hosted run encountered a
+SystemUI startup ANR. Bounded target-specific Wait recovery retains evidence;
+non-SystemUI ANRs and mapper assertion failures are never dismissed/retried.
+Source4c5b6da CI follow-up is recorded in PR22; prior source3d985e3/a68dd5a had
+both hosted checks green. Do not infer final-head status from historical runs.
 
-Final issue21 candidate:322 Android +11 Python; final APK JNI/UI/7 AVD cases PASS.
-Duplicate resume bug reproduced with Cleanup leaked contacts on heldBennett; debug
-start is idempotent and locked resume halts actors. ScenarioB includesduplicates.
-Moved harness tests to src/testDebug; all12 still run. ScenarioJSON declaredTest
-inputs. ReleaseKotlin+Java compilePASS, no simulatorclasses/manifest entries. No
-releaseUTtasks exist inthisproject (observedtaskslist); don'tclaimranthose.
-CIHTTP429 onrepo1 Android15SDKjar: canonicalMavenCentral configured +publicSDKcache
-added to existinghostworkflow, no checks removed. Head sourcea68 previouslybothCI
-success, nowfinalcommit/push/checks pending. No sourcechanges afterthiscandidate
-exceptdeliveryevidence. No S10ecommands; runtime/profilepathsidenticaltobase.
+See docs/development/{AVD-SETUP,VIRTUAL-G8,TEST-MATRIX}.md and
+ docs/validation/virtual-g8/{REPORT.md,evidence.json}. Generated disks/reports are
+ignored. Migration MIGRATION.md and docs/MYTHICMAPPER-AVD.md were updated locally
+in the separate dirty migration repository; no commit/push there. Keep PR22 draft,
+preserve unrelated design PNG and all stack branches. Never merge or touch phone
+without a separate physical request.
