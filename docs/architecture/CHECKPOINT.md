@@ -254,3 +254,22 @@ not claim it fixed. Profiles/library/favorites backup comparison unchanged. Read
 new bennett-acquisition-validation.json. Physical neighbor-cast retest pending.
 Current actual device/training state is in ignored s10e-private/hero-continuation.json;
 verify before resuming; no arbitrary game injection. No parent PR merge/release.
+
+
+### Kimmy calibration and resumption follow-up
+
+Source fix ee09d5d is committed locally on the existing PR #14 branch. Actual
+Bennett personal profile is PULSE 400 ms / radius 180 px and is unchanged; preserve
+its private working APK backup. Neighbor-cast regression stays open. Kimmy HUD
+centers were measured and saved only to its personal copy, radius 80 initial trial.
+Four basic controls are explicitly human-confirmed. Skill resumption then failed;
+real trace requests Attack DOWN 0-2 ms after skill UP. Kimmy-only one-shot 40 ms
+release gap plus 40 ms anchor acquisition added, preserving continuous shooting.
+302 tests, lint/build and native/Rust/JNI/fixture checks pass. Guarded device replay
+measured 42/43 ms and zero final contacts/errors. Current installed APK source is
+ ee09d5d, SHA256 0fc739ae80ba2c676de47542c9e25d83e8736b0bea76fbf3a33c9548b9ba8771.
+Kimmy is active again after the user unlocked normally. RT/LB physical resumption
+retest is pending. Read kimmy-handoff-validation.json and the report. Current runtime
+state is in ignored app/build/s10e-private/hero-continuation.json. No raw HUD images,
+profile IDs or network information may be committed. Keep PR #14 draft; push updated
+source/docs and check CI. No merges or production releases.

@@ -239,3 +239,82 @@ do not describe the configuration lease as fully stable. Original profile mappin
 and the entire library/favorites were compared with the pre-install backup and
 remain unchanged. See `bennett-acquisition-validation.json` and associated device
 JSON files. Human neighboring-skill regression is pending.
+
+## Kimmy physical calibration and skill handoff (2026-11-03)
+
+The phone was reverified as SM-G970F at the privately stored, reachable ADB target.
+PR #14 remains stacked on #13. Starting worktree contained only the unrelated
+untracked controller mockup. Installed source cdb4737 was CI green. Its debug APK
+was installed without clearing data; the previous working Bennett APK and exact
+profile/library preferences were preserved privately.
+
+The actual Bennett personal mapping is **PULSE 400 ms / attack radius 180 px**.
+This supersedes older 150 ms trial notes as the current personal configuration.
+Bennett's full mapping set and all favorites were compared before/after Kimmy
+calibration and installation and remain unchanged. Bennett's neighboring-skill
+regression remains OPEN; the latest user confirmation does not independently close it.
+
+Kimmy initially had a disabled, uncalibrated Dyrroth-derived personal draft. Actual
+2280 x 1080 Kimmy Training HUD pixels were measured, then saved through the existing
+exclusive Hero training setup UI. No screenshot/game artwork or account details
+are committed. Measured centers have approximately +/-6 px uncertainty:
+
+| Control | Measured center (px) | Acceptance |
+|---|---|---|
+| Basic Attack | 1943, 908 | Shooting/direction/neutral/movement human-confirmed |
+| RB / Speed Up | 1646, 943 | Pause while held/no aiming reticle observed; activation not separately certified |
+| RT / CC | 1755, 743 | Cast/aim reported; resumption later corrected to FAIL |
+| LB / AOE | 1955, 634 | Input observed; exact cast/charge/release semantics not certified |
+| X / Recall | 1160, 963 | Effect not yet physically certified |
+| A / Regen | 1311, 965 | Effect not yet physically certified |
+| B or L3 / equipped Revitalize | 1463, 970 | Shared input observed; effect not yet physically certified |
+
+All Kimmy aim radii remain 80 px initial training values; skill full-range acceptance
+is pending. Geometry was confirmed through the setup's explicit unverified-training
+consent; this does not certify complete gameplay calibration. No favorite was assigned.
+No Kimmy attack-repeat policy was added. The user explicitly confirmed right-stick
+shooting without LT, centering to stop, direction following and native movement plus
+shooting. Initial shooting needed no added center dwell in this physical observation.
+
+The installed HUD labels are Speed Up / CC / AOE. Do not infer older beam/charged
+Ultimate mechanics solely from those names. The user subsequently corrected the
+initial skill result: **shooting did not resume after skills while the stick remained
+displaced**. Earlier affirmative answers must not count as a resumption pass.
+
+The physical trace shows real RT/LB UP events followed by a requested Attack DOWN
+within approximately 0-2 ms. Thus the mapper requested resumption; a game-side touch
+handoff/acquisition issue is suspected. Raw traces remain private; sanitized timing
+evidence is in kimmy-resume-failure.json. This is an inference, not proof of game internals.
+
+Commit ee09d5d changes only Kimmy's post-skill transition: a cancelable one-shot
+40 ms release gap, then one Attack contact at its center for 40 ms before applying
+the latest stick aim. The contact then remains continuous until neutral. Initial
+shooting and Bennett's repeat path are retained. There is no recurring Kimmy firing
+timer. Neutral, Recall, another skill, disconnect/SYN_DROPPED, profile reload and
+shutdown cancel pending work in either phase. Shared B/L3 ownership waits for the
+last release. Timings are provisional gesture protocol settings, not measured
+controller-to-display latency or invented weapon cooldowns.
+
+All 302 Android tests, lint/build/inventory/release-manifest checks passed. Rust 5,
+native 3, JNI 242406 vectors, actual Kotlin JNI/missing-library, protected fixture
+hashes 12/12 and profile generator tests 12 passed. Regressions cover the real
+MotionEvent handoff, latest aim, no repetition, both-phase cancellation and unchanged
+Bennett 400 ms / 180 px behavior. The installed handoff build's source is ee09d5d;
+its APK SHA256 and exact device results are in kimmy-handoff-validation.json.
+
+Guarded S10e replay measured 42 ms release-to-attack and 43 ms anchor-to-first-move;
+40 events reached only the blue surface, maximum seven pointers, zero sequence
+errors and zero final pointers. Tester gameplay submissions remained zero. A focused
+notification shade initially blocked the test before injection; it passed only after
+the transient shade was collapsed. No setting/security policy was changed. Device
+keyguard later blocked retest; the user unlocked normally. No lock bypass occurred.
+
+A stale bound mapper service survived Home Stop during preparation. A fresh exclusive
+zero-pointer diagnostic acknowledgement was obtained before stopping only MythicMapper's
+process; root/reader absence was verified. This does not certify abrupt process kill
+with active contacts. Existing XtMapper data was not accessed or altered.
+
+**Current physical gate:** retest RT and LB resumption on the new build. Do not mark
+the failure fixed from host or blue-surface checks alone. Utility actions, actual
+skill casting semantics, physical reconnection, profile switching and interruptions
+remain separate manual acceptance items.
