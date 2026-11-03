@@ -1,7 +1,8 @@
 # Home modernization — issue18
 
 Stack: #12 → #13 → #14 → #22 → #23 (issue16) → this feature.
-Two focused feature branches; no merge, rebase, force push or release.
+Two focused feature branches; no PR merge, rebase, force push or release.
+Normal parent-branch integrations carry the editor-backdrop fix into Home without rewriting history.
 
 ## Design and working behavior
 
@@ -81,3 +82,5 @@ unchanged. This report does not certify release or gameplay compatibility.
 Final executed local results:327 Android tests,0 failures/errors/skips;12 tools tests; lint, dependency inventory, debug APK, release manifest and release Kotlin/Java compilation PASS. Rust5/native3/hostJNI242406/Kotlin bridge/profile generators12 and12/12 protected hashes PASS. Packaged AVD JNI61206/maxerror0, all seven scenarios and both UX suites PASS; each scenario final0 pointers. Release manifest has no simulator or UX debug entry.
 
 Final repeat:222 frames,81 janky(36.49%), p50/95/99 36/101/150ms; PSS112471KB. This remains worse than baseline; no performance acceptance or speedup claim. APK SHA256 970dd08af2ddbe43bfb6a670056de080657771b30b6c4f9fed78e5ee1d9bca6b. Hosted final-head checks are linked in the draft PR; they are authoritative over historical runs.
+
+Final review follow-up: the overlay Editor route now uses the common collapse helper, preventing a leftover rounded panel backdrop behind the M after returning. A regression and actual AVD overlay-editor tap verify transparent collapse and eventual Activity/lease teardown. Instrumentation waits up to5s for Android destruction rather than assuming300ms. No lease is forcibly released to make the assertion pass. Final integrated suite has328 Android tests; hosted final-head results are recorded in both drafts.

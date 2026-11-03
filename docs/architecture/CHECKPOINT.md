@@ -389,3 +389,13 @@ Only emulator-5580 was commanded. Real S10e/profile/favorites, Bennett180/400,
 Kimmy/unlock and issue20 deferred scope remain untouched. Preserve both untracked
 reference PNGs. Keep feature PRs draft; do not merge or publish. Recommended next
 work is accelerated/release-like profiling and separate physical overlay acceptance.
+
+Final UI review found/fixed the expanded-card backdrop remaining after overlay→editor.
+Parent16 head d5b5eca includes collapse-helper fix, regression and actual AVD editor
+tap/return; child18 integrates parent with normal dependency merges (no PR merge or
+rewritten history). Local integrated328 tests expected/previous full run PASS; final
+rerun logs in /tmp/mythic-ui-final-fixed-host.log, AVD Home/bubble pass and seven-case
+replay in /tmp/mythic-ui-final-fixed-smoke.log. Parent fresh CI41675067373/41675067390
+running; new child final-head CI pending push. Keep both drafts; check results/artifacts
+before claiming final CI green. No new gameplay/physical commands. Both original
+reference PNGs remain untracked; temporary parent review worktree is /tmp/mythic-ui16-review.

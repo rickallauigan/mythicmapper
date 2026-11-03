@@ -1,12 +1,12 @@
 {
   "android_tests": {
-    "tests": 327,
+    "tests": 328,
     "failures": 0,
     "errors": 0,
     "skipped": 0
   },
   "python_tests": 12,
-  "apk_sha256": "970dd08af2ddbe43bfb6a670056de080657771b30b6c4f9fed78e5ee1d9bca6b",
+  "apk_sha256": "12b7cae2bc3eb1db071d4c7513d1808f393ab5c8437f544bbca576b81d626189",
   "target": "owned emulator-5580, API36 x86_64; physical S10e untouched",
   "jni": "PASS",
   "ui": {
@@ -64,5 +64,11 @@
     "after": 115813,
     "after-repeat": 112471
   },
-  "release_scope": "release manifest excludes simulator/UX debug entries; release Kotlin/Java compiled"
+  "release_scope": "release manifest excludes simulator/UX debug entries; release Kotlin/Java compiled",
+  "overlay_editor_return": {
+    "status": "PASS",
+    "checks": "48dp target; real tap/drag; expand/collapse; no drag select; selection; recreation; position; overlay editor return/backdrop; ownership hide; rotation; cleanup",
+    "mapper_submissions": 0,
+    "source": "owned AVD UI; isolated preview data; no root"
+  }
 }
