@@ -1,0 +1,6 @@
+{
+  "status": "PASS",
+  "checks": "48dp target; real tap/drag; expand/collapse; no drag select; selection; recreation; position; ownership hide; rotation; cleanup",
+  "mapper_submissions": 0,
+  "source": "owned AVD UI; isolated preview data; no root"
+}
