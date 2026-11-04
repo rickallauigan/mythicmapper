@@ -11,6 +11,7 @@ import xtr.keymapper.controller.ControllerBindings
 
 object ProfileCodec {
     const val MAX_BYTES=1_048_576
+    fun strictJsonValue(text:String):Any? {require(text.toByteArray(Charsets.UTF_8).size<=MAX_BYTES);return StrictJson(text).read()}
     fun read(stream:InputStream):String {
         val out=java.io.ByteArrayOutputStream();val buffer=ByteArray(8192);while(true){val count=stream.read(buffer);if(count<0)break;require(out.size()+count<=MAX_BYTES){"file: exceeds 1 MiB"};out.write(buffer,0,count)};val bytes=out.toByteArray();require(bytes.size<=MAX_BYTES){"file: exceeds 1 MiB"}
         return java.nio.charset.StandardCharsets.UTF_8.newDecoder().decode(java.nio.ByteBuffer.wrap(bytes)).toString()

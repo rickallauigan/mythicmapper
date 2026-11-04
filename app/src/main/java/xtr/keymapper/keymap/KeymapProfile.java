@@ -37,6 +37,7 @@ public class KeymapProfile implements Parcelable {
     public static final int MAX_DPADS = 3;
     public Camera camera = null;
     public xtr.keymapper.controller.HeroGameplayConfig heroGameplay;
+    public String universalMapping;
 
     public KeymapProfile() {
         dpadArray = new Dpad[MAX_DPADS];
@@ -44,7 +45,7 @@ public class KeymapProfile implements Parcelable {
 
     public boolean hasControllerBindings() {
         java.util.function.Predicate<String> controller = xtr.keymapper.controller.ControllerBindings::isController;
-        if (!chords.isEmpty()) return true;
+        if (universalMapping != null || !chords.isEmpty()) return true;
         if (keys.stream().anyMatch(k -> controller.test(k.code)) || aimKeys.stream().anyMatch(k -> controller.test(k.code))) return true;
         if (swipeKeys.stream().anyMatch(k -> controller.test(k.key1.code) || controller.test(k.key2.code))) return true;
         for (Dpad dpad : dpadArray) if (dpad != null && (controller.test(dpad.keycodes.Up)
@@ -97,6 +98,7 @@ public class KeymapProfile implements Parcelable {
         aimKeys = in.createTypedArrayList(AimKey.CREATOR);
         chords = in.createTypedArrayList(xtr.keymapper.keymap.element.ControllerChord.CREATOR);
         heroGameplay = in.readParcelable(xtr.keymapper.controller.HeroGameplayConfig.class.getClassLoader());
+        universalMapping = in.readString();
     }
 
     @Override
@@ -117,6 +119,7 @@ public class KeymapProfile implements Parcelable {
         dest.writeTypedList(aimKeys);
         dest.writeTypedList(chords);
         dest.writeParcelable(heroGameplay,flags);
+        dest.writeString(universalMapping);
     }
 
     @Override

@@ -14,11 +14,17 @@ object MythicScope {
         InterfaceEvidence.controller(device.sources)
 
     @JvmStatic fun validateActivation(profile: KeymapProfile) {
+        profile.universalMapping?.let { xtr.keymapper.universal.UniversalCodec.decode(it).ready();require(!profile.disabled){"Mapping disabled"} }
         profile.heroGameplay?.let { require(it.calibrated && !profile.disabled) { "Confirm hero HUD, weapon policy and calibration in Hero training setup before activation" } }
         validateProfile(profile)
     }
 
     @JvmStatic fun validateProfile(profile: KeymapProfile) {
+        profile.universalMapping?.let { json ->
+            val mapping=xtr.keymapper.universal.UniversalCodec.decode(json)
+            require(profile.heroGameplay==null&&profile.keys.isEmpty()&&profile.aimKeys.isEmpty()&&profile.chords.isEmpty()&&profile.camera==null){"Universal and legacy producers cannot share a session"}
+            require(mapping.game==profile.packageName){"Game metadata mismatch"}
+        }
         if(!profile.disabled || profile.aimKeys.isNotEmpty() || profile.keys.isNotEmpty()) profile.heroGameplay?.validate(profile)
         require(profile.packageName == GAME) { "MythicMapper supports MLBB only" }
         require(profile.macroIdMap.isEmpty() && profile.swipeKeys.isEmpty()) { "Scripted input sequences are outside MythicMapper scope" }

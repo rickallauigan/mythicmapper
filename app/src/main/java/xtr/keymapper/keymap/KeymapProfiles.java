@@ -76,6 +76,8 @@ public class KeymapProfiles {
     public void setProfileEnabled(String profileName, boolean enabled) {
         synchronized (xtr.keymapper.structured.StructuredProfiles.SAVE_LOCK) {
         Set<String> stringSet = sharedPref.getStringSet(profileName, null);
+        if (xtr.keymapper.universal.UniversalStorage.document(stringSet) != null)
+            throw new IllegalArgumentException("Use the universal editor to enable this personal mapping");
         String packageName = null;
         for (String line : stringSet) {
             String[] data = line.split("\\s+");
@@ -87,6 +89,7 @@ public class KeymapProfiles {
         for (var entry : sharedPref.getAll().entrySet()) {
             // disable or enable all profiles for app for consistency
             KeymapProfile profile = getProfile((Set<String>) entry.getValue());
+            if(profile.universalMapping != null) continue;
             if(profile.packageName.equals(packageName)) {
                 Set<String> lines = sharedPref.getStringSet(entry.getKey(), null);
                 saveProfile(entry.getKey(), new ArrayList<>(lines), packageName, enabled, profile.xRes, profile.yRes);
@@ -124,11 +127,13 @@ public class KeymapProfiles {
     public KeymapProfile getProfile(String profileName, boolean loadMacros) {
         Set<String> stringSet = sharedPref.getStringSet(profileName, null);
         KeymapProfile keymapProfile = getProfile(stringSet);
+        if (keymapProfile.universalMapping != null) xtr.keymapper.universal.UniversalStorage.INSTANCE.read(context, profileName);
         if (loadMacros) keymapProfile.loadMacros(context);
         return keymapProfile;
     }
 
     public static KeymapProfile getProfile(Set<String> lines) {
+        var universal = lines == null ? null : xtr.keymapper.universal.UniversalStorage.document(lines);
         var structured = lines == null ? null : xtr.keymapper.structured.StructuredProfiles.document(lines);
         KeymapProfile profile = new KeymapProfile();
         profile.disabled = true;
@@ -232,6 +237,7 @@ public class KeymapProfiles {
                 profile.mouseWalk = null; profile.mouseAimConfig = null;
             }
         }
+        if (universal != null) { profile.universalMapping = xtr.keymapper.universal.UniversalCodec.INSTANCE.encode(universal); profile.disabled = !universal.getEnabled() || !universal.getCalibrated(); }
         if (profile.heroGameplay != null && !profile.heroGameplay.calibrated) profile.disabled = true;
         return profile;
     }
