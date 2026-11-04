@@ -935,7 +935,7 @@
     "status": "RECORDED"
   },
   {
-    "module": "pkg:maven/androidx.webkit/webkit@1.17.0",
+    "module": "pkg:maven/androidx.webkit/webkit@1.18.0",
     "licenses": [
       {
         "license": {
