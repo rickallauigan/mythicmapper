@@ -153,3 +153,12 @@ now share the Activity/visible-label/Back lifecycle helper. The landscape repeat
 explicitly visits Search before reopening Virtual G8, making below-actions viewport
 restoration deterministic. The complete owned-AVD Home suite passes locally with
 all CRUD, five-slot, UUID, navigation, orientation and cleanup assertions retained.
+
+Run41840154922 completed the mapping and bubble suites but exceeded the original
+120-second whole-Home subprocess budget after reaching Virtual G8. The expanded
+suite now includes a second orientation/navigation cycle. Home reveal first uses
+ACTION_SHOW_ON_SCREEN when available and stops a search direction at the reported
+scroll boundary, avoiding repeated no-op swipes. The whole-Home budget is180seconds;
+bubble stays120, destination assertions stay10, and every assertion/case remains.
+This is a bounded allowance for additional regression work, not a timeout bypass
+for a failed assertion. The workflow's25-minute job bound remains unchanged.

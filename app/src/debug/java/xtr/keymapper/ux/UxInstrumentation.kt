@@ -101,9 +101,15 @@ class UxInstrumentation:Instrumentation() {
     private fun revealHome(label:String,find:()->android.view.accessibility.AccessibilityNodeInfo?):android.view.accessibility.AccessibilityNodeInfo {
         // Filtering can shrink/clamp the list; rotation can restore focused fields.
         // Either can place a requested node above OR below the current viewport.
-        for(forward in listOf(false,true))repeat(if(forward)40 else 12){
+        for(forward in listOf(false,true))for(step in 0 until if(forward)40 else 12){
             val node=find()
             if(node?.isVisibleToUser==true)return node
+            if(node?.performAction(android.view.accessibility.AccessibilityNodeInfo.AccessibilityAction.ACTION_SHOW_ON_SCREEN.id)==true){
+                settle();find()?.takeIf{it.isVisibleToUser}?.let{return it}
+            }
+            val direction=if(forward)android.view.accessibility.AccessibilityNodeInfo.ACTION_SCROLL_FORWARD else android.view.accessibility.AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD
+            // Do not inject repeated no-op swipes at an accessibility-reported list boundary.
+            if(homeRoot().actionList.none{it.id==direction})break
             scrollHome(forward)
         }
         error("Home control unreachable: $label")

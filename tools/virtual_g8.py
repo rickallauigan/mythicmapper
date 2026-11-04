@@ -144,7 +144,7 @@ def ux(suite='bubble'):
     verify();platform_ready()
     # App-scoped overlay permission on this owned emulator only; no root/system policy changes.
     adb('shell','appops','set',PKG,'SYSTEM_ALERT_WINDOW','allow')
-    log=adb('shell','am','instrument','-w','-e','suite',suite,PKG+'/xtr.keymapper.ux.UxInstrumentation',capture_output=True,timeout=120).stdout
+    log=adb('shell','am','instrument','-w','-e','suite',suite,PKG+'/xtr.keymapper.ux.UxInstrumentation',capture_output=True,timeout=180 if suite=='home'else 120).stdout
     (WORK/('ux-'+suite+'.instrumentation.txt')).write_text(log)
     report=instrument_report(log,'ux');save('ux-'+suite+'.json',report);print(json.dumps(report))
     for name in (['bubble-collapsed','bubble-expanded','bubble-portrait']if suite=='bubble'else ['home-overview','home-favorites','home-library','home-landscape']):
