@@ -75,3 +75,12 @@ notices and history. New contributions are GPL-3.0-or-later. scrcpy-derived comp
 their applicable upstream terms; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md),
 [license inventory](docs/architecture/LICENSING.md), and [LICENSE](LICENSE).
 The original XtMapper README is preserved at [docs/XTMAPPER-README.md](docs/XTMAPPER-README.md).
+
+### Universal mapping editor (development)
+
+Home's **Create mapping** opens a blank or unmeasured starter editor. Configure and
+save generic button/aim actions without adding a hero class. Legacy hero profiles
+remain on their compatibility path. See [editor architecture](docs/editor/UNIVERSAL-MAPPING.md),
+[action schema](docs/editor/ACTION-SCHEMA.md), [calibration](docs/editor/CALIBRATION.md)
+and [validation status](docs/validation/universal-editor/REPORT.md). A generic mapping
+is not a claim that its hero or HUD has passed physical gameplay testing.

@@ -53,3 +53,25 @@ unchanged/deferred. No physical or all-hero gameplay compatibility is implied.
 
 Implementation/test status is recorded in the validation report; this design
 section is not a claim that acceptance tests have executed.
+
+## User-facing implementation
+
+`UniversalEditorActivity`, `UniversalEditorScreen` and `UniversalBindingProperties`
+extend the editor family with blank/unmeasured starter creation, existing-profile
+cloning, canvas placement/drag/pan/zoom, numeric tuning, aliases, bounded undo/redo,
+revert/discard, saved-state draft recovery, enable/calibration, favorite assignment,
+JSON import/export and safe recording preview. Main Home and universal profile Edit
+route here; legacy profiles keep the original editor.
+
+`UniversalActionHandler` resolves saved documents inside the existing monitor's
+Device, using its existing lifecycle looper and guarded InputService injection path.
+No per-hero handler is needed for a new generic profile. It reuses ControllerAimHandler
+for pointer generation and RepeatKeyHandler only for explicitly configured repeat.
+Disconnect/SYN_DROPPED cancellation carries held-button release gates forward.
+Editor/diagnostic acquisition and the existing runtime lifecycle remain authoritative.
+
+Debug `VirtualG8Session.loadUniversal` accepts the same validated document and feeds
+its existing ControllerDeviceMonitor/InputService with the recording backend.
+`python3 tools/virtual_g8.py ux universal` exercises the real production editor UI in
+an isolated preference namespace, saves/reopens a disposable custom hero, then replays
+it through that same runtime. No physical device, root, MLBB or new hero class is used.
