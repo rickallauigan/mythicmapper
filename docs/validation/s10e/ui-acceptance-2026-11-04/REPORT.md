@@ -57,3 +57,28 @@ Screenshots: home-overview-redacted.png (cropped above personal names),
 home-large-text-redacted.png (status bar masked), bubble-landscape-cropped.png
 (cropped above the transient root toast). These are real device captures;
 no UI was generated or reconstructed. Private full originals remain retained.
+
+## Final verification and release-like comparison
+
+A minified benchmark variant (release-derived, DEBUG=false, same debug signing
+identity/package) was installed non-destructively for the identical scroll workload.
+Three trials recorded0/458,0/427,0/425 janky frames; p50=5ms throughout;
+p95=7/6/6ms; p99=9/7/7ms; PSS81181/92091/92329KB. These show substantially lower
+variant overhead on this workload, not a before/after optimization claim or a
+production performance guarantee. CPU, allocation traces and Compose recomposition
+counts were not collected; no causal bottleneck attribution is made.
+
+The final debug APK was restored and its installed bytes verified against SHA256
+`d8fff30fcb5694a1ec49b4694028c1011da994c241162fd97f5a5214f7228d3f`.
+Source:97e67ad (subsequent evidence-only commits do not change source).
+App data digests still match after both variant upgrades; mapping is stopped.
+
+Final executed checks:330 Android unit tests, zero failures/errors/skips; Android
+lint/debug build; benchmark APK; release Kotlin/Java compilation and manifest;
+Rust5 tests plus formatting/clippy; native reader/capability/parent-death checks;
+host JNI242406 vectors and actual Kotlin bridge; generator12 tests;12/12 fixture
+hashes. Actual AVD JNI61206, all seven replay scenarios, UI smoke, bubble and Home
+suites passed with final zero pointers. Emulator cold startup required the existing
+bounded SystemUI recovery; emulator was stopped through its owned workflow afterward.
+Physical ARM64 JNI61206 also passed earlier in this mission. These are distinct
+from controller gameplay acceptance.

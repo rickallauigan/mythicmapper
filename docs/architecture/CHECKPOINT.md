@@ -399,3 +399,22 @@ replay in /tmp/mythic-ui-final-fixed-smoke.log. Parent fresh CI41675067373/41675
 running; new child final-head CI pending push. Keep both drafts; check results/artifacts
 before claiming final CI green. No new gameplay/physical commands. Both original
 reference PNGs remain untracked; temporary parent review worktree is /tmp/mythic-ui16-review.
+
+## 2026-11-04 physical UI acceptance
+
+PR23 parent1c0ef7d includes unlock presentation fix15f82e6, host shadow correction
+61e85bb and persisted anchor fixfcb6150. Child97e67ad integrates parent without
+rewriting history, adds guarded preserving S10e UI suites and read-only selected
+profile presentation. Both pushed; remain drafts. Physical user confirmed moved
+bubble returns after unlock. Home/search/editor/calibration/rotation/1.5× font
+passed; zero safe-surface gameplay submissions. Full330 Android tests pass;
+Rust/native/JNI/generator/fixture gates and seven AVD cases + both UX suites pass.
+Real-device report: docs/validation/s10e/ui-acceptance-2026-11-04/REPORT.md.
+Minified variant0 janky frames across3 scroll trials; debug baseline/new comparison
+does not establish an optimization. Final debug restored; installed SHA256 is in
+final-build.json. Mapping stopped; original profile/library digests unchanged.
+Private backups/ADB identity stay outside repository, located through private
+/tmp/mythic-current-s10e-private-dir. Do not publish those contents or raw logs.
+Hosted fresh checks running; inspect PR checks before claiming green. Issue20
+remains deferred. Do not merge, release or start universal editor. Preserve both
+untracked reference PNGs. Parent worktree:/tmp/mythic-s10e-ui16-fix.
