@@ -1,0 +1,297 @@
+{
+  "protocol": "g8-physical-v1-30s",
+  "build": "debug",
+  "apk_sha256": "9d08c0d3cc0c068210599d32a0409142c1598a116ef12d34ce200f57ea55aa57",
+  "installed_comparison_sha256_verified": true,
+  "baseline_sha256": "6aeaa0f39137208898d5d8366e8c6fd409af6b8f2157497965ae1c00cc2f8057",
+  "baseline_preserved": true,
+  "comparable_workload": false,
+  "reason": "Different observed event/packet counts; baseline lacks trigger travel and completed overlap evidence; optimized retains full trigger range and overlap. Sequential, one trial each; no causal speedup conclusion.",
+  "source": "Physical Android input and app Window.FrameMetrics; no synthetic controller replay",
+  "before": {
+    "elapsed_ms": 30221,
+    "observed_events": 16617,
+    "frames": 711,
+    "janky_percent": 72.85513361462729,
+    "frame_total": {
+      "samples": 711,
+      "p50_ns": 19041697,
+      "p95_ns": 27064419,
+      "p99_ns": 29398739
+    },
+    "draw": {
+      "samples": 711,
+      "p50_ns": 6717961,
+      "p95_ns": 9519308,
+      "p99_ns": 10490770
+    },
+    "app_cpu_one_core_percent": 66.63247410740875,
+    "pss_before_kb": 173577,
+    "pss_after_kb": 168114,
+    "art.gc.bytes-allocated": 67309568,
+    "art.gc.gc-count": 3,
+    "art.gc.gc-time": 136,
+    "input_queue": {
+      "samples": 5589,
+      "p50_ns": 920846,
+      "p95_ns": 1738038,
+      "p99_ns": 2420039,
+      "total_samples": 5589,
+      "window_truncated": false
+    },
+    "queue_overflows": 0,
+    "held_at_end": [],
+    "work": {
+      "screen_compositions": {
+        "count": 709,
+        "total_ns": 0
+      },
+      "controller_compositions": {
+        "count": 699,
+        "total_ns": 0
+      },
+      "stick_compositions": {
+        "count": 1291,
+        "total_ns": 0
+      },
+      "trigger_compositions": {
+        "count": 0,
+        "total_ns": 0
+      },
+      "controller_draw_recording": {
+        "count": 701,
+        "total_ns": 649725188
+      },
+      "reducer": {
+        "count": 5589,
+        "total_ns": 1299461706
+      },
+      "snapshot": {
+        "count": 742,
+        "total_ns": 371067573
+      },
+      "log_append": {
+        "count": 16617,
+        "total_ns": 80385813
+      }
+    }
+  },
+  "after": {
+    "elapsed_ms": 30147,
+    "observed_events": 5335,
+    "frames": 203,
+    "janky_percent": 81.77339901477832,
+    "frame_total": {
+      "samples": 203,
+      "p50_ns": 23596980,
+      "p95_ns": 52440971,
+      "p99_ns": 57189165
+    },
+    "draw": {
+      "samples": 203,
+      "p50_ns": 8676615,
+      "p95_ns": 14601039,
+      "p99_ns": 17487347
+    },
+    "app_cpu_one_core_percent": 25.72726971174578,
+    "pss_before_kb": 175094,
+    "pss_after_kb": 171603,
+    "art.gc.bytes-allocated": 20590592,
+    "art.gc.gc-count": 1,
+    "art.gc.gc-time": 47,
+    "input_queue": {
+      "samples": 1665,
+      "p50_ns": 1033039,
+      "p95_ns": 2182116,
+      "p99_ns": 2939346,
+      "total_samples": 1665,
+      "window_truncated": false
+    },
+    "queue_overflows": 0,
+    "held_at_end": [],
+    "work": {
+      "screen_compositions": {
+        "count": 0,
+        "total_ns": 0
+      },
+      "controller_compositions": {
+        "count": 174,
+        "total_ns": 0
+      },
+      "stick_compositions": {
+        "count": 338,
+        "total_ns": 0
+      },
+      "trigger_compositions": {
+        "count": 0,
+        "total_ns": 0
+      },
+      "controller_draw_recording": {
+        "count": 174,
+        "total_ns": 223645073
+      },
+      "reducer": {
+        "count": 1665,
+        "total_ns": 477555290
+      },
+      "snapshot": {
+        "count": 270,
+        "total_ns": 181957050
+      },
+      "log_append": {
+        "count": 5335,
+        "total_ns": 42300989
+      }
+    }
+  },
+  "touch_submission_delta_before": 0,
+  "touch_submission_delta_after": 0,
+  "release_like_performance_measured": false,
+  "performance_gate": "OPEN: high jank; unmatched physical workloads cannot establish improvement or performance budgets",
+  "repeat_pair": {
+    "before": {
+      "elapsed_ms": 30058,
+      "observed_events": 11259,
+      "frames": 564,
+      "janky_percent": 70.39007092198581,
+      "frame_total": {
+        "samples": 564,
+        "p50_ns": 19339637,
+        "p95_ns": 26754832,
+        "p99_ns": 41278935
+      },
+      "draw": {
+        "samples": 564,
+        "p50_ns": 6749230,
+        "p95_ns": 9863461,
+        "p99_ns": 11973346
+      },
+      "app_cpu_one_core_percent": 54.448067070330694,
+      "pss_before_kb": 155836,
+      "pss_after_kb": 164580,
+      "art.gc.bytes-allocated": 56754176,
+      "art.gc.gc-count": 2,
+      "art.gc.gc-time": 72,
+      "input_queue": {
+        "samples": 3827,
+        "p50_ns": 914500,
+        "p95_ns": 1949615,
+        "p99_ns": 2993385,
+        "total_samples": 3827,
+        "window_truncated": false
+      },
+      "queue_overflows": 0,
+      "held_at_end": [
+        "A",
+        "B"
+      ],
+      "work": {
+        "screen_compositions": {
+          "count": 575,
+          "total_ns": 0
+        },
+        "controller_compositions": {
+          "count": 454,
+          "total_ns": 0
+        },
+        "stick_compositions": {
+          "count": 721,
+          "total_ns": 0
+        },
+        "trigger_compositions": {
+          "count": 248,
+          "total_ns": 0
+        },
+        "controller_draw_recording": {
+          "count": 456,
+          "total_ns": 424677888
+        },
+        "reducer": {
+          "count": 3827,
+          "total_ns": 965216386
+        },
+        "snapshot": {
+          "count": 615,
+          "total_ns": 359553685
+        },
+        "log_append": {
+          "count": 11259,
+          "total_ns": 47453268
+        }
+      }
+    },
+    "after": {
+      "elapsed_ms": 30115,
+      "observed_events": 8627,
+      "frames": 473,
+      "janky_percent": 60.46511627906977,
+      "frame_total": {
+        "samples": 473,
+        "p50_ns": 19254361,
+        "p95_ns": 25603200,
+        "p99_ns": 47619909
+      },
+      "draw": {
+        "samples": 473,
+        "p50_ns": 6559616,
+        "p95_ns": 9933923,
+        "p99_ns": 12166423
+      },
+      "app_cpu_one_core_percent": 45.253196081686866,
+      "pss_before_kb": 170585,
+      "pss_after_kb": 162277,
+      "art.gc.bytes-allocated": 39297024,
+      "art.gc.gc-count": 2,
+      "art.gc.gc-time": 104,
+      "input_queue": {
+        "samples": 2974,
+        "p50_ns": 1087577,
+        "p95_ns": 2534193,
+        "p99_ns": 3563346,
+        "total_samples": 2974,
+        "window_truncated": false
+      },
+      "queue_overflows": 0,
+      "held_at_end": [],
+      "work": {
+        "screen_compositions": {
+          "count": 0,
+          "total_ns": 0
+        },
+        "controller_compositions": {
+          "count": 327,
+          "total_ns": 0
+        },
+        "stick_compositions": {
+          "count": 518,
+          "total_ns": 0
+        },
+        "trigger_compositions": {
+          "count": 0,
+          "total_ns": 0
+        },
+        "controller_draw_recording": {
+          "count": 327,
+          "total_ns": 413106651
+        },
+        "reducer": {
+          "count": 2974,
+          "total_ns": 906340023
+        },
+        "snapshot": {
+          "count": 483,
+          "total_ns": 308642967
+        },
+        "log_append": {
+          "count": 8627,
+          "total_ns": 54180787
+        }
+      }
+    },
+    "same_apk": true,
+    "comparable_workload": false,
+    "reason": "Baseline 11259 events and 24 new LT/RT pairs each, optimized 8627 events and 13 each; baseline held A+B at collection end, later actual releases observed. Optimized ends released.",
+    "p99_improvement_established": false,
+    "zero_mapper_touch_submissions_both_trials": true
+  }
+}

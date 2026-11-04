@@ -126,3 +126,78 @@ publish production releases. Private raw evidence remains ignored under
 `app/build/s10e-private/`; never commit it.
 
 Draft S10e validation PR: https://github.com/rickallauigan/mythicmapper/pull/12.
+
+
+## G8 Controller Tester — 2026-11-02
+
+Branch `feature/g8-controller-tester` is stacked on PR #12's
+`test/s10e-hardware-validation` at `f0132f9`; PR #12 remains unmerged.
+See `docs/validation/g8-tester/REPORT.md` for actual screenshots, sanitized hardware
+data, build identity, test results and remaining gates. The original supplied
+reference PNG is intentionally untracked and must not be copied into the APK.
+
+Implemented Compose Controller/Diagnostics tabs, original Canvas/SVG drawing,
+Android live key/stick/trigger feedback, capability-derived checklist, bounded log,
+sanitary export and root-enforced Binder diagnostic ownership. Existing Java/native
+mapping, profile storage and Rust reference-only boundary remain. The previous
+Runtime metrics UI remains linked from Home.
+
+271 Android tests, five Rust tests, native three suites, host/Kotlin JNI and debug
+build/lint/release-manifest boundary passed. Device ownership/start-resume rejection,
+rotation, normal exit and idle client-death cleanup passed. Physical captures include
+2,996 real Android events, full stick/trigger range, no held controls at end, zero
+overflows and zero mapper touch submissions. User reported other buttons working;
+retained telemetry does not independently certify every button. Rear L4/R4 report
+L3/R3 aliases, not independent states. Four app preference files are unchanged.
+
+Known: remaining debug rendering jank (separate synthetic replay 40.36% / p99 53ms),
+full physical button capture, disconnect with held controls and OS-reserved Home
+behavior. No gameplay validation, release budget or 60-FPS claim. Private raw logs
+remain ignored in `app/build/s10e-private/`. Never merge/publish automatically.
+
+
+## Controller tester acceptance follow-up — 2026-11-02
+
+Continue feature/g8-controller-tester / draft PR #13, stacked on unmerged PR #12.
+Read the ignored app/build/s10e-private/current-adb-target.txt for the device's
+current network target. Do not commit addresses, serials or raw private logs.
+Do not start Beatrix/Kimmy work, merge PRs or publish releases.
+
+All four fresh physical reports are retained under docs/validation/g8-tester/acceptance:
+before-current-debug-1 / after-current-debug-1 and repeat -2 JSON files. Both
+original baselines are preserved. The exact comparison APK/hash is archived privately
+as acceptance-common-debug.apk / acceptance-common-build.json. Reports describe the
+pre-navigation-fix debug APK, not release performance or final-build display latency.
+
+The repeat observed jank 70.39% -> 60.47%, frame p99 41.28 -> 47.62 ms, app CPU
+54.45% -> 45.25% of one core. Workloads still differ (11259 vs 8627 events; trigger
+pairs 24 each vs 13 each). Baseline ended with A+B held; later actual releases were
+observed. Both root snapshots remained zero pointers/submissions, mapping inactive.
+No stable p99 improvement or matched-workload performance acceptance is claimed.
+
+CI run 41455233159 failed ActivityObserverLifecycleTest line 33. Its artifact and
+a deterministic local thread-join repro show HandlerThread.getLooper() becoming
+null after termination. e05532f keeps a live Handler/Looper before stopping, joins
+and verifies termination/rejected posts/late refresh/idempotent stop. The enabled
+282-test suite passed locally and CI run 41461355489 is green; no skipped tests.
+
+The debug APK was installed with -r, preserving data. On-device JNI passed 61206
+vectors with zero error. Root ownership/start-resume rejection, rotation, normal
+exit and controlled zero-pointer process death passed. Cold Tester -> Home in the
+same process passed without the previous libsu initialization crash. One existing
+root-owned getevent reader runs during diagnostics; diagnosticOwner rejects mapping
+frames. It stops on exit/death. App-only CPU excludes that root process/reader.
+
+Final screenshots exposed a missing Diagnostics icon/label on Guided despite a
+retained semantic target. Stable Compose keys for tab identities fix it on S10e;
+regression navigation now exercises Guided -> Diagnostics -> Guided -> Controller.
+Final build/test/lint passed after that delta (282 tests, no skips). The exact
+rebuilt APK was installed and its JNI/ownership/rotation/teardown and zero-pointer
+process-death checks passed again; four preference hashes remain unchanged. See
+PR Checks for latest-head CI and acceptance reports for exact artifact hashes.
+
+No profile/favorite reset, XtMapper data operation, gameplay touch injection,
+firmware/security/thermal changes or online MLBB matches. All test artifacts are
+scoped; the source reference PNG stays untracked. Remaining acceptance gates include
+physical held-control unplug/replug, exhaustive supported-button evidence, reliable
+matched/release-like performance, manual MLBB training and inherited license/assets.

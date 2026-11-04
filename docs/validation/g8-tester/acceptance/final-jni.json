@@ -1,0 +1,24 @@
+{
+  "suite": "jni",
+  "result": {
+    "abi": "arm64-v8a",
+    "parity_vectors": 61206,
+    "max_abs_error": 0,
+    "missing_library_error_caught": true,
+    "invalid_input_neutral": true,
+    "java_reference_math": {
+      "n": 20000,
+      "p50_ns": 423,
+      "p95_ns": 1885,
+      "p99_ns": 2231
+    },
+    "rust_jni_reference_math": {
+      "n": 20000,
+      "p50_ns": 192,
+      "p95_ns": 193,
+      "p99_ns": 193
+    },
+    "measurement": "Device math microbenchmark; timer/sink overhead included; no physical display latency or hot-path migration"
+  },
+  "status": "PASS"
+}

@@ -48,14 +48,6 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean isServiceBound = false;
 
-    static {
-        // Set settings before the main shell can be created
-        Shell.enableVerboseLogging = BuildConfig.DEBUG;
-        Shell.setDefaultBuilder(Shell.Builder.create()
-                .setFlags(Shell.FLAG_REDIRECT_STDERR)
-                .setTimeout(10)
-        );
-    }
 
     private DisplaySelector displaySelector;
     private Boolean startedFromShell;

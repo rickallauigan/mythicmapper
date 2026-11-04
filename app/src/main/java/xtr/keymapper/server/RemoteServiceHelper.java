@@ -135,13 +135,15 @@ public class RemoteServiceHelper {
      * Or if Shizuku is available try to obtain service instance
      * Or if root is available try to start server and obtain instance 
      */
-    public static void getInstance(Context context, RootRemoteServiceCallback callback) {
+    public static RemoteServiceConnection getInstance(Context context, RootRemoteServiceCallback callback) {
         if (isSystemApp(context)) {
             getInstanceAsSystemApp(context, callback);
+            return null;
         } else {
             getInstance();
             if (service != null) {
                 callback.onConnection(service);
+                return null;
             } else {
                 RemoteServiceConnection connection = new RemoteServiceConnection(callback);
                 if (useShizuku) {
@@ -154,6 +156,7 @@ public class RemoteServiceHelper {
                         RootService.bind(intent, connection);
                     } else callback.onConnection(null);
                 }
+                return connection;
             }
         }
     }

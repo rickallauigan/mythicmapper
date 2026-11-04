@@ -49,6 +49,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
+        benchmark {
+            initWith release
+            applicationIdSuffix ".debug"
+            signingConfig signingConfigs.debug
+            matchingFallbacks = ['release']
+            resValue("string", "app_name", "MythicMapper (Benchmark)")
+        }
         debug {
             applicationIdSuffix ".debug"
             resValue("string", "app_name", "MythicMapper (Dev)")

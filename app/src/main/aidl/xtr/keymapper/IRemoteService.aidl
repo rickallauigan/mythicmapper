@@ -8,6 +8,8 @@ import xtr.keymapper.keymap.KeymapConfig;
 import xtr.keymapper.keymap.KeymapProfile;
 
 interface IRemoteService {
+    boolean beginDiagnostics(IBinder owner) = 14;
+    void endDiagnostics(IBinder owner) = 15;
     void destroy() = 16777114; // Destroy method defined by Shizuku server
 
 

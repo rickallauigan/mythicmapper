@@ -1,0 +1,9 @@
+{
+  "operation": "Force-stop only MythicMapper debug app while diagnostic lease held",
+  "logical_touches_before": 0,
+  "injection_submissions_before": 0,
+  "root_process_exited": true,
+  "live_reader_after": false,
+  "held_touch_process_kill_tested": false,
+  "status": "PASS"
+}
