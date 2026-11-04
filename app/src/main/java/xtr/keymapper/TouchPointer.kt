@@ -114,6 +114,9 @@ class TouchPointer : Service() {
             return
         }
         screenSuspended = false
+        // Restore UI independently; gameplay still waits for the fresh foreground decision.
+        // FavoriteOverlay itself hides its window while an editor/tester UI lease is held.
+        favoriteOverlay?.show()
         val request = foreground.start()
         RemoteServiceHelper.getInstance(this) { service ->
             mHandler.post {
@@ -281,6 +284,10 @@ class TouchPointer : Service() {
 
         return super.onStartCommand(i, flags, startId)
     }
+
+    /** Selection for presentation/editor access; never used to authorize gameplay input. */
+    fun selectedProfileForUi():String? = selectedProfile?.takeIf{profilePreferences.contains(it)}
+        ?: mythicProfileChoice?.takeIf{profilePreferences.contains(it)}
 
     fun launchProfile(profileName: String?) {
         if (profileName == null) return

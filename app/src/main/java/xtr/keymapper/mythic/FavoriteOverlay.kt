@@ -30,7 +30,7 @@ import xtr.keymapper.editor.EditorSessionGuard
 /** App-owned selector only. All mapping switches go through TouchPointer's existing runtime gate. */
 class FavoriteOverlay internal constructor(private val service: Context, private val selected:()->String?,
     private val select: (String)->Unit, private val permitted:()->Boolean) {
-    constructor(service:TouchPointer,select:(String)->Unit):this(service,{service.selectedProfile},select,
+    constructor(service:TouchPointer,select:(String)->Unit):this(service,{service.selectedProfileForUi()},select,
         {InputDeviceDiscovery.connected().any(MythicScope::supported)})
     private fun dp(value:Int)=(value*service.resources.displayMetrics.density+.5f).toInt()
     private fun rounded()=GradientDrawable().apply{setColor(0xff12121f.toInt());cornerRadius=dp(18).toFloat();setStroke(dp(1),0xff72509b.toInt())}
