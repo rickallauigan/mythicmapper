@@ -28,6 +28,17 @@ class UniversalEditorInstrumentation:Instrumentation() {
     }
     private fun click(value:String){var n=find(value);while(!n.isClickable&&n.parent!=null)n=n.parent;check(n.performAction(Node.ACTION_CLICK)){"Click failed $value"};settle()}
     private fun text(id:String,value:String){val n=find(id);val editable=nodes(n).firstOrNull{it.isEditable}?:n;check(editable.performAction(Node.ACTION_SET_TEXT,Bundle().apply{putCharSequence(Node.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE,value)})){"Edit failed $id"};settle()}
+    private fun dragTarget(document:UniversalMapping){
+        click("mapping-BTN_TL2")
+        find("mapping-canvas").performAction(Node.AccessibilityAction.ACTION_SHOW_ON_SCREEN.id);settle()
+        val bounds=android.graphics.Rect();find("mapping-canvas").getBoundsInScreen(bounds)
+        val plane=UniversalViewport(bounds.width().toFloat(),bounds.height().toFloat(),document.geometry)
+        val target=document.actions.last();val p=plane.screen(target.x!!,target.y!!)
+        val start=SystemClock.uptimeMillis()
+        fun event(action:Int,delta:Float){val e=android.view.MotionEvent.obtain(start,SystemClock.uptimeMillis(),action,bounds.left+p.x-delta,bounds.top+p.y-delta,0);e.source=android.view.InputDevice.SOURCE_TOUCHSCREEN;check(uiAutomation.injectInputEvent(e,true));e.recycle()}
+        event(0,0f);repeat(8){SystemClock.sleep(25);event(2,(it+1)*10f)};event(1,80f);settle()
+        find("Profile: UI TEST Custom Hero · Unsaved");click("Undo");find("Profile: UI TEST Custom Hero")
+    }
     private fun main(f:()->Unit){var error:Throwable?=null;runOnMainSync{try{f()}catch(t:Throwable){error=t}};error?.let{throw it}}
     override fun onStart(){
         check(Build.HARDWARE in setOf("ranchu","goldfish"))
@@ -60,20 +71,28 @@ class UniversalEditorInstrumentation:Instrumentation() {
             File(dir,"editor.png").outputStream().use{check(uiAutomation.takeScreenshot().compress(android.graphics.Bitmap.CompressFormat.PNG,100,it))}
             main{activity!!.finish()};settle()
             activity=startActivitySync(Intent(targetContext,UniversalEditorTestActivity::class.java).putExtra(xtr.keymapper.editor.EditorActivity.PROFILE_NAME,saved.id).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) as UniversalEditorTestActivity
-            settle();check(UniversalStorage.read(context,saved.id)==document);find("mapping-BTN_TL2")
+            settle();check(UniversalStorage.read(context,saved.id)==document);find("mapping-BTN_TL2");dragTarget(document)
             click("Rename profile");text("profile-name","UI TEST Unsaved rename");click("Apply name");find("Profile: UI TEST Unsaved rename · Unsaved")
             click("Undo");find("Profile: UI TEST Custom Hero");click("Redo");find("Profile: UI TEST Unsaved rename · Unsaved")
             val monitor=addMonitor(UniversalEditorTestActivity::class.java.name,null,false)
             try{main{activity!!.recreate()};activity=waitForMonitorWithTimeout(monitor,10000) as? UniversalEditorTestActivity?:error("Editor recreation failed");settle();find("Profile: UI TEST Unsaved rename · Unsaved")}finally{removeMonitor(monitor)}
             click("Revert");click("Confirm");find("Profile: UI TEST Custom Hero");check(UniversalStorage.read(context,saved.id)==document)
-            find("mapping-canvas");File(dir,"canvas.png").outputStream().use{check(uiAutomation.takeScreenshot().compress(android.graphics.Bitmap.CompressFormat.PNG,100,it))}
+            find("mapping-canvas").performAction(Node.AccessibilityAction.ACTION_SHOW_ON_SCREEN.id);settle();File(dir,"canvas.png").outputStream().use{check(uiAutomation.takeScreenshot().compress(android.graphics.Bitmap.CompressFormat.PNG,100,it))}
             main{session=VirtualG8Session();session!!.loadUniversal(document);session!!.axis("ABS_RX",128);session!!.axis("ABS_RY",128)}
             for(code in listOf("BTN_GAMEPAD","BTN_EAST","BTN_TR","BTN_TR2","BTN_TL","BTN_TL2")){
                 main{session!!.key(code,true)};SystemClock.sleep(70);main{session!!.key(code,false)}
             }
-            main{session!!.close()};val trace=session!!.report();check(trace.getInt("final_pointers")==0&&trace.getInt("total_touches")>=12)
+            main{
+                session!!.axis("ABS_RX",255);session!!.key("BTN_TL2",true);session!!.key("BTN_TR",true)
+                session!!.assertState(JSONObject().put("active_pointers",2))
+                session!!.command(JSONObject().put("action","disconnect"));session!!.assertState(JSONObject().put("active_pointers",0))
+                session!!.command(JSONObject().put("action","connect"));session!!.key("BTN_TL2",true)
+                session!!.command(JSONObject().put("action","diagnostics_on"));session!!.key("BTN_TR2",true)
+                session!!.assertState(JSONObject().put("active_pointers",0).put("diagnostics",true))
+                session!!.command(JSONObject().put("action","diagnostics_off"));session!!.close()
+            };val trace=session!!.report();check(trace.getInt("final_pointers")==0&&trace.getInt("total_touches")>=12)
             File(dir,"replay.json").writeText(trace.toString(2))
-            JSONObject().put("status","PASS").put("favorite_assigned_through_ui",true).put("home_create_entry",true).put("created_through_ui",true).put("bindings",6).put("right_stick_aim",true).put("reopened",true).put("undo_redo",true).put("draft_recreation",true).put("final_pointers",0).put("platform_touch_submissions",0)
+            JSONObject().put("status","PASS").put("favorite_assigned_through_ui",true).put("home_create_entry",true).put("created_through_ui",true).put("bindings",6).put("right_stick_aim",true).put("reopened",true).put("marker_drag_single_undo",true).put("undo_redo",true).put("draft_recreation",true).put("overlap_disconnect_diagnostics",true).put("final_pointers",0).put("platform_touch_submissions",0)
         }catch(t:Throwable){File(dir,"failure-nodes.txt").writeText(all().joinToString("\n"){"${it.viewIdResourceName}: ${it.text} visible=${it.isVisibleToUser}"});JSONObject().put("status","FAIL").put("error",t.stackTraceToString())}
         finally{main{session?.close();activity?.finish();home?.finish()};settle();store.read().profiles.filter{p->p.id !in before.profiles.map{it.id}}.forEach{store.delete(it.id)}}
         check(store.read()==before){"Isolated library/favorites changed"}

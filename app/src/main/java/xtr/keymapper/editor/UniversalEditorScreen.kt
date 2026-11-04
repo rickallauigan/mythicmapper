@@ -124,7 +124,7 @@ import kotlin.math.hypot
     }
     if(close)AlertDialog(onDismissRequest={close=false},title={Text("Discard unsaved changes?")},text={Text("Your last saved mapping and favorites are preserved.")},confirmButton={TextButton(onClick=onExit){Text("Discard changes")}},dismissButton={TextButton(onClick={close=false}){Text("Keep editing")}})
     destructive?.let{go->AlertDialog(onDismissRequest={destructive=null},title={Text("Confirm mapping change")},confirmButton={TextButton(onClick={destructive=null;go()}){Text("Confirm")}},dismissButton={TextButton(onClick={destructive=null}){Text("Cancel")}})}
-    if(rename){var name by rememberSaveable{mutableStateOf(draft!!.value.name)};AlertDialog(onDismissRequest={rename=false},title={Text("Rename personal mapping")},text={OutlinedTextField(name,{name=it},Modifier.testTag("profile-name"),label={Text("Profile name")})},confirmButton={TextButton(onClick={onChange{draft!!.change(draft.value.copy(name=name))};rename=false}){Text("Apply name")}},dismissButton={TextButton(onClick={rename=false}){Text("Cancel")}})}
+    if(rename){var name by rememberSaveable{mutableStateOf(draft!!.value.name)};AlertDialog(onDismissRequest={rename=false},title={Text("Rename personal mapping")},text={OutlinedTextField(name,{name=it},Modifier.semantics{testTagsAsResourceId=true}.testTag("profile-name"),label={Text("Profile name")})},confirmButton={TextButton(onClick={onChange{draft!!.change(draft.value.copy(name=name))};rename=false}){Text("Apply name")}},dismissButton={TextButton(onClick={rename=false}){Text("Cancel")}})}
     if(duplicate){var name by rememberSaveable{mutableStateOf("${draft!!.value.name.take(65)} copy")};AlertDialog(onDismissRequest={duplicate=false},title={Text("Duplicate personal mapping")},text={OutlinedTextField(name,{name=it},label={Text("New profile name")})},confirmButton={TextButton(onClick={duplicate=false;onDuplicate(name)}){Text("Duplicate")}},dismissButton={TextButton(onClick={duplicate=false}){Text("Cancel")}})}
     if(favoritesOpen){val library=runCatching(favorites).getOrDefault(HeroLibrary());AlertDialog(onDismissRequest={favoritesOpen=false},title={Text("Five favorite slots")},text={Column{library.favorites.forEachIndexed{slot,id->TextButton(onClick={
         favoritesOpen=false
@@ -156,7 +156,7 @@ import kotlin.math.hypot
     val plane=if(size.width>0&&size.height>0)UniversalViewport(size.width.toFloat(),size.height.toFloat(),d.geometry,zoom,px,py)else null
     val paint=remember{android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply{color=android.graphics.Color.WHITE;textSize=24f}}
     val latest by rememberUpdatedState(d)
-    Canvas(Modifier.fillMaxWidth().heightIn(min=180.dp).aspectRatio(2.111f).clipToBounds().background(MythicColors.Surface).border(1.dp,MythicColors.Line,RoundedCornerShape(8.dp))
+    Canvas(Modifier.fillMaxWidth().height(240.dp).clipToBounds().background(MythicColors.Surface).border(1.dp,MythicColors.Line,RoundedCornerShape(8.dp))
         .onSizeChanged{size=it}.testTag("mapping-canvas").semantics{contentDescription="Reference mapping plane; numeric coordinate controls are below"}
         .pointerInput(plane,pan,selected){if(plane!=null&&!pan)detectTapGestures{point->
             val nearest=latest.actions.filter{it.x!=null}.minByOrNull{a->val p=plane.screen(a.x!!,a.y!!);hypot((p.x-point.x).toDouble(),(p.y-point.y).toDouble())}
