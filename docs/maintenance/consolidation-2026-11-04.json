@@ -1,0 +1,362 @@
+{
+  "date": "2026-11-04",
+  "source_dev_commit": "a00386f0194809d62982f9024de033bda9f68cef",
+  "fully_tested_combined_head": "81b5b18594858d01a56b5b4db4d0ed2b22f217fc",
+  "dev_tree_matches_tested_head": true,
+  "prs": [
+    {
+      "pr": 12,
+      "title": "Stabilize S10e root lifecycle and add controlled device validation",
+      "merge_sha": "53c8bfe2cac0d7da7476db940bf0844585b55b2d",
+      "accepted_head": "f0132f9938700c0d33f2da810c843fc105b1ea70",
+      "ancestor_of_dev": true,
+      "two_parent_merge": true,
+      "previously_merged": true,
+      "checks": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-04T14:24:21Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/rickallauigan/mythicmapper/actions/runs/41845291901/job/126630739339",
+          "name": "validate",
+          "startedAt": "2026-11-04T14:19:10Z",
+          "status": "COMPLETED",
+          "workflowName": "Host validation (no physical gameplay test)"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-04T14:20:39Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/rickallauigan/mythicmapper/actions/runs/41845291995/job/126627091866",
+          "name": "avd",
+          "startedAt": "2026-11-04T14:12:47Z",
+          "status": "COMPLETED",
+          "workflowName": "Virtual G8 AVD (simulation only)"
+        }
+      ]
+    },
+    {
+      "pr": 13,
+      "title": "Add live GameSir G8 Controller Tester with exclusive input safety",
+      "merge_sha": "00450f263e90ac72dd3c888dc3af37b38ebbac1d",
+      "accepted_head": "1ee6e5197961a5e92dbdab8572dd056b6a451661",
+      "ancestor_of_dev": true,
+      "two_parent_merge": true,
+      "previously_merged": true,
+      "checks": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-04T14:24:21Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/rickallauigan/mythicmapper/actions/runs/41845291901/job/126630739339",
+          "name": "validate",
+          "startedAt": "2026-11-04T14:19:10Z",
+          "status": "COMPLETED",
+          "workflowName": "Host validation (no physical gameplay test)"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-04T14:20:39Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/rickallauigan/mythicmapper/actions/runs/41845291995/job/126627091866",
+          "name": "avd",
+          "startedAt": "2026-11-04T14:12:47Z",
+          "status": "COMPLETED",
+          "workflowName": "Virtual G8 AVD (simulation only)"
+        }
+      ]
+    },
+    {
+      "pr": 14,
+      "title": "Add guarded Beatrix and Kimmy training gameplay MVP",
+      "merge_sha": "86a3bd82d515391c64210625cd78d6811620785c",
+      "accepted_head": "7efcf3540038dc1e72055688084572c18ea57478",
+      "ancestor_of_dev": true,
+      "two_parent_merge": true,
+      "previously_merged": true,
+      "checks": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-04T14:24:21Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/rickallauigan/mythicmapper/actions/runs/41845291901/job/126630739339",
+          "name": "validate",
+          "startedAt": "2026-11-04T14:19:10Z",
+          "status": "COMPLETED",
+          "workflowName": "Host validation (no physical gameplay test)"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-04T14:20:39Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/rickallauigan/mythicmapper/actions/runs/41845291995/job/126627091866",
+          "name": "avd",
+          "startedAt": "2026-11-04T14:12:47Z",
+          "status": "COMPLETED",
+          "workflowName": "Virtual G8 AVD (simulation only)"
+        }
+      ]
+    },
+    {
+      "pr": 22,
+      "title": "Add root-free API36 AVD and Virtual G8 development harness",
+      "merge_sha": "a605ce0fe959d290a0c5cf0f8b5275a0438bc3a8",
+      "accepted_head": "ea94416d44a10ec9302c698677643e6e487d1cb5",
+      "ancestor_of_dev": true,
+      "two_parent_merge": true,
+      "previously_merged": true,
+      "checks": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-04T14:24:21Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/rickallauigan/mythicmapper/actions/runs/41845291901/job/126630739339",
+          "name": "validate",
+          "startedAt": "2026-11-04T14:19:10Z",
+          "status": "COMPLETED",
+          "workflowName": "Host validation (no physical gameplay test)"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-04T14:20:39Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/rickallauigan/mythicmapper/actions/runs/41845291995/job/126627091866",
+          "name": "avd",
+          "startedAt": "2026-11-04T14:12:47Z",
+          "status": "COMPLETED",
+          "workflowName": "Virtual G8 AVD (simulation only)"
+        }
+      ]
+    },
+    {
+      "pr": 23,
+      "title": "Replace collapsed selector with circular M bubble",
+      "merge_sha": "f546f4121f03af3964a14dc12ad8986a565cd51e",
+      "accepted_head": "1c0ef7d6fd06d13d56342a1cf0e04950db8155bb",
+      "ancestor_of_dev": true,
+      "two_parent_merge": true,
+      "previously_merged": true,
+      "checks": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-04T14:24:21Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/rickallauigan/mythicmapper/actions/runs/41845291901/job/126630739339",
+          "name": "validate",
+          "startedAt": "2026-11-04T14:19:10Z",
+          "status": "COMPLETED",
+          "workflowName": "Host validation (no physical gameplay test)"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-04T14:20:39Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/rickallauigan/mythicmapper/actions/runs/41845291995/job/126627091866",
+          "name": "avd",
+          "startedAt": "2026-11-04T14:12:47Z",
+          "status": "COMPLETED",
+          "workflowName": "Virtual G8 AVD (simulation only)"
+        }
+      ]
+    },
+    {
+      "pr": 24,
+      "title": "Modernize Home with Tester styling and safe profile workflows",
+      "merge_sha": "528c5a9939c97b0009db233ceb0c1e0b3569b5ff",
+      "accepted_head": "1d2f22e2573ef725a32e6b2664a588dcccf791cb",
+      "ancestor_of_dev": true,
+      "two_parent_merge": true,
+      "previously_merged": false,
+      "checks": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-04T13:57:16Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/rickallauigan/mythicmapper/actions/runs/41842142904/job/126616216710",
+          "name": "validate",
+          "startedAt": "2026-11-04T13:52:54Z",
+          "status": "COMPLETED",
+          "workflowName": "Host validation (no physical gameplay test)"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-04T13:59:40Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/rickallauigan/mythicmapper/actions/runs/41842142579/job/126616215727",
+          "name": "avd",
+          "startedAt": "2026-11-04T13:52:54Z",
+          "status": "COMPLETED",
+          "workflowName": "Virtual G8 AVD (simulation only)"
+        }
+      ]
+    },
+    {
+      "pr": 1,
+      "title": "build(deps): bump crowdin/github-action from 2 to 3",
+      "merge_sha": "9f14605c8f9b1b5d58fe0c4d3328b8abd64c0742",
+      "accepted_head": "253ec6288cad89fb209513c40ebec06106d4174b",
+      "ancestor_of_dev": true,
+      "two_parent_merge": true,
+      "previously_merged": false,
+      "checks": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-04T14:04:28Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/rickallauigan/mythicmapper/actions/runs/41843285165/job/126620191442",
+          "name": "validate",
+          "startedAt": "2026-11-04T14:00:24Z",
+          "status": "COMPLETED",
+          "workflowName": "Host validation (no physical gameplay test)"
+        }
+      ]
+    },
+    {
+      "pr": 3,
+      "title": "build(deps): bump actions/setup-java from 5 to 6",
+      "merge_sha": "b0e45b2eb9259f8c067b915b88725d97816df4dc",
+      "accepted_head": "dd0f4e97510497cc589fa28e60379cd9711497f9",
+      "ancestor_of_dev": true,
+      "two_parent_merge": true,
+      "previously_merged": false,
+      "checks": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-04T14:06:08Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/rickallauigan/mythicmapper/actions/runs/41843294631/job/126620221053",
+          "name": "validate",
+          "startedAt": "2026-11-04T14:00:39Z",
+          "status": "COMPLETED",
+          "workflowName": "Host validation (no physical gameplay test)"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-04T14:07:12Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/rickallauigan/mythicmapper/actions/runs/41843294612/job/126620224436",
+          "name": "avd",
+          "startedAt": "2026-11-04T14:00:27Z",
+          "status": "COMPLETED",
+          "workflowName": "Virtual G8 AVD (simulation only)"
+        }
+      ]
+    },
+    {
+      "pr": 4,
+      "title": "build(deps): bump androidx.webkit:webkit from 1.17.0 to 1.18.0 in /app",
+      "merge_sha": "a527eaaa94f893afc51d5501af8a6468861380ab",
+      "accepted_head": "3156b383425fad3fdc03dfa3a74f1b2c0218c97e",
+      "ancestor_of_dev": true,
+      "two_parent_merge": true,
+      "previously_merged": false,
+      "checks": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-04T14:08:18Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/rickallauigan/mythicmapper/actions/runs/41843377833/job/126621105392",
+          "name": "validate",
+          "startedAt": "2026-11-04T14:02:03Z",
+          "status": "COMPLETED",
+          "workflowName": "Host validation (no physical gameplay test)"
+        }
+      ]
+    },
+    {
+      "pr": 5,
+      "title": "build(deps): bump actions/checkout from 4 to 7",
+      "merge_sha": "a00386f0194809d62982f9024de033bda9f68cef",
+      "accepted_head": "81b5b18594858d01a56b5b4db4d0ed2b22f217fc",
+      "ancestor_of_dev": true,
+      "two_parent_merge": true,
+      "previously_merged": false,
+      "checks": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-04T14:24:21Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/rickallauigan/mythicmapper/actions/runs/41845291901/job/126630739339",
+          "name": "validate",
+          "startedAt": "2026-11-04T14:19:10Z",
+          "status": "COMPLETED",
+          "workflowName": "Host validation (no physical gameplay test)"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-04T14:20:39Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/rickallauigan/mythicmapper/actions/runs/41845291995/job/126627091866",
+          "name": "avd",
+          "startedAt": "2026-11-04T14:12:47Z",
+          "status": "COMPLETED",
+          "workflowName": "Virtual G8 AVD (simulation only)"
+        }
+      ]
+    },
+    {
+      "pr": 6,
+      "title": "build(deps): bump org.yaml:snakeyaml from 2.5 to 2.7 in /app",
+      "merge_sha": "02c402ebbd869b49e9a94100705e2f631bcc8e8c",
+      "accepted_head": "216936ff1102de44a94a67cec732327a44793451",
+      "ancestor_of_dev": true,
+      "two_parent_merge": true,
+      "previously_merged": false,
+      "checks": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-04T14:10:11Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/rickallauigan/mythicmapper/actions/runs/41843385730/job/126621177503",
+          "name": "validate",
+          "startedAt": "2026-11-04T14:02:12Z",
+          "status": "COMPLETED",
+          "workflowName": "Host validation (no physical gameplay test)"
+        }
+      ]
+    },
+    {
+      "pr": 7,
+      "title": "build(deps): bump actions/upload-artifact from 4 to 7",
+      "merge_sha": "115eab041b5806aa3520b11273cfa8ad7e831d61",
+      "accepted_head": "9401e06e6612e40680bd0c30ad993c50dc40b2cb",
+      "ancestor_of_dev": true,
+      "two_parent_merge": true,
+      "previously_merged": false,
+      "checks": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-04T14:05:51Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/rickallauigan/mythicmapper/actions/runs/41843329102/job/126620338893",
+          "name": "validate",
+          "startedAt": "2026-11-04T14:00:40Z",
+          "status": "COMPLETED",
+          "workflowName": "Host validation (no physical gameplay test)"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-04T14:08:32Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/rickallauigan/mythicmapper/actions/runs/41843329056/job/126620338754",
+          "name": "avd",
+          "startedAt": "2026-11-04T14:00:40Z",
+          "status": "COMPLETED",
+          "workflowName": "Virtual G8 AVD (simulation only)"
+        }
+      ]
+    }
+  ],
+  "open_prs": [],
+  "releases": [],
+  "issue20": {
+    "state": "OPEN",
+    "title": "[Deferred][Safety bug] Kimmy shooting can remain active in MLBB after screen lock",
+    "url": "https://github.com/rickallauigan/mythicmapper/issues/20"
+  },
+  "physical_device_commands_performed": false,
+  "protected_fixture_engine_controller_paths_unchanged": true,
+  "license_notices_unchanged": true,
+  "android_unit_tests": 330,
+  "tool_tests": 15
+}

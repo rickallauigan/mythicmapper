@@ -418,3 +418,17 @@ Private backups/ADB identity stay outside repository, located through private
 Hosted fresh checks running; inspect PR checks before claiming green. Issue20
 remains deferred. Do not merge, release or start universal editor. Preserve both
 untracked reference PNGs. Parent worktree:/tmp/mythic-s10e-ui16-fix.
+
+
+## 2026-11-04 — Repository consolidation complete
+
+PR24 and Dependabot1/3/4/5/6/7 merged independently with normal merge commits after
+fresh green checks. Original12/13/14/22/23 merges were not repeated. See
+[full merge/CI matrix](../maintenance/consolidation-2026-11-04.md) and adjacentJSON
+for source commits, job URLs and preserved-ancestry evidence. Final dev runtime tree
+matches the fully host/AVD-tested combined checkout head. No tests disabled or force
+pushes. No physical S10e operations, profile/favorite changes, release or Crowdin
+dispatch. Issue20 remains OPEN/deferred; do not start15 without user instruction.
+Only documentation follows the tested runtime source; inspect the latest dev APK
+workflow for that final documentation commit. Preserve the two untracked referencePNG
+files. Historical draft/pending sections above are superseded by this checkpoint.
