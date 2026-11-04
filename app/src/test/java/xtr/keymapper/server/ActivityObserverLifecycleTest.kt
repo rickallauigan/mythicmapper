@@ -35,14 +35,15 @@ class ActivityObserverLifecycleTest {
             shadowOf(looper).idle()
             assertEquals(listOf("com.mobile.legends"),seen)
             shadowOf(looper).idleFor(Duration.ofSeconds(5));assertEquals(1,seen.size)
+            observer.refresh();shadowOf(looper).idle();assertEquals(2,seen.size)
             observer.stop();thread.join(2000)
             assertFalse("Observer thread must terminate",thread.isAlive)
             assertNull("A terminated HandlerThread no longer exposes a looper",thread.looper)
             task.topActivity=ComponentName("other.app","Other")
             assertFalse(handler.post{fail("Stopped observer ran")})
             // Late refresh and repeated shutdown must neither notify nor restart polling.
-            observer.run();observer.stop();observer.run()
-            assertEquals(listOf("com.mobile.legends"),seen)
+            observer.run();observer.stop();observer.refresh();observer.run()
+            assertEquals(listOf("com.mobile.legends","com.mobile.legends"),seen)
         } finally {
             observer.stop();thread.join(2000)
         }

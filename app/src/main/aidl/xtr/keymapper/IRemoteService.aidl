@@ -8,6 +8,7 @@ import xtr.keymapper.keymap.KeymapConfig;
 import xtr.keymapper.keymap.KeymapProfile;
 
 interface IRemoteService {
+    void refreshActivityObserver() = 16; // Fresh foreground sample after unlock settles.
     boolean beginDiagnostics(IBinder owner) = 14;
     void endDiagnostics(IBinder owner) = 15;
     void destroy() = 16777114; // Destroy method defined by Shizuku server

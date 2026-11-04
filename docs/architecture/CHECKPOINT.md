@@ -161,7 +161,7 @@ remain ignored in `app/build/s10e-private/`. Never merge/publish automatically.
 Continue feature/g8-controller-tester / draft PR #13, stacked on unmerged PR #12.
 Read the ignored app/build/s10e-private/current-adb-target.txt for the device's
 current network target. Do not commit addresses, serials or raw private logs.
-Do not start Beatrix/Kimmy work, merge PRs or publish releases.
+Historical Beatrix/Kimmy pause is superseded by the user-authorized gameplay feature below. Do not merge PRs or publish releases.
 
 All four fresh physical reports are retained under docs/validation/g8-tester/acceptance:
 before-current-debug-1 / after-current-debug-1 and repeat -2 JSON files. Both
@@ -201,3 +201,134 @@ firmware/security/thermal changes or online MLBB matches. All test artifacts are
 scoped; the source reference PNG stays untracked. Remaining acceptance gates include
 physical held-control unplug/replug, exhaustive supported-button evidence, reliable
 matched/release-like performance, manual MLBB training and inherited license/assets.
+
+
+## Beatrix / Kimmy gameplay feature — 2026-11-02
+
+User explicitly authorized this feature after the tester checkpoint. Branch
+feature/beatrix-kimmy-gameplay starts at complete validated PR #13 head 1ee6e51,
+stacked over PR #12 f0132f9 and dev. See docs/gameplay/beatrix-kimmy/REPORT.md.
+Draft PR #14 is open against feature/g8-controller-tester. Implementation 0ab8303;
+guarded device harness 8b7b30e. Final local lint/build pass, remote CI pending.
+No parent PR merged; no tester work, personal profile or favorite overwritten.
+Supplied mockup PNG remains untracked.
+
+Implemented shared controls, B/L3 ownership, Beatrix manual weapon/hold-or-pulse
+policy and Kimmy stick shooting/skill priority/neutral arming. Reuses held aim,
+RepeatKeyHandler, pointer ledger, native movement and diagnostic ownership. Rust
+remains reference-only. Both templates disabled until explicit calibration; edits
+revoke readiness. Recommended favorite slots require opt-in and cannot overwrite
+occupied slots. Hero setup acquired its exclusive root lease and rendered on S10e.
+
+294 Android tests passed; Rust 5, native 3, host JNI 242406 vectors, compiled Kotlin
+JNI/missing-library and 12/12 fixture hash checks passed. Device heroes guard,
+heroes_prepare, heroes_touch and jni suites passed; sanitized JSON is in the report
+directory. Guarded blue-surface replay observed 43 events / 7 pointers, zero sequence
+errors and zero final contacts. Tester ownership allowed zero gameplay submissions.
+Two new disabled training drafts exist; original favorites unchanged. APK installed
+with -r and private pre-feature APK/preferences/evidence backups retained. Current
+ADB endpoint lives only in ignored app/build/s10e-private/current-adb-target.txt.
+No physical Beatrix/Kimmy gameplay or hero-specific HUD calibration verified.
+
+Next: manually enter Beatrix Hero Training with mapping stopped and report equipped
+weapon. Inspect real HUD privately before enabling a calibrated copy. Then validate
+physical LT/aim, native movement, skills and shared spell, followed by Kimmy. Keep
+raw game screenshots/account data private. Never claim weapon behaviors verified
+from host or safe-surface replay. No automatic matches, merges or releases.
+
+
+### Bennett repeat safety follow-up
+
+User confirms180 radius and LT repeat work but reports an adjacent skill actually
+casting. Explicit Home Stop then no-mapper physical LT/stick exercise produced no
+action. Source now adds anchor acquisition for Beatrix PULSE only: 40 ms anchor /
+40 ms aimed / 70 ms released at150ms cadence. No claim of game compatibility yet.
+Commit5e7999b adds timing/cancellation regression coverage. Commit28c605b stops the
+bound/started mapper before normal Home hero-setup entry (prevents exit autoResume).
+297 host Android tests, lint and debug assembly passed. Updated APK installed (-r),
+SHA092669eff3dd92dc7cea8c5628793e030538bb6f8cd87346fb80bf8fddbd2d93.
+Guarded real-device touch replay:43/44ms acquisition,43 events/7 max pointers,0 final
+pointers/errors. Diagnostic submission delta0. Normal setup exit root/readerabsent.
+Setup lease availability still transiently fails handoff; Save blocked safely. Do
+not claim it fixed. Profiles/library/favorites backup comparison unchanged. Read
+new bennett-acquisition-validation.json. Physical neighbor-cast retest pending.
+Current actual device/training state is in ignored s10e-private/hero-continuation.json;
+verify before resuming; no arbitrary game injection. No parent PR merge/release.
+
+
+### Kimmy calibration and resumption follow-up
+
+Source fix ee09d5d is committed locally on the existing PR #14 branch. Actual
+Bennett personal profile is PULSE 400 ms / radius 180 px and is unchanged; preserve
+its private working APK backup. Neighbor-cast regression stays open. Kimmy HUD
+centers were measured and saved only to its personal copy, radius 80 initial trial.
+Four basic controls are explicitly human-confirmed. Skill resumption then failed;
+real trace requests Attack DOWN 0-2 ms after skill UP. Kimmy-only one-shot 40 ms
+release gap plus 40 ms anchor acquisition added, preserving continuous shooting.
+302 tests, lint/build and native/Rust/JNI/fixture checks pass. Guarded device replay
+measured 42/43 ms and zero final contacts/errors. Current installed APK source is
+ ee09d5d, SHA256 0fc739ae80ba2c676de47542c9e25d83e8736b0bea76fbf3a33c9548b9ba8771.
+Kimmy is active again after the user unlocked normally. RT/LB physical resumption
+retest is pending. Read kimmy-handoff-validation.json and the report. Current runtime
+state is in ignored app/build/s10e-private/hero-continuation.json. No raw HUD images,
+profile IDs or network information may be committed. Keep PR #14 draft; push updated
+source/docs and check CI. No merges or production releases.
+
+### Kimmy screen-off safety follow-up
+
+User confirmed post-skill resumption, Recall neutral guard, Regen and B/L3. Physical
+disconnect stopped firing, root trace zero; held-stick reconnect did not immediately
+fire, exact neutral step not independently established. SCREEN OFF FAILED: game
+kept firing after unlock although root logged UP/zero and root/reader exited. Manual
+Attack touch stopped it; controller with mapping off did not shoot. Mapping stopped.
+Uncommitted candidate uses Kimmy-only backend-owned ACTION_CANCEL at stop, preserving
+Bennett UP behavior. 303 tests and lint/build pass, safe blue replay passes. Candidate
+installed with identical profiles/library. Debug kimmy_screen_cleanup probe sleeps
+only controlled blue surface, awaits manual unlock, requires same surface evidence.
+Read current private continuation and instrumentation report before any activation.
+Real Training screen-off retest remains mandatory; do not claim fixed from logical
+zero. No global touch cancellation, automatic game recovery tap or keyguard bypass.
+
+### Retain foreground service across lock/unlock
+
+User now prioritizes keeping MM running rather than restarting via Use after unlock.
+TouchPointer SCREEN_OFF no longer calls stopPointer/stopSelf. It invalidates queued
+activation, pauses runtime, hides overlay and retains session/profile/foreground
+service. Normal unlock re-registers existing root task observer for a fresh package;
+keyguard/off-screen/editor/diagnostic gates remain. Overlay show is idempotent.
+308 Android tests, lint, debug build and release-manifest pass. Actual S10e safe
+screen suite verified service still started+foreground while locked/root paused;
+heroes_touch and heroes passed. All profiles/favorites/settings compared unchanged.
+Current installed APK hash is in lock-session-validation.json. Candidate 5e0f17a
+DID NOT fix gameplay stuck firing; user reported same behavior, separate known bug.
+Device is normally awake but keyguard may be locked after safe screen test; async
+unlock request pending. Mapping is stopped. After manual unlock activate only
+existing Kimmy copy; test lock with sticks CENTERED first, then unlock without Use
+and check right-stick shooting/skills. Do not inject automated touches into MLBB.
+Preserve Bennett400/180, open neighboring-skill regression, draft PR14 dependency.
+
+### Unlock settling candidate
+
+f1360fe user test FAILED after locking while firing: icon absent/controller dead,
+game still firing. ADB proved MM foreground service/root/reader still alive, so
+retention worked but session resume failed. Manual Attack recovery performed, then
+fresh exclusive zero-contact acknowledgement and own-app stop verified root exit.
+Added bounded keyguard settling, display callback fallback and three observer
+refreshes over 2.5s (same observer/reader); ordinary callbacks still deduplicate.
+Added standard service dump: screen_suspended, last_screen_action, session_running,
+overlay_attached, root_alive, mapping_paused. 310 tests/lint/build pass. Actual new
+screen_resume suite PASSED real manual unlock and fresh foreground observation,
+remaining paused outside MLBB. Profiles/favorites/settings identical after tests.
+Current APK hash: see unlock-settling-validation.json. Kimmy now ACTIVE again;
+awaiting user centered-sticks lock/unlock test (no firing at lock) with M icon,
+right-stick and RT checks without Use. If failed, first collect dumpsys activity
+service PACKAGE/xtr.keymapper.TouchPointer while leaving game foreground; do not
+restart instrumentation with possible active game contacts. Existing Bennett and
+favorites untouched. Firing-during-lock cleanup remains a separate open failure.
+
+User confirmed "yes it works" to centered-sticks lock/unlock, M return, right-stick
+and RT without Use on installed source51209f0. Physical session restoration PASS.
+ADB confirms screen_suspendedfalse/unlocked/sessionrunning/overlayattached/mapping
+active after SCREEN_ON. Existing gameplay firing-during-lock bug remains OPEN.
+Keep current Kimmy session; user asked to center after test. No more physical test
+needed for the scoped restoration request. Draft14 updated; no merge/release.

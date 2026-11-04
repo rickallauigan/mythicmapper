@@ -254,7 +254,7 @@ public class RemoteService extends IRemoteService.Stub {
      */
     @Override
     public void startServer(KeymapProfile profile, KeymapConfig keymapConfig, IRemoteServiceCallback cb, int screenWidth, int screenHeight, int displayId) throws RemoteException {
-        xtr.keymapper.mythic.MythicScope.validateProfile(profile);
+        xtr.keymapper.mythic.MythicScope.validateActivation(profile);
         // Controller MVP never starts the legacy grabbing touchpad paths.
         keymapConfig.touchpadInputMode = KeymapConfig.TOUCHPAD_DISABLED;
         keymapConfig.pointerMode = KeymapConfig.POINTER_SYSTEM;
@@ -383,6 +383,11 @@ public class RemoteService extends IRemoteService.Stub {
         if (activityObserverService != null)
             activityObserverService.stop();
         activityObserverService = new ActivityObserverService(context, callback);
+    }
+
+    @Override
+    public void refreshActivityObserver() {
+        if (activityObserverService != null) activityObserverService.refresh();
     }
 
     @Override

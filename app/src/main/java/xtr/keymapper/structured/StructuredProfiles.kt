@@ -38,6 +38,18 @@ object StructuredProfiles {
     }
     /** Merge only the editor's active projection; disabled definitions and labels stay intact. */
     @JvmStatic fun reconcile(old:Set<String>?,edited:Set<String>):Set<String> {
+        // Editing a confirmed hero's geometry/controls revokes readiness. Confirmation
+        // is a separate explicit training-setup operation, never an editor side effect.
+        val prior=old?.let{runtime(it)}
+        val nativeEdit=edited.filterNot{it.startsWith("$TAG ")}.toSet()
+        val heroLine=prior?.firstOrNull{it.startsWith("HERO_GAMEPLAY ")}
+        val adjusted=if(heroLine!=null && prior!=nativeEdit){
+            nativeEdit.filterNot{it=="ENABLED"||it.startsWith("HERO_GAMEPLAY ")}.toSet()+
+                (heroLine.substringBeforeLast(' ')+" 0")
+        }else edited
+        return reconcileProjection(old,adjusted)
+    }
+    private fun reconcileProjection(old:Set<String>?,edited:Set<String>):Set<String> {
         val d=old?.let{document(it)} ?: return ProfileConfiguration.validate(edited.filterNot{it.startsWith("$TAG ")}.joinToString("\n"))
         val native=edited.filterNot{it.startsWith("$TAG ")}.toSet()
         val fresh=ProfileCodec.fromLegacy(d.profile.name,native)

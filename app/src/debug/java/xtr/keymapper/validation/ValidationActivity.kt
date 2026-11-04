@@ -39,6 +39,7 @@ class ValidationActivity: Activity() {
         override fun ready()=surface.hasWindowFocus() && surface.isShown && !isFinishing
         override fun width()=surface.width
         override fun height()=surface.height
+        override fun activeTouches()=surface.result().getInt("active_pointers")
     }
     class TouchSurface(context:android.content.Context):View(context) {
         var controllerLabel="Controller input: waiting"

@@ -1,4 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Bounded CPU wake lock only during the controlled screen-off validation. -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <application>
         <activity android:name="xtr.keymapper.validation.ValidationActivity" android:exported="true" android:configChanges="orientation|screenSize" android:theme="@style/Theme.XtMapper" />
     </application>

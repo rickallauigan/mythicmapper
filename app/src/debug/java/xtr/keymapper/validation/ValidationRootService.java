@@ -27,6 +27,14 @@ public class ValidationRootService extends RootService {
                 catch(Exception ignored){return "{}";}
             }
         }
+        @Override public String runHeroes(IValidationSurface surface) {
+            try{return exerciseHeroes(surface).toString();}
+            catch(Exception error){return "{\"status\":\"FAIL\",\"error\":\"Hero safe-surface replay failed: "+error.getClass().getSimpleName()+"\"}";}
+        }
+        @Override public String screenCleanup(IValidationSurface surface) {
+            try{return exerciseScreenCleanup(surface).toString();}
+            catch(Exception error){return "{\"status\":\"FAIL\",\"error\":\"Owned screen cleanup failed: "+error.getClass().getSimpleName()+"\"}";}
+        }
     };
     @Override public IBinder onBind(Intent intent){return binder;}
     private void requireSurface(IValidationSurface surface)throws Exception {
@@ -51,6 +59,133 @@ public class ValidationRootService extends RootService {
         for(String key:new String[]{"cpu_ms","elapsed_ns","art.gc.gc-count","art.gc.bytes-allocated","art.gc.gc-time"})
             out.put(key,before.isNull(key)||after.isNull(key)?JSONObject.NULL:after.getLong(key)-before.getLong(key));
         return out.put("pss_kb_after",after.getLong("pss_kb")).put("managed_heap_bytes_after",after.getLong("managed_heap_bytes"));
+    }
+    private interface MainStep { void run() throws Exception; }
+    private void onMain(MainStep step)throws Exception {
+        var done=new java.util.concurrent.CountDownLatch(1);var failure=new java.util.concurrent.atomic.AtomicReference<Throwable>();
+        new android.os.Handler(android.os.Looper.getMainLooper()).post(()->{try{step.run();}catch(Throwable e){failure.set(e);}finally{done.countDown();}});
+        if(!done.await(8,java.util.concurrent.TimeUnit.SECONDS))throw new IllegalStateException("Hero replay timed out");
+        if(failure.get()!=null)throw new IllegalStateException("Hero replay failed",failure.get());
+    }
+    /** Fixed synthetic controller replay into the same focused, purchase-free blue surface. */
+    private JSONObject exerciseHeroes(IValidationSurface surface)throws Exception {
+        requireSurface(surface);int width=surface.width(),height=surface.height();
+        if(width<300||height<300)throw new IllegalStateException("Surface not laid out");
+        var config=new KeymapConfig(null);config.pointerMode=KeymapConfig.POINTER_OVERLAY;
+        int actors=0;
+        List<Long> pulseAcquisitionDelays=new ArrayList<>();
+        List<Long> kimmyReleaseGaps=new ArrayList<>(),kimmyAcquisitionDelays=new ArrayList<>();
+        for(String variant:List.of("BEATRIX_HOLD","BEATRIX_PULSE","KIMMY")){
+            var hero=xtr.keymapper.controller.HeroGameplayConfig.Hero.valueOf(variant.startsWith("BEATRIX")?"BEATRIX":"KIMMY");
+            String lines=String.join("\n",xtr.keymapper.mythic.HeroTrainingProfiles.INSTANCE.draft(hero))
+                .replace("HOLD_RELEASE 0 0",variant.equals("BEATRIX_PULSE")?"PULSE 150 1":"HOLD_RELEASE 0 1")+"\nENABLED";
+            var callback=(IRemoteServiceCallback)Proxy.newProxyInstance(getClassLoader(),new Class[]{IRemoteServiceCallback.class},
+                (p,m,a)->switch(m.getName()){case "requestKeymapProfile"->ProfileConfiguration.parse(lines);case "requestKeymapConfig"->config;default->null;});
+            final int[] attackPointer={-1};
+            TouchBackend guarded=new TouchBackend(){
+                final Input delegate=new Input(0);
+                long anchorTime;
+                boolean awaitingAim;
+                long lastKimmySkillUp=-1,kimmyAnchorTime;
+                boolean awaitingKimmyAim;
+                public void injectTouch(int action,int pointer,float pressure,float x,float y){
+                    if(action!=MotionEvent.ACTION_UP)try{requireSurface(surface);}catch(Exception e){throw new SecurityException("Safe surface lost",e);}
+                    if(variant.equals("BEATRIX_PULSE")) {
+                        if(action==MotionEvent.ACTION_DOWN){anchorTime=SystemClock.uptimeMillis();awaitingAim=true;}
+                        if(action==MotionEvent.ACTION_MOVE&&awaitingAim){pulseAcquisitionDelays.add(SystemClock.uptimeMillis()-anchorTime);awaitingAim=false;}
+                        if(action==MotionEvent.ACTION_UP)awaitingAim=false;
+                    }
+                    if(variant.equals("KIMMY")) {
+                        long now=SystemClock.uptimeMillis();
+                        if(action==MotionEvent.ACTION_UP&&pointer!=attackPointer[0])lastKimmySkillUp=now;
+                        if(action==MotionEvent.ACTION_DOWN&&pointer==attackPointer[0]&&lastKimmySkillUp>=0){
+                            kimmyReleaseGaps.add(now-lastKimmySkillUp);lastKimmySkillUp=-1;
+                            kimmyAnchorTime=now;awaitingKimmyAim=true;
+                        }
+                        if(action==MotionEvent.ACTION_MOVE&&pointer==attackPointer[0]&&awaitingKimmyAim){
+                            kimmyAcquisitionDelays.add(now-kimmyAnchorTime);awaitingKimmyAim=false;
+                        }
+                        if(action==MotionEvent.ACTION_UP&&pointer==attackPointer[0])awaitingKimmyAim=false;
+                    }
+                    delegate.injectTouch(action,pointer,pressure,x,y);
+                }
+                public boolean hasSubmissionFailure(){return delegate.hasSubmissionFailure();}
+                public boolean cancelOwnedGesture(){return delegate.cancelOwnedGesture();}
+            };
+            final InputService[] runtime={null};final ControllerDeviceMonitor[] monitor={null};
+            Map<String,long[]> nodes=new HashMap<>();nodes.put("hero-replay",new long[]{1,2,0,255,128,0,255,128});
+            try{
+                onMain(()->{
+                    requireSurface(surface);runtime[0]=new InputService(ProfileConfiguration.parse(lines),config,callback,width,height,null,true,0,guarded,true);
+                    var aims=runtime[0].getKeymapProfile().aimKeys;
+                    for(int i=0;i<aims.size();i++)if(aims.get(i).code.equals("BTN_TL2"))attackPointer[0]=xtr.keymapper.controller.ControllerAimHandler.FIRST_POINTER_ID+i;
+                    monitor[0]=new ControllerDeviceMonitor(runtime[0],width,height,()->new HashMap<>(nodes));
+                    var field=InputService.class.getDeclaredField("controllers");field.setAccessible(true);field.set(runtime[0],monitor[0]);monitor[0].start();
+                });
+                String[] packets=variant.equals("BEATRIX_HOLD")?new String[]{"EV_KEY BTN_TL2 DOWN","EV_ABS ABS_RX ff","EV_SYN SYN_REPORT 0","EV_KEY BTN_TR DOWN","EV_KEY BTN_TR2 DOWN","EV_KEY BTN_TL DOWN","EV_KEY BTN_EAST DOWN","EV_KEY BTN_THUMBL DOWN","EV_KEY BTN_GAMEPAD DOWN","EV_KEY BTN_WEST DOWN","EV_KEY BTN_EAST UP","EV_KEY BTN_THUMBL UP"}
+                    :variant.equals("BEATRIX_PULSE")?new String[]{"EV_KEY BTN_TL2 DOWN","EV_ABS ABS_RX ff","EV_SYN SYN_REPORT 0"}
+                    :new String[]{"EV_ABS ABS_RX ff","EV_SYN SYN_REPORT 0","EV_KEY BTN_TR DOWN","EV_KEY BTN_TL DOWN","EV_KEY BTN_TR UP","EV_KEY BTN_TL UP","EV_KEY BTN_EAST DOWN","EV_KEY BTN_THUMBL DOWN","EV_KEY BTN_EAST UP","EV_KEY BTN_THUMBL UP"};
+                for(String packet:packets){onMain(()->{requireSurface(surface);monitor[0].event("hero-replay",packet);});SystemClock.sleep(16);}
+                SystemClock.sleep(180);
+                onMain(()->{requireSurface(surface);runtime[0].reloadKeymap();});
+                SystemClock.sleep(200);
+                onMain(()->{runtime[0].pauseResumeKeymap();if(!runtime[0].isDiagnosticSafe())throw new IllegalStateException("Hero runtime not released/healthy");});
+                if(guarded.hasSubmissionFailure())throw new IllegalStateException("Platform rejected hero gesture");
+                actors++;
+            }finally{onMain(()->{if(monitor[0]!=null)monitor[0].stop();if(runtime[0]!=null)runtime[0].stop();});}
+        }
+        if(pulseAcquisitionDelays.isEmpty()||pulseAcquisitionDelays.stream().anyMatch(ms->ms<40))throw new IllegalStateException("Attack acquisition phase missing");
+        if(kimmyReleaseGaps.isEmpty()||kimmyReleaseGaps.stream().anyMatch(ms->ms<40)||kimmyAcquisitionDelays.isEmpty()||kimmyAcquisitionDelays.stream().anyMatch(ms->ms<40))throw new IllegalStateException("Kimmy handoff phase missing");
+        return new JSONObject().put("status","PASS").put("uid",android.os.Process.myUid()).put("hero_touch_policies",actors)
+            .put("beatrix_pulse_anchor_to_first_move_ms",new org.json.JSONArray(pulseAcquisitionDelays))
+            .put("kimmy_skill_up_to_attack_down_ms",new org.json.JSONArray(kimmyReleaseGaps))
+            .put("kimmy_resumed_attack_anchor_to_first_move_ms",new org.json.JSONArray(kimmyAcquisitionDelays))
+            .put("source","Deterministic hero engine replay into guarded blue surface; not physical controller input or MLBB gameplay")
+            .put("reload_and_pulse_cleanup",true).put("runtime_metrics",new JSONObject(RuntimeMetrics.snapshot()));
+    }
+    /** Fixed one-contact protocol. Sleep is deliberate; never wakes or dismisses keyguard. */
+    private JSONObject exerciseScreenCleanup(IValidationSurface surface)throws Exception {
+        requireSurface(surface);
+        String lines=String.join("\n",xtr.keymapper.mythic.HeroTrainingProfiles.INSTANCE.draft(
+            xtr.keymapper.controller.HeroGameplayConfig.Hero.KIMMY)).replace("HOLD_RELEASE 0 0","HOLD_RELEASE 0 1")+"\nENABLED";
+        var config=new KeymapConfig(null);config.pointerMode=KeymapConfig.POINTER_OVERLAY;
+        var callback=(IRemoteServiceCallback)Proxy.newProxyInstance(getClassLoader(),new Class[]{IRemoteServiceCallback.class},
+            (p,m,a)->switch(m.getName()){case "requestKeymapProfile"->ProfileConfiguration.parse(lines);case "requestKeymapConfig"->config;default->null;});
+        Input delegate=new Input(0);
+        TouchBackend guarded=new TouchBackend(){
+            public void injectTouch(int action,int pointer,float pressure,float x,float y){
+                if(action!=MotionEvent.ACTION_UP)try{requireSurface(surface);}catch(Exception e){throw new SecurityException("Safe surface lost",e);}
+                delegate.injectTouch(action,pointer,pressure,x,y);
+            }
+            public boolean cancelOwnedGesture(){return delegate.cancelOwnedGesture();}
+            public boolean hasSubmissionFailure(){return delegate.hasSubmissionFailure();}
+        };
+        final InputService[] runtime={null};final ControllerDeviceMonitor[] monitor={null};
+        try {
+            int width=surface.width(),height=surface.height();
+            onMain(()->{
+                runtime[0]=new InputService(ProfileConfiguration.parse(lines),config,callback,width,height,null,true,0,guarded,true);
+                monitor[0]=new ControllerDeviceMonitor(runtime[0],width,height,()->Map.of("screen-replay",new long[]{1,2,0,255,128,0,255,128}));
+                var field=InputService.class.getDeclaredField("controllers");field.setAccessible(true);field.set(runtime[0],monitor[0]);monitor[0].start();
+                monitor[0].event("screen-replay","EV_ABS ABS_RX ff");monitor[0].event("screen-replay","EV_SYN SYN_REPORT 0");
+            });
+            long deadline=SystemClock.uptimeMillis()+3000;
+            while(surface.activeTouches()!=1&&SystemClock.uptimeMillis()<deadline)SystemClock.sleep(10);
+            if(surface.activeTouches()!=1)throw new IllegalStateException("Owned DOWN not observed");
+            requireSurface(surface);
+            if(android.os.Build.VERSION.SDK_INT<26)throw new IllegalStateException("Screen cleanup probe requires API 26+");
+            Process sleep=new ProcessBuilder("/system/bin/input","keyevent","223").start();
+            if(!sleep.waitFor(3,java.util.concurrent.TimeUnit.SECONDS)||sleep.exitValue()!=0)throw new IllegalStateException("Sleep command failed");
+            var power=getSystemService(android.os.PowerManager.class);
+            deadline=SystemClock.uptimeMillis()+3000;
+            while(power.isInteractive()&&SystemClock.uptimeMillis()<deadline)SystemClock.sleep(10);
+            if(power.isInteractive())throw new IllegalStateException("Display did not turn off");
+            onMain(()->runtime[0].stop());
+            return new JSONObject().put("status","PASS").put("screen_off_observed",true)
+                .put("submission_failure",guarded.hasSubmissionFailure())
+                .put("logical_contacts_after_stop",new JSONObject(RuntimeMetrics.snapshot()).getInt("logical_active_touches"))
+                .put("source","Owned blue-surface gesture only; no gameplay injection or keyguard dismissal");
+        }finally{onMain(()->{if(runtime[0]!=null)runtime[0].stop();if(monitor[0]!=null)monitor[0].stop();});}
     }
     private JSONObject exercise(IValidationSurface surface)throws Exception {
         requireSurface(surface);

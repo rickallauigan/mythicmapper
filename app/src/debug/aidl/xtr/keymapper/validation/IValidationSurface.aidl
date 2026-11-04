@@ -4,4 +4,5 @@ interface IValidationSurface {
     boolean ready();
     int width();
     int height();
+    int activeTouches();
 }

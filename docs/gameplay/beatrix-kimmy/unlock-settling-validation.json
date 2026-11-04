@@ -1,0 +1,49 @@
+{
+  "change": "Bounded unlock/keyguard settling and fresh foreground resampling",
+  "android_tests": 310,
+  "failures": 0,
+  "debug_build_lint_release_manifest": "PASS",
+  "device_unlock_surface": {
+    "suite": "screen_resume",
+    "result": {
+      "screen": {
+        "screen_off_on": true,
+        "overlay_removed_on_screen_off": true,
+        "mapping_foreground_service_retained_while_locked": true,
+        "mapping_paused_while_locked": true,
+        "keyguard_locked_after_wake": true,
+        "normal_unlock_session_restarted": true,
+        "fresh_foreground_observed": true,
+        "mapping_stayed_paused_outside_mlbb": true
+      },
+      "foreground_service_notification": true,
+      "notification_flags": 98,
+      "attached": true,
+      "favorite_slots": 5,
+      "expand_collapse": true,
+      "drag_reposition": true,
+      "editor_lease_hide_restore": true,
+      "activity_rotation_reclamp": true,
+      "gameplay_mapping_inactive": true
+    },
+    "status": "PASS"
+  },
+  "guarded_touch": "PASS zero final pointers/sequence errors",
+  "diagnostic_gameplay_submissions": 0,
+  "profiles_favorites_settings_unchanged": true,
+  "apk_sha256": "9b2f27389779cea66f23c36a1a07b7482857ad9483ab91b638787ab43564f98c",
+  "physical_training_centered_lock_test": "PASS, user confirmed M icon returns, right-stick shooting and RT work after centered-stick lock/unlock without opening MM or pressing Use",
+  "prior_firing_during_lock": "FAIL, separate game cleanup issue",
+  "cause": "Ordering/stale foreground hypotheses, exact prior failure cause unproven",
+  "adb_post_unlock": {
+    "screen_suspended": false,
+    "interactive": true,
+    "keyguard_locked": false,
+    "session_running": true,
+    "profile_selected": true,
+    "overlay_attached": true,
+    "root_alive": true,
+    "mapping_paused": false
+  },
+  "installed_source_commit": "51209f0"
+}

@@ -110,6 +110,23 @@ public class Input implements TouchBackend {
         injectInputEvent(motionEvent);
     }
 
+    /** Cancels our tracked injection stream, never the system-wide touch state. */
+    @Override public synchronized boolean cancelOwnedGesture() {
+        int count = pointersState.update(pointerProperties, pointerCoords);
+        if (count == 0) { pointerCount = 0; return true; }
+        for (int i=0;i<count;i++) {
+            Pointer pointer = pointersState.get(i);
+            pointer.setUp(true); pointer.setPressure(0);
+        }
+        pointersState.update(pointerProperties, pointerCoords);
+        pointerCount = 0;
+        MotionEvent event = MotionEvent.obtain(lastTouchDown, SystemClock.uptimeMillis(),
+                MotionEvent.ACTION_CANCEL, count, pointerProperties, pointerCoords,
+                0, 0, 1f, 1f, 0, 0, InputDevice.SOURCE_TOUCHSCREEN, 0);
+        injectInputEvent(event);
+        return true;
+    }
+
     synchronized void injectMouseClick(long pointerId, float x, float y, boolean pressed, int actionButton) {
         long now = SystemClock.uptimeMillis();
 

@@ -63,14 +63,14 @@ fun MythicHome(activity: MainActivity) {
     MythicHomeScreen(library,devices.any(MythicScope::supported),active,selected,
         onActivate={p -> action {
             check(devices.any(MythicScope::supported)){"Connect original G8 in the observed USB mode; see diagnostics for identity"}
-            MythicScope.validateProfile(KeymapProfiles(activity).getProfile(p.id,false))
+            MythicScope.validateActivation(KeymapProfiles(activity).getProfile(p.id,false))
             KeymapConfig(activity).apply {disableAutoProfiling=false;useShizuku=false;touchpadInputMode=KeymapConfig.TOUCHPAD_DISABLED;pointerMode=KeymapConfig.POINTER_SYSTEM}.applySharedPrefs()
             xtr.keymapper.server.RemoteServiceHelper.useShizuku=false
             activity.selectProfileFromCompose(p.id);activity.launchAppFromCompose()
             activity.packageManager.getLaunchIntentForPackage(MythicScope.GAME)?.let {activity.startActivity(it)}
         }},
         onStop={activity.stopPointerFromCompose();active=false},
-        onClone={preset -> nameRequest=NameRequest("My hero") {name -> action{store.clone(name,HeroCatalog.lines(activity,preset),preset.id)}}},
+        onClone={preset -> nameRequest=NameRequest(if(preset.id.contains("beatrix"))"Beatrix training"else if(preset.id.contains("kimmy"))"Kimmy training"else"My hero") {name -> action{store.clone(name,HeroCatalog.lines(activity,preset),preset.id)}}},
         onRename={p -> nameRequest=NameRequest(p.name){name -> action{val s=store.read();store.update(s,s.copy(profiles=s.profiles.map{if(it.id==p.id)it.copy(name=name)else it}))}}},
         onDuplicate={p -> nameRequest=NameRequest("${p.name.take(70)} copy"){name -> action{val lines=KeymapProfiles(activity).sharedPref.getStringSet(p.id,null)?.toSet() ?: error("Mapping missing");store.clone(name,lines,p.preset)}}},
         onDelete={p -> action{check(p.id!=selected || !active){"Stop mapping before deleting the selected profile"};store.delete(p.id)}},
@@ -80,6 +80,7 @@ fun MythicHome(activity: MainActivity) {
         onEditor={edit(it,false)},onCalibration={edit(it,true)},
         onDiagnostics={activity.startActivity(Intent(activity,xtr.keymapper.tester.TesterActivity::class.java))},
         onRuntimeDiagnostics={activity.startActivity(Intent(activity,DiagnosticsActivity::class.java))},
+        onHeroSetup={p->activity.openHeroTrainingFromCompose(p.id)},
         onPermission={activity.startActivity(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,android.net.Uri.parse("package:${activity.packageName}")))})
     nameRequest?.let {request ->
         var name by remember(request){mutableStateOf(request.initial)}
@@ -103,7 +104,7 @@ fun MythicHomeScreen(library: HeroLibrary, connected: Boolean, active: Boolean, 
     onActivate:(HeroProfile)->Unit, onStop:()->Unit, onClone:(HeroPreset)->Unit,
     onRename:(HeroProfile)->Unit, onDuplicate:(HeroProfile)->Unit, onDelete:(HeroProfile)->Unit,
     onRestore:(HeroProfile)->Unit, onAssign:(Int,String?)->Unit, onSwap:(Int,Int)->Unit,
-    onEditor:(HeroProfile)->Unit, onCalibration:(HeroProfile)->Unit, onDiagnostics:()->Unit, onPermission:()->Unit, onRuntimeDiagnostics:()->Unit={}) {
+    onEditor:(HeroProfile)->Unit, onCalibration:(HeroProfile)->Unit, onDiagnostics:()->Unit, onPermission:()->Unit, onRuntimeDiagnostics:()->Unit={},onHeroSetup:(HeroProfile)->Unit={}) {
     var search by remember {mutableStateOf("")}
     var assignSlot by remember {mutableStateOf<Int?>(null)}
     MaterialTheme(colorScheme=darkColorScheme(primary=Color(0xff6de0c1),surface=Color(0xff14212b),background=Color(0xff0b141d))) {
@@ -137,7 +138,7 @@ fun MythicHomeScreen(library: HeroLibrary, connected: Boolean, active: Boolean, 
                     OutlinedTextField(search,{search=it},Modifier.fillMaxWidth(),label={Text("Search profiles and starters")},singleLine=true)
                     Text("Starter templates require your HUD calibration. No new hero is marked verified.")}
                 items(HeroCatalog.presets.filter{it.name.contains(search,true)}) {preset ->
-                    Card(Modifier.fillMaxWidth()){Column(Modifier.padding(14.dp)) {Text(preset.name);Text(preset.status);Button(onClick={onClone(preset)}){Text("Clone to personal profile")}}}
+                    Card(Modifier.fillMaxWidth()){Column(Modifier.padding(14.dp)) {Text(preset.name);Text(preset.status);Button(onClick={onClone(preset)},modifier=Modifier.testTag("clone-${preset.id}")){Text("Clone to personal profile")}}}
                 }
                 item {Text("Personal mappings",style=MaterialTheme.typography.titleLarge)}
                 items(library.profiles.filter{it.name.contains(search,true)},key={it.id}) {p ->
@@ -145,6 +146,7 @@ fun MythicHomeScreen(library: HeroLibrary, connected: Boolean, active: Boolean, 
                         Text(p.name,style=MaterialTheme.typography.titleMedium)
                         Row {TextButton(onClick={onActivate(p)},enabled=connected){Text("Use")};TextButton(onClick={onEditor(p)}){Text("Visual editor")};TextButton(onClick={onCalibration(p)}){Text("Calibrate")}}
                         Row {TextButton(onClick={onRename(p)}){Text("Rename")};TextButton(onClick={onDuplicate(p)}){Text("Duplicate")};TextButton(onClick={onDelete(p)}){Text("Delete")}}
+                        if(p.preset in setOf("s10e-g8-beatrix-training-v1","s10e-g8-kimmy-training-v1"))TextButton(onClick={onHeroSetup(p)}){Text("Hero training setup")}
                         if(p.preset!=null)TextButton(onClick={onRestore(p)}){Text("Restore starter")}
                     }}
                 }

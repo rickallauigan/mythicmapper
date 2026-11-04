@@ -41,6 +41,18 @@ class FavoriteOverlayTest {
             overlay.close();shadowOf(Looper.getMainLooper()).idle();assertFalse(root.isAttachedToWindow)
         } finally {EditorSessionGuard.release(owner);overlay.close();controller.destroy();ShadowSettings.setCanDrawOverlays(false)}
     }
+    @Test fun closeAndShowRestoresOneCollapsedOverlayWithoutDuplicateChildren() {
+        ShadowSettings.setCanDrawOverlays(true)
+        val controller=Robolectric.buildService(TouchPointer::class.java).create()
+        val overlay=FavoriteOverlay(controller.get()){}
+        try {
+            overlay.show();overlay.show();shadowOf(Looper.getMainLooper()).idle()
+            val root=ReflectionHelpers.getField<LinearLayout>(overlay,"root")
+            assertEquals(2,root.childCount);assertTrue(root.isAttachedToWindow)
+            overlay.close();shadowOf(Looper.getMainLooper()).idle();assertFalse(root.isAttachedToWindow)
+            overlay.show();shadowOf(Looper.getMainLooper()).idle();assertEquals(2,root.childCount);assertTrue(root.isAttachedToWindow)
+        } finally {overlay.close();controller.destroy();ShadowSettings.setCanDrawOverlays(false)}
+    }
     @Test fun missingPermissionDoesNotAttachAWindow() {
         ShadowSettings.setCanDrawOverlays(false)
         val controller=Robolectric.buildService(TouchPointer::class.java).create()

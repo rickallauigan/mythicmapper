@@ -31,10 +31,14 @@ class HardwareValidationInstrumentation: Instrumentation() {
                 "profiles_verify" -> report.put("result",profiles(true))
                 "injection" -> report.put("result",injection())
                 "startup" -> report.put("result",startup())
-                "overlay", "screen" -> report.put("result",overlay())
+                "overlay", "screen", "screen_resume" -> report.put("result",overlay())
                 "reader_hold" -> report.put("result",readerHold())
                 "runtime" -> report.put("result",runtimeLifecycle())
                 "tester" -> report.put("result",tester())
+                "heroes" -> report.put("result",tester(true))
+                "heroes_prepare" -> report.put("result",prepareHeroes())
+                "heroes_touch" -> report.put("result",injection(true))
+                "kimmy_screen_cleanup" -> report.put("result",screenCleanup())
                 "tester_render" -> report.put("result",testerRender())
                 else -> error("Unknown suite")
             }
@@ -69,7 +73,7 @@ class HardwareValidationInstrumentation: Instrumentation() {
                 .put("states_submitted",240).put("elapsed_ms",elapsed).put("app_cpu_ms",cpuDelta).put("app_pss_kb",android.os.Debug.getPss()).put("gfx_summary",JSONArray(lines))
         }finally{runOnMainSync{activity.finish()};SystemClock.sleep(500)}
     }
-    private fun tester():JSONObject {
+    private fun tester(heroProfiles:Boolean=false):JSONObject {
         val activity=startActivitySync(Intent(targetContext,xtr.keymapper.tester.TesterActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) as xtr.keymapper.tester.TesterActivity
         val ready=CountDownLatch(1);var remote:xtr.keymapper.IRemoteService?=null
         runOnMainSync{xtr.keymapper.server.RemoteServiceHelper.getInstance(targetContext){remote=it;ready.countDown()}}
@@ -92,7 +96,16 @@ class HardwareValidationInstrumentation: Instrumentation() {
                 override fun enablePointer(){};override fun disablePointer(){};override fun setCursorX(x:Int){};override fun setCursorY(y:Int){}
                 override fun requestKeymapProfile()=profile;override fun requestKeymapConfig()=config
             }
-            backend.startServer(profile,config,callback,1080,2280,0);backend.resumeMouse();SystemClock.sleep(200)
+            if(heroProfiles){
+                for(hero in xtr.keymapper.controller.HeroGameplayConfig.Hero.entries){
+                    val draft=HeroTrainingProfiles.draft(hero)+"ENABLED"
+                    val failure=runCatching{backend.startServer(KeymapProfiles.getProfile(draft),config,callback,1080,2280,0)}.exceptionOrNull()
+                    check(failure is IllegalArgumentException){"Uncalibrated hero crossed Binder activation gate"}
+                    val ready=draft.map{if(it.startsWith("HERO_GAMEPLAY "))it.dropLast(1)+"1"else it}.toSet()
+                    backend.startServer(KeymapProfiles.getProfile(ready),config,callback,1080,2280,0)
+                }
+            }else backend.startServer(profile,config,callback,1080,2280,0)
+            backend.resumeMouse();SystemClock.sleep(200)
             check(!backend.isActive && backend.isMappingPaused)
             File(targetContext.filesDir,"validation/tester-ready.json").writeText("{\"ready\":true}")
             val original=activity.requestedOrientation
@@ -113,8 +126,28 @@ class HardwareValidationInstrumentation: Instrumentation() {
             val times=state.receiptToProcessNs.toLongArray();if(times.isNotEmpty())report.put("receipt_to_reducer",stats(times))
             val death=CountDownLatch(1);backend.asBinder().linkToDeath({death.countDown()},0)
             runOnMainSync{activity.finish()};check(death.await(5,TimeUnit.SECONDS))
-            return report.put("root_exit_on_tester_exit",true).put("lease_released_on_exit",true).put("mapping_not_resumed",true)
+            return report.put("hero_profiles_exclusivity_checked",heroProfiles).put("uncalibrated_heroes_rejected_across_binder",if(heroProfiles)2 else 0).put("root_exit_on_tester_exit",true).put("lease_released_on_exit",true).put("mapping_not_resumed",true)
         }finally{runOnMainSync{activity.finish()};runCatching{backend.stopServer()};File(targetContext.filesDir,"validation/tester-ready.json").delete()}
+    }
+    private fun prepareHeroes():JSONObject {
+        val store=HeroLibraryStore(targetContext);val before=store.read()
+        val mappings=KeymapProfiles(targetContext).sharedPref;val original=mappings.all.toMap()
+        val journal=File(targetContext.filesDir,"validation/heroes-preparation-journal.json");journal.parentFile!!.mkdirs()
+        journal.writeText(JSONObject().put("original_profile_ids",JSONArray(before.profiles.map{it.id})).put("original_mapping_keys",JSONArray(original.keys.toList())).toString(2))
+        var created=0;val results=JSONArray()
+        for(hero in xtr.keymapper.controller.HeroGameplayConfig.Hero.entries){
+            val preset=if(hero==xtr.keymapper.controller.HeroGameplayConfig.Hero.BEATRIX)"s10e-g8-beatrix-training-v1"else"s10e-g8-kimmy-training-v1"
+            val old=store.read().profiles.firstOrNull{it.preset==preset}
+            val p=old?:store.clone(if(hero==xtr.keymapper.controller.HeroGameplayConfig.Hero.BEATRIX)"Beatrix training draft"else"Kimmy training draft",HeroTrainingProfiles.draft(hero),preset).also{created++}
+            val parsed=KeymapProfiles(targetContext).getProfile(p.id,false)
+            if(old==null)check(parsed.disabled&&!parsed.heroGameplay.calibrated)
+            results.put(JSONObject().put("hero",hero.name).put("created",old==null).put("enabled",!parsed.disabled).put("calibrated",parsed.heroGameplay?.calibrated?:false).put("hero_policy_present",parsed.heroGameplay!=null))
+        }
+        check(before.favorites==store.read().favorites)
+        check(before.profiles.all{it in store.read().profiles})
+        check(original.all{(key,value)->mappings.all[key]==value})
+        return JSONObject().put("created_profiles",created).put("templates",results).put("original_mapping_entries_preserved",original.size)
+            .put("original_library_records_preserved",true).put("favorites_unchanged",true).put("activation_requested",false)
     }
     private fun stats(values:LongArray):JSONObject {
         values.sort();return JSONObject().put("n",values.size).put("p50_ns",values[(values.size*.5).toInt()])
@@ -150,7 +183,7 @@ class HardwareValidationInstrumentation: Instrumentation() {
             check(!marker.exists()){ "Previous validation fixture needs cleanup first" }
             val before=store.read();val created=mutableListOf<String>()
             try {
-                val preset=HeroCatalog.presets.single();val lines=HeroCatalog.lines(targetContext,preset)
+                val preset=HeroCatalog.presets.first{it.id=="s10e-g8-tuned-v03-single-touch-r1"};val lines=HeroCatalog.lines(targetContext,preset)
                 val a=store.clone("VALIDATION_ONLY Alpha",lines,preset.id);created+=a.id
                 val b=store.clone("VALIDATION_ONLY Beta",lines,preset.id);created+=b.id
                 val c=store.clone("VALIDATION_ONLY Duplicate",KeymapProfiles(targetContext).sharedPref.getStringSet(a.id,null)!!,preset.id);created+=c.id
@@ -208,7 +241,7 @@ class HardwareValidationInstrumentation: Instrumentation() {
     private fun overlay():JSONObject {
         val activity=startActivitySync(Intent(targetContext,ValidationActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) as ValidationActivity
         val store=HeroLibraryStore(targetContext);val before=store.read()
-        val profile=store.clone("VALIDATION_ONLY Overlay",HeroCatalog.lines(targetContext,HeroCatalog.presets.single()),HeroCatalog.presets.single().id)
+        val profile=store.clone("VALIDATION_ONLY Overlay",HeroCatalog.lines(targetContext,HeroCatalog.presets.first{it.id=="s10e-g8-tuned-v03-single-touch-r1"}),HeroCatalog.presets.first{it.id=="s10e-g8-tuned-v03-single-touch-r1"}.id)
         var current=store.read();store.update(current,current.assign(0,profile.id))
         val settings=targetContext.getSharedPreferences("settings",0)
         val hadAuto=settings.contains("disable_auto_profile");val oldAuto=settings.getBoolean("disable_auto_profile",true)
@@ -270,7 +303,7 @@ class HardwareValidationInstrumentation: Instrumentation() {
             val notificationFlags=notifications.first{it.id==2}.notification.flags
             check(service!!.mService?.isActive!=true){"Test must not activate a gameplay mapping"}
             var screenResult:JSONObject?=null
-            if(suite=="screen") {
+            if(suite=="screen" || suite=="screen_resume") {
                 fun key(code:Int){uiAutomation.executeShellCommand("input keyevent $code").use{android.os.ParcelFileDescriptor.AutoCloseInputStream(it).use{stream->stream.readBytes()}}}
                 val power=targetContext.getSystemService(android.os.PowerManager::class.java)
                 key(223)
@@ -281,11 +314,32 @@ class HardwareValidationInstrumentation: Instrumentation() {
                 try {
                     repeat(150){if(root.isAttachedToWindow)SystemClock.sleep(20)}
                     check(!root.isAttachedToWindow){"Screen-off left selector attached after 3s"}
+                    val running=targetContext.getSystemService(android.app.ActivityManager::class.java)
+                        .getRunningServices(100).singleOrNull{it.service.className==xtr.keymapper.TouchPointer::class.java.name}
+                    check(running!=null&&running.started&&running.foreground){"Screen-off stopped the mapping foreground service"}
+                    check(service!!.mService?.isMappingPaused==true){"Locked mapping was not paused"}
                 } finally { key(224) }
                 repeat(100){if(!power.isInteractive)SystemClock.sleep(20)}
                 check(power.isInteractive){"Screen did not wake"}
                 screenResult=JSONObject().put("screen_off_on",true).put("overlay_removed_on_screen_off",true)
+                    .put("mapping_foreground_service_retained_while_locked",true).put("mapping_paused_while_locked",true)
                     .put("keyguard_locked_after_wake",targetContext.getSystemService(android.app.KeyguardManager::class.java).isKeyguardLocked)
+                if(suite=="screen_resume") {
+                    val marker=File(targetContext.filesDir,"validation/lock-session-waiting.json")
+                    marker.parentFile!!.mkdirs();marker.writeText("{\"waiting_for_manual_unlock\":true}")
+                    try {
+                        val keyguard=targetContext.getSystemService(android.app.KeyguardManager::class.java)
+                        val deadline=SystemClock.elapsedRealtime()+180000
+                        val session=field(service!!,"foreground") as xtr.keymapper.profiles.ForegroundProfileSession
+                        while((keyguard.isKeyguardLocked || field(service!!,"screenSuspended")==true || session.current()?.packageName!=targetContext.packageName)&&SystemClock.elapsedRealtime()<deadline)SystemClock.sleep(100)
+                        check(!keyguard.isKeyguardLocked&&field(service!!,"screenSuspended")==false){"Unlock session stayed suspended"}
+                        check(session.current()?.packageName==targetContext.packageName){"Fresh foreground callback missing after unlock"}
+                        check(service!!.mService?.isMappingPaused==true){"Must not map into the controlled test Activity"}
+                        check(!root.isAttachedToWindow){"Game selector restored outside MLBB"}
+                        screenResult.put("normal_unlock_session_restarted",true).put("fresh_foreground_observed",true)
+                            .put("mapping_stayed_paused_outside_mlbb",true)
+                    } finally {marker.delete()}
+                }
             }
             return JSONObject().put("screen",screenResult ?: JSONObject.NULL).put("foreground_service_notification",true).put("notification_flags",notificationFlags).put("attached",true).put("favorite_slots",slots)
                 .put("expand_collapse",true).put("drag_reposition",true).put("editor_lease_hide_restore",true).put("activity_rotation_reclamp",true).put("gameplay_mapping_inactive",true)
@@ -347,7 +401,47 @@ class HardwareValidationInstrumentation: Instrumentation() {
                 .put("no_game_launch",true).put("root_metrics",metrics).put("root_exit_observed",true)
         } finally {runCatching{remote.stopServer()};runOnMainSync{activity.finish()}}
     }
-    private fun injection():JSONObject {
+    private fun screenCleanup():JSONObject {
+        val activity=startActivitySync(Intent(targetContext,ValidationActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) as ValidationActivity
+        val originalSurface=activity.surface
+        val connected=CountDownLatch(1);var runner:IValidationRunner?=null
+        val connection=object:ServiceConnection {
+            override fun onServiceConnected(name:ComponentName?,binder:IBinder?){runner=IValidationRunner.Stub.asInterface(binder);connected.countDown()}
+            override fun onServiceDisconnected(name:ComponentName?){runner=null}
+        }
+        val power=targetContext.getSystemService(PowerManager::class.java)
+        val keyguard=targetContext.getSystemService(android.app.KeyguardManager::class.java)
+        val wake=power.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,"MythicMapper:screen-cleanup-validation")
+        val marker=File(targetContext.filesDir,"validation/screen-cleanup-waiting.json")
+        try {
+            repeat(100){if(!activity.guard.ready())SystemClock.sleep(30)}
+            check(activity.guard.ready()){"Controlled screen-cleanup surface not focused"}
+            check(Shell.getShell().isRoot){"App root consent unavailable"}
+            runOnMainSync{RootService.bind(Intent(targetContext,ValidationRootService::class.java),connection)}
+            check(connected.await(15,TimeUnit.SECONDS)){"Validation root unavailable"}
+            wake.acquire(10000)
+            val binder=runner!!.asBinder()
+            val root=JSONObject(runner!!.screenCleanup(activity.guard))
+            check(root.getString("status")=="PASS"){root.toString()}
+            runOnMainSync{RootService.unbind(connection)}
+            if(wake.isHeld)wake.release()
+            marker.writeText(JSONObject().put("waiting_for_manual_unlock",true).put("root",root).toString(2))
+            val deadline=SystemClock.elapsedRealtime()+180000
+            while((!power.isInteractive||keyguard.isKeyguardLocked||!activity.guard.ready())&&SystemClock.elapsedRealtime()<deadline)SystemClock.sleep(100)
+            check(power.isInteractive&&!keyguard.isKeyguardLocked&&activity.guard.ready()){"Manual unlock/focused surface required"}
+            check(!activity.isDestroyed&&activity.surface===originalSurface){"Activity recreated; original contact evidence lost"}
+            val observed=originalSurface.result()
+            check(!root.getBoolean("submission_failure")&&root.getInt("logical_contacts_after_stop")==0){root.toString()}
+            check(observed.getInt("active_pointers")==0&&observed.getInt("cancel_events")>=1&&observed.getInt("sequence_errors")==0){observed.toString()}
+            return JSONObject().put("root",root).put("surface",observed).put("same_activity",true)
+                .put("injector_binder_dead_after_unbind",!binder.isBinderAlive)
+                .put("manual_unlock",true).put("gameplay_test",false)
+        }finally{
+            if(wake.isHeld)wake.release()
+            marker.delete();runOnMainSync{runCatching{RootService.unbind(connection)};activity.finish()}
+        }
+    }
+    private fun injection(heroes:Boolean=false):JSONObject {
         val activity=startActivitySync(Intent(targetContext,ValidationActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) as ValidationActivity
         val connected=CountDownLatch(1);var runner:IValidationRunner?=null
         val connection=object:ServiceConnection {
@@ -360,10 +454,10 @@ class HardwareValidationInstrumentation: Instrumentation() {
             check(Shell.getShell().isRoot){"App root consent unavailable"}
             runOnMainSync{RootService.bind(Intent(targetContext,ValidationRootService::class.java),connection)}
             check(connected.await(15,TimeUnit.SECONDS)){"Validation root Binder unavailable"}
-            val root=JSONObject(runner!!.run(activity.guard));check(root.getString("status")=="PASS"){root.toString()}
+            val root=JSONObject(if(heroes)runner!!.runHeroes(activity.guard)else runner!!.run(activity.guard));check(root.getString("status")=="PASS"){root.toString()}
             SystemClock.sleep(500)
             val observed=activity.surface.result()
-            check(observed.getInt("observed_events")>=20 && observed.getInt("max_pointers")==3 && observed.getInt("active_pointers")==0 && observed.getInt("sequence_errors")==0){observed.toString()}
+            check(observed.getInt("observed_events")>=20 && observed.getInt("max_pointers")== (if(heroes)7 else 3) && observed.getInt("active_pointers")==0 && observed.getInt("sequence_errors")==0){observed.toString()}
             return JSONObject().put("root",root).put("surface",observed)
         } finally {
             runOnMainSync{runCatching{RootService.unbind(connection)};activity.finish()}

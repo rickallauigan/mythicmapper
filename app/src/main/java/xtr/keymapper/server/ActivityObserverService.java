@@ -44,6 +44,11 @@ public class ActivityObserverService implements Runnable {
         requestRefresh();
     }
     public synchronized String mode(){return mode;}
+    /** Explicit unlock resample; ordinary task callbacks remain deduplicated. */
+    public void refresh() {
+        synchronized(this){if(stopped)return;lastPackage=null;}
+        requestRefresh();
+    }
     private void requestRefresh() {
         synchronized(this){if(stopped||queued)return;queued=true;handler.post(this);}
     }

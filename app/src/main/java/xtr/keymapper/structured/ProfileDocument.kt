@@ -36,6 +36,7 @@ internal object MappingFields {
     data class Layout(val tag:String,val fields:List<String>)
     private fun layout(tag:String,fields:String)=Layout(tag,fields.split(" "))
     val layouts=linkedMapOf(
+        "hero_gameplay" to layout("HERO_GAMEPLAY","hero weapon fire_policy repeat_ms calibrated"),
         "stick_aim" to layout("STICK_AIM","input position.x position.y aim.radius aim.sensitivity.x aim.sensitivity.y aim.dead_zone aim.invert_y"),
         "mouse_skill_aim" to layout("AIM_KEY","input position.x position.y aim.radius aim.sensitivity.x aim.sensitivity.y"),
         "stick_camera" to layout("STICK_CAMERA","position.x position.y sensitivity.x sensitivity.y dead_zone"),
@@ -47,7 +48,8 @@ internal object MappingFields {
         "mouse_walk" to layout("MOUSE_WALK","position.x position.y radius"),
         "mouse_aim" to layout("MOUSE_AIM","position.x position.y limited_bounds size.width size.height click_position.x click_position.y sensitivity.x sensitivity.y nonlinear")
     )
-    val booleans=setOf("aim.invert_y","auto_active","limited_bounds","nonlinear")
+    val strings=setOf("hero","weapon","fire_policy")
+    val booleans=setOf("calibrated","aim.invert_y","auto_active","limited_bounds","nonlinear")
     val identities=setOf("input","modifier","end_input","directions.up","directions.down","directions.left","directions.right")
     fun identify(line:String):Pair<String,String> {
         val d=line.split(Regex("\\s+"));val tag=d[0]
@@ -73,7 +75,7 @@ internal object MappingFields {
         val fields=if(binding.action=="fixed_touch") listOf("position.x","position.y")+(if(d[0].startsWith("MOUSE_")) emptyList() else listOf("offset"))+(if(d.size==5) listOf("repeat_ms") else emptyList()) else layouts.getValue(binding.action).fields
         fields.forEachIndexed {i,path ->
             val v=d[i+1]
-            val value:Any=when {path in booleans ->v!="0";path=="toggle"->v.toInt()!=0;path in identities->if(v in setOf("BTN_RIGHT","BTN_MOUSE")) v else ControllerBindings.editorCode(v);path=="macro_id"->v;else->v.toDouble()}
+            val value:Any=when {path in booleans ->v!="0";path=="toggle"->v.toInt()!=0;path in identities->if(v in setOf("BTN_RIGHT","BTN_MOUSE")) v else ControllerBindings.editorCode(v);path=="macro_id"||path in strings->v;else->v.toDouble()}
             put(out,path,value)
         }
         return out

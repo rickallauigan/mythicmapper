@@ -1,0 +1,12 @@
+{
+  "model": "SM-G970F",
+  "android": "16",
+  "selinux": "Enforcing",
+  "root_uid": 0,
+  "mlbb_version": "2.2.16.12322",
+  "apk_sha256": "35f2de820b0c3d7862d0f6f20bec631c7bf5b09d3e64850fa549df6f28b2a1f5",
+  "installed": true,
+  "data_cleared": false,
+  "physical_gameplay": "NOT TESTED",
+  "template_favorite_assignment": "No automatic assignment"
+}
