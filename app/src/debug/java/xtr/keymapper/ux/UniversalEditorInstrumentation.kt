@@ -117,7 +117,16 @@ class UniversalEditorInstrumentation:Instrumentation() {
             val monitor=addMonitor(UniversalEditorTestActivity::class.java.name,null,false)
             try{main{activity!!.recreate()};activity=waitForMonitorWithTimeout(monitor,10000) as? UniversalEditorTestActivity?:error("Editor recreation failed");settle();find("Profile: UI TEST Unsaved rename · Unsaved")}finally{removeMonitor(monitor)}
             click("Revert");click("Confirm");find("Profile: UI TEST Custom Hero");check(UniversalStorage.read(context,saved.id)==document)
-            find("mapping-canvas").performAction(Node.AccessibilityAction.ACTION_SHOW_ON_SCREEN.id);settle();File(dir,"canvas.png").outputStream().use{check(uiAutomation.takeScreenshot().compress(android.graphics.Bitmap.CompressFormat.PNG,100,it))}
+            fun rotate(orientation:Int){
+                val desired=if(orientation==android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)android.content.res.Configuration.ORIENTATION_PORTRAIT else android.content.res.Configuration.ORIENTATION_LANDSCAPE
+                if(activity!!.resources.configuration.orientation==desired)return
+                val rotation=addMonitor(UniversalEditorTestActivity::class.java.name,null,false)
+                try{main{activity!!.requestedOrientation=orientation};activity=waitForMonitorWithTimeout(rotation,10000) as? UniversalEditorTestActivity?:error("Editor orientation recreation failed");settle();check(activity!!.resources.configuration.orientation==desired)}finally{removeMonitor(rotation)}
+            }
+            rotate(android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+            find("mapping-canvas");settle();File(dir,"canvas.png").outputStream().use{check(uiAutomation.takeScreenshot().compress(android.graphics.Bitmap.CompressFormat.PNG,100,it))}
+            check(UniversalStorage.read(context,saved.id)==document)
+            rotate(android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
             sendStatus(0,Bundle().apply{putString("editor_step","saved custom profile replay")});main{session=VirtualG8Session();session!!.loadUniversal(document);session!!.axis("ABS_RX",128);session!!.axis("ABS_RY",128)}
             for(code in listOf("BTN_GAMEPAD","BTN_EAST","BTN_TR","BTN_TR2","BTN_TL","BTN_TL2")){
                 main{session!!.key(code,true)};SystemClock.sleep(70);main{session!!.key(code,false)}
@@ -132,7 +141,7 @@ class UniversalEditorInstrumentation:Instrumentation() {
                 session!!.command(JSONObject().put("action","diagnostics_off"));session!!.close()
             };val trace=session!!.report();check(trace.getInt("final_pointers")==0&&trace.getInt("total_touches")>=12)
             File(dir,"replay.json").writeText(trace.toString(2))
-            JSONObject().put("status","PASS").put("favorite_assigned_through_ui",true).put("home_create_entry",true).put("created_through_ui",true).put("bindings",6).put("right_stick_aim",true).put("reopened",true).put("marker_drag_single_undo",true).put("undo_redo",true).put("draft_recreation",true).put("overlap_disconnect_diagnostics",true).put("final_pointers",0).put("platform_touch_submissions",0)
+            JSONObject().put("status","PASS").put("favorite_assigned_through_ui",true).put("home_create_entry",true).put("created_through_ui",true).put("bindings",6).put("right_stick_aim",true).put("reopened",true).put("marker_drag_single_undo",true).put("undo_redo",true).put("draft_recreation",true).put("portrait_landscape_recreation",true).put("overlap_disconnect_diagnostics",true).put("final_pointers",0).put("platform_touch_submissions",0)
         }catch(t:Throwable){File(dir,"failure-nodes.txt").writeText(all().joinToString("\n"){"${it.viewIdResourceName}: ${it.text} visible=${it.isVisibleToUser}"});JSONObject().put("status","FAIL").put("error",t.stackTraceToString())}
         finally{main{session?.close();activity?.finish();home?.finish()};settle();store.read().profiles.filter{p->p.id !in before.profiles.map{it.id}}.forEach{store.delete(it.id)}}
         check(store.read()==before){"Isolated library/favorites changed"}

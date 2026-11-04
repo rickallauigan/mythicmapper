@@ -52,8 +52,8 @@ import kotlin.math.hypot
         Column(Modifier.fillMaxSize().safeDrawingPadding().verticalScroll(rememberScrollState()).padding(16.dp)
             .semantics{testTagsAsResourceId=true}.testTag("universal-editor"),verticalArrangement=Arrangement.spacedBy(12.dp)){
             Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween,verticalAlignment=Alignment.CenterVertically){
-                Text("M · Hero mapping editor",style=MaterialTheme.typography.titleLarge)
-                TextButton(onClick={exit()}){Text("Close editor")}
+                Text("M · Hero mapping editor",modifier=Modifier.weight(1f),maxLines=2,style=MaterialTheme.typography.titleLarge)
+                TextButton(onClick={exit()},modifier=Modifier.widthIn(min=80.dp).heightIn(min=48.dp).semantics{contentDescription="Close editor"}){Text("Close")}
             }
             Text("MLBB · Original GameSir G8 · native left-stick movement",color=MythicColors.Muted)
             error?.let{Text(it,color=MaterialTheme.colorScheme.error);TextButton(onClick=onClearError){Text("Dismiss error")}}
