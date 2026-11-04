@@ -25,12 +25,12 @@ import androidx.compose.ui.semantics.*
 import java.util.Locale
 import kotlin.math.*
 
-private val Ink=Color(0xff080910)
-private val CardInk=Color(0xff12121f)
-private val Violet=Color(0xffb779ff)
-private val Line=Color(0xff38304e)
-private val Muted=Color(0xffb8b2ce)
-private val Green=Color(0xff64f28a)
+private val Ink=xtr.keymapper.mythic.MythicColors.Ink
+private val CardInk=xtr.keymapper.mythic.MythicColors.Surface
+private val Violet=xtr.keymapper.mythic.MythicColors.Violet
+private val Line=xtr.keymapper.mythic.MythicColors.Line
+private val Muted=xtr.keymapper.mythic.MythicColors.Muted
+private val Green=xtr.keymapper.mythic.MythicColors.Green
 private fun accent(name:String)=when(name){"A"->Green;"B"->Color(0xffff5c69);"X"->Color(0xff50c6ff);"Y"->Color(0xffffdf52);else->Violet}
 private fun number(v:Float?)=if(TesterWork.baselineFormatting)v?.let{"%.2f".format(Locale.ROOT,it)}?:"—"else DiagnosticNumbers.fixed(v)
 

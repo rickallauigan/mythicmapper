@@ -1,0 +1,74 @@
+{
+  "android_tests": {
+    "tests": 328,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "python_tests": 12,
+  "apk_sha256": "12b7cae2bc3eb1db071d4c7513d1808f393ab5c8437f544bbca576b81d626189",
+  "target": "owned emulator-5580, API36 x86_64; physical S10e untouched",
+  "jni": "PASS",
+  "ui": {
+    "status": "PASS",
+    "checks": "physical/simulated labels; favorites replace/clear; search; rename; duplicate UUID; delete confirm/cancel; all five slots; editor/Tester/Virtual navigation; ownership cleanup; portrait/landscape",
+    "source": "actual AVD accessibility; isolated disposable preferences",
+    "mapper_submissions": 0
+  },
+  "virtual_cases": [
+    {
+      "id": "basic-input",
+      "status": "PASS",
+      "final_pointers": 0,
+      "platform_touch_submissions": 0
+    },
+    {
+      "id": "beatrix-bennett",
+      "status": "PASS",
+      "final_pointers": 0,
+      "platform_touch_submissions": 0
+    },
+    {
+      "id": "kimmy-skill-resume",
+      "status": "PASS",
+      "final_pointers": 0,
+      "platform_touch_submissions": 0
+    },
+    {
+      "id": "lock-unlock",
+      "status": "PASS",
+      "final_pointers": 0,
+      "platform_touch_submissions": 0
+    },
+    {
+      "id": "disconnect-reconnect",
+      "status": "PASS",
+      "final_pointers": 0,
+      "platform_touch_submissions": 0
+    },
+    {
+      "id": "profile-switch",
+      "status": "PASS",
+      "final_pointers": 0,
+      "platform_touch_submissions": 0
+    },
+    {
+      "id": "diagnostics-exclusive",
+      "status": "PASS",
+      "final_pointers": 0,
+      "platform_touch_submissions": 0
+    }
+  ],
+  "memory_pss_kb": {
+    "before": 111922,
+    "after": 115813,
+    "after-repeat": 112471
+  },
+  "release_scope": "release manifest excludes simulator/UX debug entries; release Kotlin/Java compiled",
+  "overlay_editor_return": {
+    "status": "PASS",
+    "checks": "48dp target; real tap/drag; expand/collapse; no drag select; selection; recreation; position; overlay editor return/backdrop; ownership hide; rotation; cleanup",
+    "mapper_submissions": 0,
+    "source": "owned AVD UI; isolated preview data; no root"
+  }
+}

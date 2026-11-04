@@ -1,0 +1,110 @@
+[
+  {
+    "trial": 1,
+    "elapsed_seconds": 7.01,
+    "frames": [
+      "428"
+    ],
+    "janky": [
+      "13 (3.04%)"
+    ],
+    "percentiles_ms": [
+      [
+        "50th percentile",
+        "9ms"
+      ],
+      [
+        "90th percentile",
+        "17ms"
+      ],
+      [
+        "95th percentile",
+        "18ms"
+      ],
+      [
+        "99th percentile",
+        "27ms"
+      ]
+    ],
+    "pss_kb": [
+      "168212"
+    ],
+    "screen": [
+      1080,
+      2280
+    ],
+    "source": "physical S10e app rendering; debug; 12 alternating 250ms Home swipes; no physical display latency claim"
+  },
+  {
+    "trial": 2,
+    "elapsed_seconds": 7.882,
+    "frames": [
+      "460"
+    ],
+    "janky": [
+      "13 (2.83%)"
+    ],
+    "percentiles_ms": [
+      [
+        "50th percentile",
+        "16ms"
+      ],
+      [
+        "90th percentile",
+        "17ms"
+      ],
+      [
+        "95th percentile",
+        "18ms"
+      ],
+      [
+        "99th percentile",
+        "48ms"
+      ]
+    ],
+    "pss_kb": [
+      "182721"
+    ],
+    "screen": [
+      1080,
+      2280
+    ],
+    "source": "physical S10e app rendering; debug; 12 alternating 250ms Home swipes; no physical display latency claim"
+  },
+  {
+    "trial": 3,
+    "elapsed_seconds": 7.025,
+    "frames": [
+      "416"
+    ],
+    "janky": [
+      "11 (2.64%)"
+    ],
+    "percentiles_ms": [
+      [
+        "50th percentile",
+        "8ms"
+      ],
+      [
+        "90th percentile",
+        "16ms"
+      ],
+      [
+        "95th percentile",
+        "17ms"
+      ],
+      [
+        "99th percentile",
+        "20ms"
+      ]
+    ],
+    "pss_kb": [
+      "171762"
+    ],
+    "screen": [
+      1080,
+      2280
+    ],
+    "source": "physical S10e app rendering; debug; 12 alternating 250ms Home swipes; no physical display latency claim"
+  }
+]

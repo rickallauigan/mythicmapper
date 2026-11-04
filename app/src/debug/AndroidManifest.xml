@@ -2,8 +2,9 @@
     <!-- Bounded CPU wake lock only during the controlled screen-off validation. -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <application>
+        <activity android:name="xtr.keymapper.ux.PhysicalHomeLargeTextActivity" android:exported="true" android:configChanges="orientation|screenSize" android:theme="@style/Theme.XtMapper.MainActivity" android:label="Physical UI text-size acceptance" />
         <activity android:name="xtr.keymapper.ux.BubblePreviewActivity" android:exported="true" android:configChanges="orientation|screenSize" android:theme="@style/Theme.XtMapper" />
-        <activity android:name="xtr.keymapper.virtual.VirtualHomeActivity" android:exported="true" android:theme="@style/Theme.XtMapper" android:label="Development Home · recording only" />
+        <activity android:name="xtr.keymapper.virtual.VirtualHomeActivity" android:configChanges="orientation|screenSize" android:exported="true" android:theme="@style/Theme.XtMapper.MainActivity" android:label="Development Home · recording only" />
         <activity android:name="xtr.keymapper.virtual.VirtualG8Activity" android:exported="true" android:configChanges="orientation|screenSize" android:theme="@style/Theme.XtMapper" android:label="Virtual G8 — DEV ONLY">
             <intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter>
         </activity>
