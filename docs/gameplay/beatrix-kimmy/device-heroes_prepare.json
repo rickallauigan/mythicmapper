@@ -1,0 +1,27 @@
+{
+  "suite": "heroes_prepare",
+  "result": {
+    "created_profiles": 2,
+    "templates": [
+      {
+        "hero": "BEATRIX",
+        "created": true,
+        "enabled": false,
+        "calibrated": false,
+        "hero_policy_present": true
+      },
+      {
+        "hero": "KIMMY",
+        "created": true,
+        "enabled": false,
+        "calibrated": false,
+        "hero_policy_present": true
+      }
+    ],
+    "original_mapping_entries_preserved": 0,
+    "original_library_records_preserved": true,
+    "favorites_unchanged": true,
+    "activation_requested": false
+  },
+  "status": "PASS"
+}

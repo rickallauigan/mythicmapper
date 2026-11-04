@@ -1,0 +1,31 @@
+{
+  "apk_sha256": "a0487c2557f0cc1c9b48566471f1caba9696ba4a16b36b4c424397970144ce20",
+  "install_replace": "PASS",
+  "old_root_and_reader_gone_before_install": true,
+  "prior_logical_touches": 0,
+  "application_data_cleared": false,
+  "ci": "https://github.com/rickallauigan/mythicmapper/actions/runs/41461355489",
+  "ci_result": "success",
+  "runtime_checks": "PASS startup/JNI/ownership/rotation/normal exit and controlled zero-pointer process termination",
+  "cold_tester_then_home_same_process": "PASS; no fatal Java/native log or libsu reconfiguration exception",
+  "jni_device": "PASS 61206 parity vectors; max error zero; missing-library handling passes",
+  "ownership_and_rotation": "PASS; production start/resume blocked; zero touch submissions; root/reader stop on normal exit",
+  "shared_reader": "One existing root-owned reader may run while leased; mapping guard rejects its frames; no second reader introduced",
+  "live_reader_count": 1,
+  "live_reader_owned_by_mapper_root": true,
+  "controlled_process_termination": {
+    "method": "am force-stop only MythicMapper development app",
+    "prior_logical_touches": 0,
+    "prior_submission_samples": 0,
+    "root_and_reader_gone": true,
+    "limitation": "Does not prove active injection cleanup under arbitrary crash; test began with zero pointers"
+  },
+  "final_guided_screenshot": "final-guided.png",
+  "base_source_commit": "e05532f6eed3097ad7a2a5358fdff7c848227d1b",
+  "navigation_source_blob": "7c5612a5c790120b0be1bd251cc3f60ca2699359",
+  "navigation_fix": "Stable keys for all tab identities; actual S10e labels restored",
+  "source_note": "Built from working tree including final navigation fix, committed alongside this evidence; latest PR-head CI checked separately",
+  "final_navigation_build_runtime_suites": "PASS JNI, ownership, rotation, normal exit and repeated zero-pointer app-death cleanup",
+  "screenshots": "Actual final-navigation-build app windows; fresh task and complete PNG verified",
+  "installed_artifact_matches_build": true
+}

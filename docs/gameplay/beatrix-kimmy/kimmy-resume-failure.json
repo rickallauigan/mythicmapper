@@ -1,0 +1,73 @@
+{
+  "source": "Observed Linux/root controller and touch transitions in manual Kimmy Training",
+  "user_report": "Basic shooting did not resume after skills with right stick still held",
+  "resume_request_present": true,
+  "observed_handoffs": [
+    {
+      "skill_linux_code": "BTN_TR2",
+      "observed_skill_up_to_attack_down_ms": 0.0
+    },
+    {
+      "skill_linux_code": "BTN_TR2",
+      "observed_skill_up_to_attack_down_ms": 1.0
+    },
+    {
+      "skill_linux_code": "BTN_TR2",
+      "observed_skill_up_to_attack_down_ms": 0.0
+    },
+    {
+      "skill_linux_code": "BTN_TR2",
+      "observed_skill_up_to_attack_down_ms": 0.0
+    },
+    {
+      "skill_linux_code": "BTN_TR",
+      "observed_skill_up_to_attack_down_ms": 1.0
+    },
+    {
+      "skill_linux_code": "BTN_TL",
+      "observed_skill_up_to_attack_down_ms": 1.0
+    },
+    {
+      "skill_linux_code": "BTN_TR2",
+      "observed_skill_up_to_attack_down_ms": 1.0
+    },
+    {
+      "skill_linux_code": "BTN_TL",
+      "observed_skill_up_to_attack_down_ms": 0.0
+    },
+    {
+      "skill_linux_code": "BTN_TL",
+      "observed_skill_up_to_attack_down_ms": 2.0
+    },
+    {
+      "skill_linux_code": "BTN_TR2",
+      "observed_skill_up_to_attack_down_ms": 0.0
+    },
+    {
+      "skill_linux_code": "BTN_TL",
+      "observed_skill_up_to_attack_down_ms": 1.0
+    },
+    {
+      "skill_linux_code": "BTN_TL",
+      "observed_skill_up_to_attack_down_ms": 2.0
+    },
+    {
+      "skill_linux_code": "BTN_TL",
+      "observed_skill_up_to_attack_down_ms": 0.0
+    },
+    {
+      "skill_linux_code": "BTN_TL",
+      "observed_skill_up_to_attack_down_ms": 2.0
+    },
+    {
+      "skill_linux_code": "BTN_TR2",
+      "observed_skill_up_to_attack_down_ms": 1.0
+    },
+    {
+      "skill_linux_code": "BTN_TR2",
+      "observed_skill_up_to_attack_down_ms": 2.0
+    }
+  ],
+  "diagnosis": "Immediate 0-2 ms touch handoff observed; game touch ownership/gesture acceptance suspected, not proven until retest",
+  "raw_log_private": true
+}

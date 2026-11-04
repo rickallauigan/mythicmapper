@@ -1,0 +1,20 @@
+{
+  "suite": "screen",
+  "result": {
+    "screen": {
+      "screen_off_on": true,
+      "overlay_removed_on_screen_off": true,
+      "keyguard_locked_after_wake": true
+    },
+    "foreground_service_notification": true,
+    "notification_flags": 98,
+    "attached": true,
+    "favorite_slots": 5,
+    "expand_collapse": true,
+    "drag_reposition": true,
+    "editor_lease_hide_restore": true,
+    "activity_rotation_reclamp": true,
+    "gameplay_mapping_inactive": true
+  },
+  "status": "PASS"
+}

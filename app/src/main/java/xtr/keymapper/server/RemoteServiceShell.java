@@ -48,11 +48,8 @@ public class RemoteServiceShell {
                         break;
                 }
             }
-            new ProcessBuilder("setenforce", "0").inheritIO().start();
-            ServiceManager.addService("xtmapper", mService);
+            ServiceManager.addService("mythicmapper", mService);
 
-            new ProcessBuilder("pm", "grant", BuildConfig.APPLICATION_ID, "android.permission.SYSTEM_ALERT_WINDOW").inheritIO().start();
-            new ProcessBuilder("settings put system alert_window_bypass_low_ram 1".split("\\s+")).inheritIO().start();
 
             var fakeTouch = SystemProperties.get("persist.waydroid.fake_touch", null);
             if (fakeTouch != null && !fakeTouch.isBlank()) {

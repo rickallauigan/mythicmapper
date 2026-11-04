@@ -1,0 +1,38 @@
+{
+  "suite": "tester",
+  "result": {
+    "exclusive_root_lease": true,
+    "production_start_resume_blocked": true,
+    "injection_submission_delta": 0,
+    "observed_android_event_history": 0,
+    "passed_checks": [
+      "A",
+      "B",
+      "LT",
+      "RT",
+      "L3",
+      "R3",
+      "L stick \u00b7 all directions",
+      "L stick \u00b7 full range",
+      "R stick \u00b7 all directions",
+      "R stick \u00b7 full range",
+      "LT analog range",
+      "RT analog range"
+    ],
+    "applicable_checks": 23,
+    "held_at_end": [],
+    "queue_overflows": 0,
+    "source": "Automated ownership/lifecycle only; no synthetic controller events generated",
+    "configuration_retained_activity_and_lease": true,
+    "receipt_to_reducer": {
+      "n": 5,
+      "p50_ns": 254193,
+      "p95_ns": 9953384,
+      "p99_ns": 9953384
+    },
+    "root_exit_on_tester_exit": true,
+    "lease_released_on_exit": true,
+    "mapping_not_resumed": true
+  },
+  "status": "PASS"
+}

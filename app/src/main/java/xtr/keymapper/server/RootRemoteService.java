@@ -28,4 +28,10 @@ class RootRemoteService extends RootService {
         return mService;
     }
 
+    @Override
+    public void onDestroy() {
+        try { if (mService != null) mService.shutdown(); }
+        finally { mService = null; super.onDestroy(); }
+    }
+
 }

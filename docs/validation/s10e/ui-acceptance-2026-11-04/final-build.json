@@ -1,0 +1,15 @@
+{
+  "source_commit": "97e67ad",
+  "apk_sha256": "d8fff30fcb5694a1ec49b4694028c1011da994c241162fd97f5a5214f7228d3f",
+  "variant": "debug",
+  "installed_package": "io.github.rickallauigan.mythicmapper.debug",
+  "installed_apk_hash_matches": true,
+  "mapping_service_stopped": true,
+  "android_unit_tests": 330,
+  "failures": 0,
+  "skipped": 0,
+  "avd_scenarios_passed": 7,
+  "avd_home": "PASS",
+  "avd_bubble": "PASS",
+  "release_manifest_debug_entries_absent": true
+}

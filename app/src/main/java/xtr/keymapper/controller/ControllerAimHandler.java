@@ -8,14 +8,24 @@ import xtr.keymapper.mouse.HeldAimHandler.TouchSink;
 
 /** Absolute right-stick aiming. No mouse emulation and no left-stick touch conversion. */
 public final class ControllerAimHandler {
+    /** Keeps the shared math/aim class usable by plain-JVM JNI parity checks. */
+    public interface AnchorScheduler {
+        void after(Runnable task, int delayMs);
+        void cancel(Runnable task);
+    }
     public static final int FIRST_POINTER_ID = 50;
     private final List<AimKey> configs;
     private final TouchSink sink;
     private final float width, height;
     private final Map<String, State> held = new LinkedHashMap<>();
     private float x, y;
+    private String focus;
+    /** Optional hero priority; ordinary profiles retain latest-held ownership. */
+    public synchronized void focus(String code) { focus=code; }
     private static final class State {
         final AimKey config; final int pointer;
+        AnchorScheduler scheduler;
+        Runnable pendingAim;
         float x, y;
         State(AimKey config, int pointer) { this.config = config; this.pointer = pointer; x = config.x; y = config.y; }
     }
@@ -38,6 +48,14 @@ public final class ControllerAimHandler {
         return new float[]{vx, vy};
     }
     public synchronized boolean trigger(String code, int action) {
+        return trigger(code, action, null, 0);
+    }
+    /** Optional acquisition phase for release-fired repeated attacks. Axes still track
+     * the latest physical stick, but the contact stays at its anchor until acquired. */
+    public synchronized boolean triggerAfterAnchor(String code, AnchorScheduler scheduler, int delayMs) {
+        return trigger(code, 1, scheduler, delayMs);
+    }
+    private boolean trigger(String code, int action, AnchorScheduler scheduler, int delayMs) {
         for (int i = 0; i < configs.size(); i++) {
             AimKey config = configs.get(i);
             if (!config.stick || !config.code.equals(code)) continue;
@@ -45,10 +63,20 @@ public final class ControllerAimHandler {
                 State state = new State(config, FIRST_POINTER_ID + i);
                 held.put(code, state);
                 sink.inject(state.x, state.y, 1, state.pointer);
-                move(state); // Includes stick already displaced when the shoulder goes down.
+                if (scheduler != null && delayMs > 0) {
+                    state.scheduler = scheduler;
+                    state.pendingAim = () -> {
+                        synchronized (ControllerAimHandler.this) {
+                            if (held.get(code) != state) return;
+                            state.pendingAim = null;
+                            if (focus == null || focus.equals(code)) move(state);
+                        }
+                    };
+                    scheduler.after(state.pendingAim, delayMs);
+                } else if(focus==null||focus.equals(code))move(state);
             } else if (action == 0) {
                 State state = held.remove(code);
-                if (state != null) sink.inject(state.x, state.y, 0, state.pointer);
+                if (state != null) { cancelPending(state); sink.inject(state.x, state.y, 0, state.pointer); }
             }
             return true;
         }
@@ -59,11 +87,12 @@ public final class ControllerAimHandler {
     public synchronized void axes(float x, float y) {
         this.x = x; this.y = y;
         // Latest held action owns the stick. Other held pointers remain independently releasable.
-        State latest = null;
-        for (State state : held.values()) latest = state;
+        State latest = held.get(focus);
+        if(latest==null)for (State state : held.values()) latest = state;
         if (latest != null) move(latest);
     }
     private void move(State state) {
+        if (state.pendingAim != null) return;
         AimKey c = state.config;
         float[] v = vector(x, y, c.deadZone, c.xSensitivity, c.ySensitivity, c.invertY);
         float dx = v[0] * c.radius, dy = v[1] * c.radius;
@@ -81,7 +110,11 @@ public final class ControllerAimHandler {
         }
     }
     public synchronized void reset() {
-        for (State state : held.values()) sink.inject(state.x, state.y, 0, state.pointer);
-        held.clear(); x = y = 0;
+        for (State state : held.values()) { cancelPending(state); sink.inject(state.x, state.y, 0, state.pointer); }
+        held.clear(); focus=null; x = y = 0;
+    }
+    private void cancelPending(State state) {
+        if (state.pendingAim != null) state.scheduler.cancel(state.pendingAim);
+        state.pendingAim = null;
     }
 }

@@ -50,7 +50,7 @@ public class ConcurrentControllerInputTest {
                 for(int i=0;i<f.ids.size();i++) {
                     assertTrue(f.ids.get(i)>=0 && f.ids.get(i)<32);
                     assertTrue(Float.isFinite(f.xs.get(i))); assertTrue(Float.isFinite(f.ys.get(i)));
-                    if(f.action!=MotionEvent.ACTION_UP && !(f.action==MotionEvent.ACTION_POINTER_UP && i==f.index))
+                    if(f.action!=MotionEvent.ACTION_CANCEL && f.action!=MotionEvent.ACTION_UP && !(f.action==MotionEvent.ACTION_POINTER_UP && i==f.index))
                         assertTrue("Held pointer must have pressure",f.pressures.get(i)>0);
                 }
                 assertEquals(f.ids.size(),new HashSet<>(f.ids).size());
@@ -61,6 +61,7 @@ public class ConcurrentControllerInputTest {
                     case MotionEvent.ACTION_DOWN -> { assertTrue(live.isEmpty()); down=f.down; assertTrue(live.add(id)); }
                     case MotionEvent.ACTION_POINTER_DOWN -> { assertFalse(live.isEmpty()); assertTrue(live.add(id)); }
                     case MotionEvent.ACTION_MOVE -> assertFalse(live.isEmpty());
+                    case MotionEvent.ACTION_CANCEL -> { assertEquals(live,new HashSet<>(f.ids));live.clear(); }
                     case MotionEvent.ACTION_POINTER_UP, MotionEvent.ACTION_UP -> {
                         assertEquals(live,new HashSet<>(f.ids)); assertTrue(live.remove(id));
                         if(f.action==MotionEvent.ACTION_UP) assertTrue(live.isEmpty());
@@ -68,7 +69,7 @@ public class ConcurrentControllerInputTest {
                     }
                     default -> fail("Unexpected touch action "+f.action);
                 }
-                if(f.action!=MotionEvent.ACTION_UP && f.action!=MotionEvent.ACTION_POINTER_UP)
+                if(f.action!=MotionEvent.ACTION_CANCEL && f.action!=MotionEvent.ACTION_UP && f.action!=MotionEvent.ACTION_POINTER_UP)
                     assertEquals(live,new HashSet<>(f.ids));
                 assertEquals(down,f.down); assertTrue(f.time>=f.down);
             }
@@ -82,17 +83,24 @@ public class ConcurrentControllerInputTest {
         final Object originalManager=Input.inputManager;
         final InputService runtime;
         final ControllerDeviceMonitor monitor;
-        Harness() throws Exception {
+        KeymapProfile reloadProfile;
+        final Map<String,long[]> nodes=new HashMap<>(Map.of("pad",new long[]{1,2,0,255,128,0,255,128},"other",new long[]{3,4,0,255,128,0,255,128}));
+        Harness() throws Exception {this(Files.readString(Path.of("../profiles/mlbb/samsung-s10e/mlbb-gamesir-g8-v0.3-tuned.txt")));}
+        Harness(String text) throws Exception {
             Input.injectInputEventMethod=Recorder.class.getMethod("inject",InputEvent.class,int.class);
             Input.inputManager=recorder; Input.setDisplayIdMethod=null;
             KeymapConfig config=new KeymapConfig(null);config.pointerMode=KeymapConfig.POINTER_OVERLAY;
-            IRemoteServiceCallback callback=(IRemoteServiceCallback)Proxy.newProxyInstance(getClass().getClassLoader(),new Class[]{IRemoteServiceCallback.class},(p,m,a)->null);
+            reloadProfile=ProfileConfiguration.parse(text);
+            IRemoteServiceCallback callback=(IRemoteServiceCallback)Proxy.newProxyInstance(getClass().getClassLoader(),new Class[]{IRemoteServiceCallback.class},(p,m,a)->switch(m.getName()){
+                case "requestKeymapProfile" -> reloadProfile;
+                case "requestKeymapConfig" -> config;
+                default -> null;
+            });
             // Read existing committed fixture; no invented gameplay coordinates.
-            String text=Files.readString(Path.of("../profiles/mlbb/samsung-s10e/mlbb-gamesir-g8-v0.3-tuned.txt"));
-            runtime=new InputService(ProfileConfiguration.parse(text),config,callback,2280,1080,null,true,0);
+            runtime=new InputService(reloadProfile,config,callback,2280,1080,null,true,0);
             // Keep production repeat state machine but make its scheduler deterministic on the host.
             ReflectionHelpers.setField(runtime.getKeyEventHandler(),"repeatKeys",new RepeatKeyHandler(new Handler(Looper.getMainLooper()),runtime::injectEvent));
-            monitor=new ControllerDeviceMonitor(runtime,2280,1080,()->Map.of("pad",new long[]{1,2,0,255,128,0,255,128},"other",new long[]{3,4,0,255,128,0,255,128}));
+            monitor=new ControllerDeviceMonitor(runtime,2280,1080,()->new HashMap<>(nodes));
             monitor.start();
         }
         void key(String code,boolean down) { assertTrue(monitor.event("pad","EV_KEY "+code+(down?" DOWN":" UP"))); }
@@ -181,6 +189,206 @@ public class ConcurrentControllerInputTest {
             h.key("BTN_TR2",false);assertEquals(2,h.live().keySet().stream().filter(p->p>=50&&p<58).count());
             h.key("BTN_TL2",false);h.key("BTN_TR",false);h.key("BTN_TL",false);
             assertTrue(h.live().isEmpty());h.recorder.validLifecycle();
+        }
+    }
+
+    private String hero(String name,boolean pulse){
+        return String.join("\n",xtr.keymapper.mythic.HeroTrainingProfiles.INSTANCE.draft(xtr.keymapper.controller.HeroGameplayConfig.Hero.valueOf(name)))
+            .replace("HOLD_RELEASE 0 0",pulse?"PULSE 150 1":"HOLD_RELEASE 0 1")+"\nENABLED";
+    }
+    @Test public void beatrixSharedSpellAndSimultaneousSkillsUseIndependentPointers() throws Exception {
+        try(var h=new Harness(hero("BEATRIX",false))){
+            h.axis("ABS_RX","ff");assertTrue(h.recorder.frames.isEmpty());
+            h.key("BTN_TL2",true);h.key("BTN_TR",true);h.key("BTN_TR2",true);h.key("BTN_TL",true);
+            h.key("BTN_EAST",true);int before=h.recorder.frames.size();h.key("BTN_THUMBL",true);assertEquals(before,h.recorder.frames.size());
+            h.key("BTN_GAMEPAD",true);h.key("BTN_WEST",true);
+            assertEquals(7,h.recorder.frames.get(h.recorder.frames.size()-1).ids.size());
+            before=h.recorder.frames.size();h.key("BTN_EAST",false);assertEquals(before,h.recorder.frames.size());
+            h.key("BTN_THUMBL",false);assertEquals(MotionEvent.ACTION_POINTER_UP,h.recorder.frames.get(h.recorder.frames.size()-1).action);
+            h.monitor.stop();h.runtime.stop();h.recorder.validLifecycle();
+        }
+    }
+    @Test public void beatrixPulseSurvivesAxisTrafficAndCancelsOnReleaseAndProfileStop() throws Exception {
+        try(var h=new Harness(hero("BEATRIX",true))){
+            h.key("BTN_TL2",true);
+            for(int i=0;i<40;i++){h.axis("ABS_RX",i%2==0?"ff":"c0");h.tick(10);}
+            assertTrue(h.recorder.frames.stream().filter(f->f.action==MotionEvent.ACTION_DOWN).count()>=3);
+            h.key("BTN_TL2",false);int end=h.recorder.frames.size();h.tick(500);assertEquals(end,h.recorder.frames.size());
+            h.key("BTN_TL2",true);h.monitor.stop();h.runtime.stop();end=h.recorder.frames.size();h.tick(500);assertEquals(end,h.recorder.frames.size());h.recorder.validLifecycle();
+        }
+        try(var next=new Harness(hero("KIMMY",false))){assertTrue(next.recorder.frames.isEmpty());next.monitor.stop();next.runtime.stop();}
+    }
+    @Test public void beatrixRepeatedAttackAcquiresAnchorBeforeAimingAtNeighboringControls() throws Exception {
+        try(var h=new Harness(hero("BEATRIX",true).replace(
+                "STICK_AIM BTN_TL2 1981.08 946.58 80 ","STICK_AIM BTN_TL2 1981.08 946.58 180 "))){
+            var attack=h.runtime.getKeymapProfile().aimKeys.stream().filter(a->a.code.equals("BTN_TL2")).findFirst().orElseThrow();
+            h.axis("ABS_RX","00");h.axis("ABS_RY","00");h.key("BTN_TL2",true);
+            assertEquals("No same-turn drag before anchor acquisition",1,h.recorder.frames.size());
+            // Even continuously changing stick samples must not move a newly pressed
+            // contact onto neighboring skill hit areas during acquisition.
+            for(int i=0;i<50;i++){h.axis("ABS_RX",i%2==0?"00":"ff");h.tick(10);}
+            h.key("BTN_TL2",false);
+            long down=-1;boolean moved=false;int complete=0;
+            for(Frame f:h.recorder.frames){
+                if(f.action==MotionEvent.ACTION_DOWN){
+                    assertEquals(attack.x,f.xs.get(0),.001f);assertEquals(attack.y,f.ys.get(0),.001f);
+                    down=f.time;moved=false;
+                }else if(f.action==MotionEvent.ACTION_MOVE){
+                    assertTrue("Anchor must persist before moving",f.time-down>=40);
+                    assertTrue(Math.hypot(f.xs.get(0)-attack.x,f.ys.get(0)-attack.y)<=180.001);
+                    moved=true;
+                }else if(f.action==MotionEvent.ACTION_UP&&f.time-down>=80){
+                    assertTrue("Complete pulse includes aimed phase",moved);complete++;
+                }
+            }
+            assertTrue(complete>=3);h.recorder.validLifecycle();int end=h.recorder.frames.size();h.tick(500);assertEquals(end,h.recorder.frames.size());
+        }
+    }
+    @Test public void pendingBeatrixAimCannotRunAfterEarlyReleaseSkillPriorityOrDisconnect() throws Exception {
+        for(String interrupt:List.of("release","skill","disconnect","stop"))try(var h=new Harness(hero("BEATRIX",true))){
+            h.axis("ABS_RX","ff");h.key("BTN_TL2",true);h.tick(20);
+            switch(interrupt){
+                case "release" -> h.key("BTN_TL2",false);
+                case "skill" -> h.key("BTN_TR",true);
+                case "disconnect" -> h.monitor.event("pad","EV_SYN SYN_DROPPED 00000000");
+                case "stop" -> h.monitor.stop();
+            }
+            int end=h.recorder.frames.size();h.tick(500);assertEquals("No stale aimed movement after "+interrupt,end,h.recorder.frames.size());
+            if(!interrupt.equals("stop"))h.key("BTN_TL2",false);if(interrupt.equals("skill"))h.key("BTN_TR",false);
+            h.monitor.stop();h.runtime.stop();h.recorder.validLifecycle();
+        }
+    }
+    @Test public void kimmySkillPriorityCenteringAndDisconnectReleaseEveryPointer() throws Exception {
+        try(var h=new Harness(hero("KIMMY",false))){
+            h.axis("ABS_X","ff");assertTrue(h.recorder.frames.isEmpty()); // native movement is untouched
+            h.axis("ABS_RX","ff");assertEquals(MotionEvent.ACTION_DOWN,h.recorder.frames.get(0).action);
+            h.key("BTN_TL2",true);int count=h.recorder.frames.size();h.key("BTN_TL2",false);assertEquals(count,h.recorder.frames.size());
+            h.key("BTN_TR",true);assertEquals(MotionEvent.ACTION_UP,h.recorder.frames.get(count).action);
+            h.key("BTN_TL",true);h.key("BTN_TR",false);h.axis("ABS_RY","ff");
+            h.key("BTN_TL",false);assertTrue(h.live().isEmpty());h.tick(80);
+            assertEquals(MotionEvent.ACTION_MOVE,h.recorder.frames.get(h.recorder.frames.size()-1).action);
+            h.key("BTN_GAMEPAD",true);h.key("BTN_WEST",true);h.nodes.clear();h.tick(250);
+            assertEquals(MotionEvent.ACTION_UP,h.recorder.frames.get(h.recorder.frames.size()-1).action);h.recorder.validLifecycle();
+            count=h.recorder.frames.size();h.nodes.put("pad",new long[]{5,6,0,255,255,0,255,128});h.tick(250);h.axis("ABS_RX","ff");assertEquals(count,h.recorder.frames.size());
+            h.axis("ABS_RX","80");h.axis("ABS_RY","80");h.axis("ABS_RX","ff");assertTrue(h.recorder.frames.size()>count);
+            h.monitor.stop();h.runtime.stop();h.recorder.validLifecycle();
+        }
+    }
+    @Test public void kimmyShootingStaysOneContinuousContactWithoutLtOrRepeatTimer() throws Exception {
+        try(var h=new Harness(hero("KIMMY",false))){
+            h.axis("ABS_RX","c0");
+            assertEquals(1,h.live().size());
+            h.key("BTN_TL2",true);int before=h.recorder.frames.size();h.key("BTN_TL2",false);
+            assertEquals("LT must not gate or retrigger Kimmy shooting",before,h.recorder.frames.size());
+            for(int i=0;i<30;i++){
+                h.axis("ABS_RX",i%2==0?"ff":"c0");h.axis("ABS_RY",i%2==0?"90":"a0");h.tick(20);
+                assertEquals("Aim updates retain one contact",1,h.live().size());
+            }
+            before=h.recorder.frames.size();h.tick(5000);
+            assertEquals("A displaced stick has no attack-repeat timer",before,h.recorder.frames.size());
+            assertEquals(1,h.recorder.frames.stream().filter(f->f.action==MotionEvent.ACTION_DOWN).count());
+            assertEquals(0,h.recorder.frames.stream().filter(f->f.action==MotionEvent.ACTION_UP).count());
+            h.axis("ABS_RX","80");h.axis("ABS_RY","80");assertTrue(h.live().isEmpty());
+            assertEquals(1,h.recorder.frames.stream().filter(f->f.action==MotionEvent.ACTION_UP).count());
+            before=h.recorder.frames.size();h.tick(1000);assertEquals(before,h.recorder.frames.size());h.recorder.validLifecycle();
+        }
+    }
+    @Test public void kimmyRuntimeStopCancelsOnlyOwnedGestureAndBennettKeepsRelease() throws Exception {
+        for(String hero:List.of("KIMMY","BEATRIX"))try(var h=new Harness(hero(hero,false))){
+            ReflectionHelpers.setField(h.runtime,"controllers",h.monitor);
+            h.axis("ABS_RX","ff");if(hero.equals("BEATRIX"))h.key("BTN_TL2",true);
+            assertEquals(1,h.live().size());h.runtime.stop();assertTrue(h.live().isEmpty());
+            Frame end=h.recorder.frames.get(h.recorder.frames.size()-1);
+            assertEquals(hero.equals("KIMMY")?MotionEvent.ACTION_CANCEL:MotionEvent.ACTION_UP,end.action);
+            int count=h.recorder.frames.size();h.tick(1000);assertEquals(count,h.recorder.frames.size());
+            h.runtime.stop();assertEquals(count,h.recorder.frames.size());h.recorder.validLifecycle();
+        }
+    }
+    @Test public void kimmySkillReleaseSeparatesTouchesAndReacquiresUsingLatestAim() throws Exception {
+        for(String skill:List.of("BTN_TR","BTN_TR2","BTN_TL"))try(var h=new Harness(hero("KIMMY",false))){
+            var attack=h.runtime.getKeymapProfile().aimKeys.stream().filter(a->a.code.equals("BTN_TL2")).findFirst().orElseThrow();
+            h.axis("ABS_RX","ff");h.key(skill,true);h.tick(100);h.key(skill,false);
+            Frame up=h.recorder.frames.get(h.recorder.frames.size()-1);assertEquals(MotionEvent.ACTION_UP,up.action);
+            assertTrue(h.live().isEmpty());int end=h.recorder.frames.size();
+            h.tick(39);h.axis("ABS_RX","00");assertEquals(end,h.recorder.frames.size());
+            h.tick(1);Frame down=h.recorder.frames.get(end);assertEquals(MotionEvent.ACTION_DOWN,down.action);
+            assertTrue(down.time-up.time>=40);assertEquals(attack.x,down.xs.get(0),.001f);assertEquals(attack.y,down.ys.get(0),.001f);
+            end=h.recorder.frames.size();h.axis("ABS_RY","00");h.tick(39);assertEquals(end,h.recorder.frames.size());
+            h.tick(1);Frame moved=h.recorder.frames.get(end);assertEquals(MotionEvent.ACTION_MOVE,moved.action);
+            assertTrue(moved.time-down.time>=40);assertTrue(moved.xs.get(0)<attack.x);assertTrue(moved.ys.get(0)<attack.y);
+            end=h.recorder.frames.size();h.tick(1000);assertEquals("Resumption is not repetition",end,h.recorder.frames.size());
+            h.axis("ABS_RX","80");h.axis("ABS_RY","80");assertTrue(h.live().isEmpty());h.recorder.validLifecycle();
+        }
+    }
+    @Test public void kimmyResumeCancellationCoversReleaseGapAndAnchorPhase() throws Exception {
+        for(int elapsed:List.of(20,60))for(String interrupt:List.of("neutral","recall","skill","disconnect","stop","reload"))
+            try(var h=new Harness(hero("KIMMY",false))){
+                h.axis("ABS_RX","ff");h.key("BTN_TR2",true);h.key("BTN_TR2",false);h.tick(elapsed);
+                switch(interrupt){
+                    case "neutral" -> h.axis("ABS_RX","80");
+                    case "recall" -> {h.key("BTN_WEST",true);h.key("BTN_WEST",false);}
+                    case "skill" -> h.key("BTN_TR",true);
+                    case "disconnect" -> h.monitor.event("pad","EV_SYN SYN_DROPPED 00000000");
+                    case "stop" -> h.monitor.stop();
+                    case "reload" -> {ReflectionHelpers.setField(h.runtime,"controllers",h.monitor);h.runtime.reloadKeymap();}
+                }
+                int end=h.recorder.frames.size();h.tick(500);
+                assertEquals("No stale touch after "+interrupt+" at "+elapsed+"ms",end,h.recorder.frames.size());
+                if(interrupt.equals("recall")){
+                    h.axis("ABS_RX","c0");assertEquals(end,h.recorder.frames.size());
+                    h.axis("ABS_RX","80");h.axis("ABS_RX","ff");assertFalse(h.live().isEmpty());
+                }
+                h.monitor.stop();h.runtime.stop();h.recorder.validLifecycle();
+            }
+    }
+    @Test public void kimmySharedSpellWaitsForFinalOwnerBeforeOneShotResume() throws Exception {
+        try(var h=new Harness(hero("KIMMY",false))){
+            h.axis("ABS_RX","ff");h.key("BTN_EAST",true);h.key("BTN_THUMBL",true);
+            h.key("BTN_EAST",false);int end=h.recorder.frames.size();h.tick(200);
+            assertEquals(end,h.recorder.frames.size());assertEquals(1,h.live().size());
+            h.key("BTN_THUMBL",false);assertTrue(h.live().isEmpty());h.tick(80);assertEquals(1,h.live().size());
+            assertEquals(3,h.recorder.frames.stream().filter(f->f.action==MotionEvent.ACTION_DOWN).count());
+            end=h.recorder.frames.size();h.tick(500);assertEquals(end,h.recorder.frames.size());
+            h.monitor.stop();h.runtime.stop();h.recorder.validLifecycle();
+        }
+    }
+    @Test public void bennett400msAnd180pxRemainUnchangedByKimmyHandoff() throws Exception {
+        String profile=hero("BEATRIX",true).replace("BEATRIX NIBIRU PULSE 150 1","BEATRIX BENNETT PULSE 400 1")
+            .replace("STICK_AIM BTN_TL2 1981.08 946.58 80 ","STICK_AIM BTN_TL2 1981.08 946.58 180 ");
+        try(var h=new Harness(profile)){
+            assertEquals(400,h.runtime.getKeymapProfile().heroGameplay.repeatMs);
+            assertEquals(180,h.runtime.getKeymapProfile().aimKeys.stream().filter(a->a.code.equals("BTN_TL2")).findFirst().orElseThrow().radius,.001f);
+            h.axis("ABS_RX","ff");h.key("BTN_TL2",true);Frame first=h.recorder.frames.get(0);
+            h.tick(40);assertEquals(MotionEvent.ACTION_MOVE,h.recorder.frames.get(1).action);
+            h.tick(40);assertEquals(MotionEvent.ACTION_UP,h.recorder.frames.get(2).action);
+            h.tick(319);assertEquals(3,h.recorder.frames.size());h.tick(1);
+            Frame next=h.recorder.frames.get(3);assertEquals(MotionEvent.ACTION_DOWN,next.action);assertEquals(400,next.time-first.time);
+            h.key("BTN_TL2",false);int end=h.recorder.frames.size();h.tick(500);assertEquals(end,h.recorder.frames.size());h.recorder.validLifecycle();
+        }
+    }
+    @Test public void kimmyRecallDoesNotResumeShootingUntilNeutralAndSynDroppedCleansUp() throws Exception {
+        try(var h=new Harness(hero("KIMMY",false))){
+            h.axis("ABS_RX","ff");h.key("BTN_WEST",true);h.key("BTN_WEST",false);int stopped=h.recorder.frames.size();
+            h.axis("ABS_RX","c0");assertEquals(stopped,h.recorder.frames.size());
+            h.axis("ABS_RX","80");h.axis("ABS_RX","ff");assertTrue(h.recorder.frames.size()>stopped);
+            h.monitor.event("pad","EV_SYN SYN_DROPPED 00000000");h.recorder.validLifecycle();
+            h.monitor.stop();h.runtime.stop();
+        }
+    }
+
+    @Test public void actualProfileReloadCancelsOldHeroPulseAndReleasesSharedOwners() throws Exception {
+        try(var h=new Harness(hero("BEATRIX",true))){
+            ReflectionHelpers.setField(h.runtime,"controllers",h.monitor);
+            h.key("BTN_TL2",true);h.key("BTN_EAST",true);h.key("BTN_THUMBL",true);h.key("BTN_GAMEPAD",true);
+            assertFalse(h.live().isEmpty());
+            h.reloadProfile=ProfileConfiguration.parse(hero("KIMMY",false));h.runtime.reloadKeymap();
+            assertTrue(h.live().isEmpty());h.recorder.validLifecycle();int stopped=h.recorder.frames.size();
+            h.tick(500);assertEquals(stopped,h.recorder.frames.size());assertFalse(h.monitor.event("pad","EV_KEY BTN_TL2 DOWN"));
+            assertEquals(xtr.keymapper.controller.HeroGameplayConfig.Hero.KIMMY,h.runtime.getKeymapProfile().heroGameplay.hero);
+            var next=new ControllerDeviceMonitor(h.runtime,2280,1080,()->new HashMap<>(h.nodes));
+            ReflectionHelpers.setField(h.runtime,"controllers",next);next.start();
+            next.event("pad","EV_ABS ABS_RX ff");next.event("pad","EV_SYN SYN_REPORT 00000000");
+            assertFalse(h.live().isEmpty());next.stop();h.runtime.stop();h.recorder.validLifecycle();
         }
     }
 

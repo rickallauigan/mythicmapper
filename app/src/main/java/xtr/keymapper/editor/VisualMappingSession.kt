@@ -31,6 +31,12 @@ class VisualMappingSession(val profileId: String, saved: Set<String>) {
 
     fun replace(code: String, replacement: String?, confirmTypeChange: Boolean = false) {
         require(code != "NATIVE_LEFT" && code != "BTN_MODE" && code != "BTN_START") { "Native/reserved control is not editable here." }
+        if(profile.heroGameplay!=null){
+            require(code in setOf("BTN_GAMEPAD","BTN_WEST","BTN_EAST","BTN_TL2","BTN_TR","BTN_TR2","BTN_TL")){"Hero controls: edit B for the shared B/L3 spell; native movement and right-stick policy are reserved"}
+            require(replacement!=null){"Hero controls are required; clone a generic profile for another layout"}
+            val mustAim=code !in setOf("BTN_GAMEPAD","BTN_WEST")
+            require(replacement.startsWith(if(mustAim)"STICK_AIM " else "$code ")){"Preserve hero aiming; change touch behavior in Hero training setup"}
+        }
         val old = bindings(code)
         require(old.size <= 1) { "Conflicting bindings: resolve in Advanced Editor first." }
         val oldLine = old.singleOrNull()
@@ -64,6 +70,7 @@ class VisualMappingSession(val profileId: String, saved: Set<String>) {
         return "$code $x $y 0"
     }
     fun chord(modifier: String, trigger: String, x: Float?, y: Float?) {
+        require(profile.heroGameplay==null){"Hero controls reserve their input ownership"}
         val m = ControllerBindings.canonical(modifier); val t = ControllerBindings.canonical(trigger)
         val old = lines.filter { val d=it.split(Regex("\\s+")); d.size==6 && d[0]=="CHORD" && ControllerBindings.canonical(d[1])==m && ControllerBindings.canonical(d[2])==t }
         val replacement = if (x == null && y == null) emptyList() else {

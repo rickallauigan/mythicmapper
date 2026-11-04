@@ -1,0 +1,158 @@
+{
+  "date": "2026-11-03",
+  "base_commit": "7efcf3540038dc1e72055688084572c18ea57478",
+  "target": "owned AVD only; no S10e commands",
+  "avd_name": "MythicMapper_API36_G8",
+  "emulator_version": "37.1.11.0",
+  "image": "system-images;android-36;default;x86_64",
+  "image_revision": 2,
+  "android": {
+    "api": "36",
+    "abi": "x86_64",
+    "qemu": "1",
+    "physical_g8_names_in_emulator_input": 0
+  },
+  "android_unit_tests": {
+    "tests": 322,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "ui_smoke": {
+    "status": "PASS",
+    "checks": [
+      "VirtualHomeActivity",
+      "offline-library-and-five-slots",
+      "TesterActivity",
+      "EditorActivity",
+      "virtual-ui-orientation"
+    ],
+    "source": "AVD UI and recording sink; not physical gameplay",
+    "platform_touch_submissions": 0,
+    "root_required": false
+  },
+  "cases": [
+    {
+      "id": "basic-input",
+      "status": "PASS",
+      "recorded_touches": 36,
+      "final_pointers": 0,
+      "platform_submissions": 0
+    },
+    {
+      "id": "beatrix-bennett",
+      "status": "PASS",
+      "recorded_touches": 10,
+      "final_pointers": 0,
+      "platform_submissions": 0
+    },
+    {
+      "id": "diagnostics-exclusive",
+      "status": "PASS",
+      "recorded_touches": 6,
+      "final_pointers": 0,
+      "platform_submissions": 0
+    },
+    {
+      "id": "disconnect-reconnect",
+      "status": "PASS",
+      "recorded_touches": 9,
+      "final_pointers": 0,
+      "platform_submissions": 0
+    },
+    {
+      "id": "kimmy-skill-resume",
+      "status": "PASS",
+      "recorded_touches": 12,
+      "final_pointers": 0,
+      "platform_submissions": 0
+    },
+    {
+      "id": "lock-unlock",
+      "status": "PASS",
+      "recorded_touches": 6,
+      "final_pointers": 0,
+      "platform_submissions": 0
+    },
+    {
+      "id": "profile-switch",
+      "status": "PASS",
+      "recorded_touches": 8,
+      "final_pointers": 0,
+      "platform_submissions": 0
+    }
+  ],
+  "rust_tests": 5,
+  "native_suites": 3,
+  "jni_vectors": 242406,
+  "actual_kotlin_jni": "PASS including missing-library",
+  "historical_fixture_hashes": "12/12",
+  "profile_generator_tests": 12,
+  "python_quality_tests": 11,
+  "lint_build_inventory": "PASS",
+  "release_merged_manifest_virtual_entries": 0,
+  "production_main_and_profiles_diff_from_base": false,
+  "apk_sha256": "691eb7db9892c03cbd0ceaa6233ba40fd7354d94adf4c22b63b3989b0a0c16e5",
+  "physical_gameplay": "NOT TESTED; issue20 deferred",
+  "avd_jni": {
+    "suite": "jni",
+    "result": {
+      "abi": "x86_64",
+      "process_64bit": true,
+      "parity_vectors": 61206,
+      "max_abs_error": 0,
+      "missing_library_error_caught": true,
+      "invalid_input_neutral": true,
+      "java_reference_math": {
+        "n": 20000,
+        "p50_ns": 426,
+        "p95_ns": 1007,
+        "p99_ns": 2917
+      },
+      "rust_jni_reference_math": {
+        "n": 20000,
+        "p50_ns": 109,
+        "p95_ns": 156,
+        "p99_ns": 176
+      },
+      "measurement": "Device math microbenchmark; timer/sink overhead included; no physical display latency or hot-path migration"
+    },
+    "status": "PASS"
+  },
+  "cold_stop_restart": "PASS, owned process only; Bennett/Kimmy replay passed again",
+  "latest_boot_recovery": {
+    "systemui_startup_anr_observed": true,
+    "action": "Verified owned-AVD SystemUI Wait; full JNI/UI/7-case suite rerun PASS",
+    "platform_clean_boot": "NOT CLAIMED"
+  },
+  "mapper_submission_scope": "Recording sink only; ordinary ADB UI navigation/recovery is separate",
+  "hosted_ci": {
+    "source_commit": "3d985e3f6172d1f1ced160ecc45a961c44226fcd",
+    "host_validation": {
+      "status": "PASS",
+      "run": "https://github.com/rickallauigan/mythicmapper/actions/runs/41627465766"
+    },
+    "avd_validation": {
+      "status": "PASS",
+      "run": "https://github.com/rickallauigan/mythicmapper/actions/runs/41627465742",
+      "emulator_version": "Android emulator version 37.2.13.0 (build_id 16740729) (CL:N/A)",
+      "api": 36,
+      "abi": "x86_64",
+      "jni_vectors": 61206,
+      "jni_max_error": 0,
+      "ui_smoke": "PASS",
+      "all_seven_cases": "PASS; zero final pointers",
+      "systemui_recovery_used": false,
+      "physical_device_dependency": false
+    }
+  },
+  "final_local_validation": "322 Android/12 Python; JNI/UI/7-case PASS; root-free debug Home adapter",
+  "release_compile": "Kotlin and Java PASS; no simulator in release Kotlin classes or merged manifest",
+  "duplicate_resume_regression": {
+    "before_fix": "Reproduced Cleanup leaked contacts under held Bennett repeat",
+    "after_fix": "PASS; idempotent owner and locked-resume cleanup; covered on host and AVD"
+  },
+  "fixture_inputs": "Declared as Gradle test inputs",
+  "robolectric_ci_http429": "Canonical Maven Central URL + scoped SDK jar cache; no tests disabled",
+  "jni_abi_fix_commit": "c20f709"
+}

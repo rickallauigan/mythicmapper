@@ -1,5 +1,8 @@
 package xtr.keymapper.profiles
 
+import android.app.KeyguardManager
+import android.os.PowerManager
+import android.content.Intent
 import android.content.Context
 import android.hardware.input.InputManager
 import android.os.Binder
@@ -35,6 +38,8 @@ class ForegroundProfileWorkflowTest {
     private lateinit var session: ForegroundProfileSession
     private val started = mutableListOf<String?>()
     private var pauses = 0
+    private var observerRegistrations = 0
+    private var observerRefreshes = 0
     private val mlbb = "com.mobile.legends"
 
     @Before fun setup() {
@@ -59,6 +64,8 @@ class ForegroundProfileWorkflowTest {
         val remote = Proxy.newProxyInstance(IRemoteService::class.java.classLoader,
             arrayOf(IRemoteService::class.java)) { _, method, _ ->
             when (method.name) {
+                "refreshActivityObserver" -> { observerRefreshes++; null }
+                "registerActivityObserver" -> { observerRegistrations++; null }
                 "startServer" -> { started += pointer.selectedProfile; null }
                 "pauseMouse" -> { pauses++; null }
                 "asBinder" -> binder
@@ -151,6 +158,96 @@ class ForegroundProfileWorkflowTest {
         assertEquals(before + "G8 v0.3", started)
         assertEquals(groupsBefore, bindings())
         assertEquals(profilesBefore.keys, storage().keys)
+    }
+
+    @Test fun favoriteChoiceUsesExistingForegroundLifecycleAndSurvivesReturningToGame() {
+        profiles.saveProfile("Personal hero",arrayListOf("BTN_TR 100 100 0"),mlbb,true,2280,1080)
+        foreground(mlbb)
+        pointer.launchProfile("Personal hero");idle()
+        assertEquals("Personal hero",started.last())
+        val count=started.size
+        foreground("file.manager");assertNull(pointer.selectedProfile);assertEquals(count,started.size)
+        foreground(mlbb);assertEquals("Personal hero",started.last())
+        assertEquals(count+1,started.size)
+    }
+
+    private fun screen(action: String, interactive: Boolean, locked: Boolean) {
+        shadowOf(pointer.getSystemService(PowerManager::class.java)).setIsInteractive(interactive)
+        shadowOf(pointer.getSystemService(KeyguardManager::class.java)).setKeyguardLocked(locked)
+        RuntimeEnvironment.getApplication().sendBroadcast(Intent(action));idle()
+    }
+    @Test fun lockKeepsSessionServiceAndProfileThenUnlockRequiresFreshForeground() {
+        foreground(mlbb);val before=storage();val count=started.size
+        screen(Intent.ACTION_SCREEN_OFF,false,true)
+        assertFalse(shadowOf(pointer).isStoppedBySelf)
+        assertEquals("G8 v0.3",pointer.selectedProfile)
+        observer.onForegroundActivitiesChanged(mlbb);idle();assertEquals(count,started.size)
+        screen(Intent.ACTION_SCREEN_ON,true,true)
+        assertEquals(0,observerRegistrations);assertEquals(count,started.size)
+        screen(Intent.ACTION_USER_PRESENT,true,false)
+        assertEquals(1,observerRegistrations);assertEquals(count,started.size)
+        foreground(mlbb);assertEquals(count+1,started.size)
+        assertEquals(before,storage())
+        screen(Intent.ACTION_USER_PRESENT,true,false);assertEquals(1,observerRegistrations)
+    }
+    @Test fun unlockIntoAnotherAppDoesNotStartUntilGameReturns() {
+        foreground(mlbb);val count=started.size
+        screen(Intent.ACTION_SCREEN_OFF,false,true)
+        screen(Intent.ACTION_USER_PRESENT,true,false)
+        foreground("file.manager");assertEquals(count,started.size)
+        foreground(mlbb);assertEquals(count+1,started.size)
+    }
+    @Test fun relockInvalidatesQueuedUnlockAndEditorStillBlocksActivation() {
+        foreground(mlbb);val count=started.size
+        screen(Intent.ACTION_SCREEN_OFF,false,true)
+        screen(Intent.ACTION_USER_PRESENT,true,false)
+        observer.onForegroundActivitiesChanged(mlbb)
+        screen(Intent.ACTION_SCREEN_OFF,false,true)
+        assertEquals(count,started.size)
+        val owner=Any()
+        try {
+            xtr.keymapper.editor.EditorSessionGuard.acquire(owner)
+            screen(Intent.ACTION_USER_PRESENT,true,false)
+            foreground(mlbb);assertEquals(count,started.size)
+        } finally {xtr.keymapper.editor.EditorSessionGuard.release(owner);idle()}
+        assertEquals(count+1,started.size)
+    }
+    @Test fun explicitStopAfterLockInvalidatesPendingUnlockConnection() {
+        foreground(mlbb);val count=started.size
+        screen(Intent.ACTION_SCREEN_OFF,false,true)
+        shadowOf(pointer.getSystemService(PowerManager::class.java)).setIsInteractive(true)
+        shadowOf(pointer.getSystemService(KeyguardManager::class.java)).setKeyguardLocked(false)
+        val receiver:android.content.BroadcastReceiver=ReflectionHelpers.getField(pointer,"screenOff")
+        receiver.onReceive(pointer,Intent(Intent.ACTION_USER_PRESENT))
+        pointer.onDestroy();idle();foreground(mlbb)
+        assertEquals(count,started.size)
+    }
+
+    @Test fun userPresentBeforeKeyguardSettlesRetriesWithoutBypassingLock() {
+        foreground(mlbb);val count=started.size
+        screen(Intent.ACTION_SCREEN_OFF,false,true)
+        screen(Intent.ACTION_USER_PRESENT,true,true)
+        assertEquals(0,observerRegistrations);assertEquals(count,started.size)
+        shadowOf(pointer.getSystemService(KeyguardManager::class.java)).setKeyguardLocked(false)
+        shadowOf(Looper.getMainLooper()).idleFor(java.time.Duration.ofMillis(250))
+        assertEquals(1,observerRegistrations);assertEquals(count,started.size)
+        foreground(mlbb);assertEquals(count+1,started.size)
+    }
+    @Test fun foregroundSettlingResamplesAreBoundedAndRelockCancelsThem() {
+        foreground(mlbb);val count=started.size
+        screen(Intent.ACTION_SCREEN_OFF,false,true)
+        screen(Intent.ACTION_USER_PRESENT,true,false)
+        foreground("com.android.systemui");assertEquals(count,started.size)
+        shadowOf(Looper.getMainLooper()).idleFor(java.time.Duration.ofMillis(300))
+        assertEquals(1,observerRefreshes)
+        foreground(mlbb);assertEquals(count+1,started.size)
+        shadowOf(Looper.getMainLooper()).idleFor(java.time.Duration.ofSeconds(5))
+        assertEquals(3,observerRefreshes)
+        screen(Intent.ACTION_SCREEN_OFF,false,true)
+        screen(Intent.ACTION_USER_PRESENT,true,false)
+        screen(Intent.ACTION_SCREEN_OFF,false,true)
+        shadowOf(Looper.getMainLooper()).idleFor(java.time.Duration.ofSeconds(5))
+        assertEquals(3,observerRefreshes)
     }
 
 }

@@ -1,0 +1,68 @@
+{
+  "artifact": {
+    "source_commit": "ee09d5df03b279830be59e3dadf512384905af89",
+    "apk_sha256": "0fc739ae80ba2c676de47542c9e25d83e8736b0bea76fbf3a33c9548b9ba8771",
+    "installed": true,
+    "data_cleared": false,
+    "all_profile_sets_unchanged": true,
+    "entire_library_and_favorites_unchanged": true,
+    "kimmy_physical_handoff_retest": "PENDING",
+    "focus_guard": "Blocked while notification shade focused; only retried after collapsing shade"
+  },
+  "host": {
+    "android_tests": 302,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "lint_debug": "PASS",
+    "debug_build": "PASS",
+    "rust_unit_tests": 5,
+    "native_regression_suites": 3,
+    "host_jni_parity_vectors": 242406,
+    "compiled_kotlin_jni_and_missing_library": "PASS",
+    "protected_fixture_hashes": "12/12 unchanged",
+    "profile_generator_tests": 12
+  },
+  "device": {
+    "kimmy_skill_up_to_attack_down_ms": [
+      42
+    ],
+    "kimmy_resumed_attack_anchor_to_first_move_ms": [
+      43
+    ],
+    "safe_surface": {
+      "observed_events": 40,
+      "max_pointers": 7,
+      "active_pointers": 0,
+      "sequence_errors": 0,
+      "cancel_events": 0
+    },
+    "diagnostic_gameplay_submission_delta": 0,
+    "root_exit_on_tester_exit": true,
+    "focus_rejection": "Test refused to inject while notification shade held focus; passed after shade collapsed without changing settings"
+  },
+  "human": {
+    "right_stick_shoots_without_lt": "PASS",
+    "center_stops_shooting": "PASS",
+    "all_directions_follow_aim": "PASS",
+    "left_stick_movement_plus_shooting": "PASS",
+    "rb": "Shooting suspension/no reticle reported and accepted; activation not separately certified",
+    "rt": "Cast/aim reported; subsequent correction says shooting resumption failed",
+    "ultimate_cast_timing": "NOT TESTED; no charge semantics claimed",
+    "skill_resumption_before_fix": "FAIL",
+    "skill_resumption_after_fix": "PENDING",
+    "remaining": [
+      "Recall/Regen/B-L3 spell effects",
+      "physical disconnect/reconnect",
+      "profile switching",
+      "screen off/on",
+      "leaving MLBB"
+    ]
+  },
+  "bennett": {
+    "profile_unchanged": true,
+    "repeat_ms": 400,
+    "attack_radius_px": 180,
+    "neighboring_skill_regression": "OPEN; not independently confirmed resolved"
+  }
+}

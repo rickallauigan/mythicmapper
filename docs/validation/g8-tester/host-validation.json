@@ -1,0 +1,23 @@
+{
+  "android": {
+    "tests": 271,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "debug_build": "PASS",
+  "lint": "PASS",
+  "release_manifest_generation": "PASS",
+  "rust_unit_tests": 5,
+  "native_suites": [
+    "controller-probe PASS",
+    "mouse-reader PASS",
+    "reader-parent-death PASS"
+  ],
+  "host_jni_parity_vectors": 242406,
+  "actual_kotlin_jni_bridge": "PASS",
+  "profile_python_tests": 12,
+  "tool_python_tests": 4,
+  "s10e_fixture_hashes_matching": 12,
+  "rust_fmt_clippy": "PASS"
+}

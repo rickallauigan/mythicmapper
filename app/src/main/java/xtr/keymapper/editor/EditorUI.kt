@@ -587,6 +587,7 @@ class EditorUI(
         val linesToWrite = ArrayList<String?>()
 
         editorUiComponents.forEach { linesToWrite.add(it.dataLine) }
+        profile?.heroGameplay?.let { linesToWrite.add(it.data) }
 
         // Enabled macro ids
         MacroIdUtils.getLines(linesToWrite, profile)
@@ -610,6 +611,7 @@ class EditorUI(
     ): String {
         val linesToWrite = ArrayList<String>()
         editorUiComponents.forEach { linesToWrite.add(it.dataLine) }
+        profile?.heroGameplay?.let { linesToWrite.add(it.data) }
 
         MacroIdUtils.getLines(linesToWrite, profile)
         linesToWrite.add("APPLICATION ${profile!!.packageName}")

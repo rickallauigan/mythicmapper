@@ -1,0 +1,13 @@
+{
+  "suite": "startup",
+  "result": {
+    "root_binder": true,
+    "root_uid": 0,
+    "foreground_callback": true,
+    "mapping_started": false,
+    "foreground_observer": "polling_5000ms",
+    "launch_to_away_callback_ns": 5011249304,
+    "launch_to_return_callback_ns": 5008418227
+  },
+  "status": "PASS"
+}

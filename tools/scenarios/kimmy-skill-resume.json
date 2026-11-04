@@ -1,0 +1,92 @@
+{
+  "schema": 1,
+  "id": "kimmy-skill-resume",
+  "source": "synthetic",
+  "description": "Continuous right-stick contact; skill handoff uses production gap/acquisition. Shared B/L3 owners.",
+  "steps": [
+    {
+      "at_ms": 10,
+      "code": "ABS_RX",
+      "value": 255,
+      "action": "axis",
+      "expect": {
+        "active_pointers": 1
+      }
+    },
+    {
+      "at_ms": 20,
+      "code": "ABS_RX",
+      "value": 0,
+      "action": "axis",
+      "expect": {
+        "last_x_max": 1950
+      }
+    },
+    {
+      "at_ms": 30,
+      "code": "BTN_TR2",
+      "down": true,
+      "action": "button",
+      "expect": {
+        "active_pointers": 1
+      }
+    },
+    {
+      "at_ms": 40,
+      "code": "BTN_TR2",
+      "down": false,
+      "action": "button",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 200,
+      "expect": {
+        "active_pointers": 1
+      }
+    },
+    {
+      "at_ms": 210,
+      "code": "ABS_RX",
+      "value": 128,
+      "action": "axis",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 220,
+      "code": "BTN_EAST",
+      "down": true,
+      "action": "button"
+    },
+    {
+      "at_ms": 230,
+      "code": "BTN_THUMBL",
+      "down": true,
+      "action": "button",
+      "expect": {
+        "active_pointers": 1
+      }
+    },
+    {
+      "at_ms": 240,
+      "code": "BTN_EAST",
+      "down": false,
+      "action": "button",
+      "expect": {
+        "active_pointers": 1
+      }
+    },
+    {
+      "at_ms": 250,
+      "code": "BTN_THUMBL",
+      "down": false,
+      "action": "button",
+      "expect": {
+        "active_pointers": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "suite": "tester_render",
+  "result": {
+    "injection_submission_delta": 0,
+    "source": "Synthetic UI-state replay, visibly labeled; no controller event generation or hardware compatibility claim",
+    "states_submitted": 240,
+    "elapsed_ms": 4404,
+    "app_cpu_ms": 5845,
+    "app_pss_kb": 164493,
+    "gfx_summary": [
+      "Total frames rendered: 166",
+      "Janky frames: 67 (40.36%)",
+      "50th percentile: 30ms",
+      "90th percentile: 36ms",
+      "95th percentile: 40ms",
+      "99th percentile: 53ms"
+    ]
+  },
+  "status": "PASS"
+}

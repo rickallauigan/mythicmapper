@@ -224,7 +224,7 @@ object GameKeyMapperBridge {
             ?: error("GameKeyMapperBridge requires MainActivity")
         activity.setContentView(
             ComposeView(activity).apply {
-                setContent { GameKeyMapperActivityContent(mainActivity) }
+                setContent { xtr.keymapper.mythic.MythicHome(mainActivity) }
             }
         )
     }

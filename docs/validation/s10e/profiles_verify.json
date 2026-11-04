@@ -1,0 +1,9 @@
+{
+  "suite": "profiles_verify",
+  "result": {
+    "restart_persistence": true,
+    "test_profiles_deleted": 3,
+    "prior_library_restored": true
+  },
+  "status": "PASS"
+}
