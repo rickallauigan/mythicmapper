@@ -67,6 +67,12 @@ class VirtualG8Activity:ComponentActivity() {
                             for(p in listOf("BASIC","BENNETT","KIMMY"))OutlinedButton(onClick={s.command(JSONObject().put("action","profile").put("profile",p))}){Text(p)}
                             OutlinedButton(onClick={s.command(JSONObject().put("action",if(s.connected)"disconnect"else"connect"))}){Text(if(s.connected)"Disconnect"else"Connect")}
                         }
+                        Text("Saved custom mappings · recording only")
+                        val profiles=remember(s){xtr.keymapper.mythic.HeroLibraryStore(this@VirtualG8Activity).read().profiles}
+                        for(profile in profiles) {
+                            val document=remember(profile.id){runCatching{xtr.keymapper.universal.UniversalStorage.read(this@VirtualG8Activity,profile.id)}.getOrNull()}
+                            if(document!=null)OutlinedButton(onClick={runCatching{s.loadUniversal(document)}.onFailure{message=it.message?:"Mapping unavailable"};changed()}){Text("Preview ${profile.name}")}
+                        }
                         Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(16.dp)) {
                             Column(Modifier.weight(1f)) {
                                 val l=reading(s,"ABS_X","ABS_Y");val r=reading(s,"ABS_RX","ABS_RY")

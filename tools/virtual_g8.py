@@ -140,10 +140,19 @@ def smoke():
     if report['status']!='PASS':raise RuntimeError('UI smoke failed')
     for p in sorted((ROOT/'tools/scenarios').glob('*.json')):run(p)
 def ux(suite='bubble'):
-    if suite not in ('bubble','home'):raise ValueError('Unknown UX suite')
+    if suite not in ('bubble','home','universal'):raise ValueError('Unknown UX suite')
     verify();platform_ready()
     # App-scoped overlay permission on this owned emulator only; no root/system policy changes.
     adb('shell','appops','set',PKG,'SYSTEM_ALERT_WINDOW','allow')
+    if suite=='universal':
+        log=adb('shell','am','instrument','-w',PKG+'/xtr.keymapper.ux.UniversalEditorInstrumentation',capture_output=True,timeout=480).stdout
+        (WORK/'ux-universal.instrumentation.txt').write_text(log)
+        report=instrument_report(log,'universal_editor');save('ux-universal.json',report)
+        for name in ('result.json','saved-profile.json','replay.json','editor.png','canvas.png','failure-nodes.txt'):
+            adb('exec-out','run-as',PKG,'cat','files/universal-editor/'+name,stdout=(WORK/('universal-'+name)).open('wb'),text=False,check=False)
+        print(json.dumps(report))
+        if report['status']!='PASS':raise RuntimeError('Universal editor UI suite failed')
+        return
     log=adb('shell','am','instrument','-w','-e','suite',suite,PKG+'/xtr.keymapper.ux.UxInstrumentation',capture_output=True,timeout=180 if suite=='home'else 120).stdout
     (WORK/('ux-'+suite+'.instrumentation.txt')).write_text(log)
     report=instrument_report(log,'ux');save('ux-'+suite+'.json',report);print(json.dumps(report))

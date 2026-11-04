@@ -2,6 +2,7 @@
     <!-- Bounded CPU wake lock only during the controlled screen-off validation. -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <application>
+        <activity android:name="xtr.keymapper.ux.UniversalEditorTestActivity" android:exported="true" android:theme="@style/Theme.XtMapper.MainActivity" />
         <activity android:name="xtr.keymapper.ux.PhysicalHomeLargeTextActivity" android:exported="true" android:configChanges="orientation|screenSize" android:theme="@style/Theme.XtMapper.MainActivity" android:label="Physical UI text-size acceptance" />
         <activity android:name="xtr.keymapper.ux.BubblePreviewActivity" android:exported="true" android:configChanges="orientation|screenSize" android:theme="@style/Theme.XtMapper" />
         <activity android:name="xtr.keymapper.virtual.VirtualHomeActivity" android:configChanges="orientation|screenSize" android:exported="true" android:theme="@style/Theme.XtMapper.MainActivity" android:label="Development Home · recording only" />
@@ -13,4 +14,5 @@
     <instrumentation android:name="xtr.keymapper.validation.HardwareValidationInstrumentation" android:targetPackage="${applicationId}" android:label="Controlled MythicMapper hardware validation" />
     <instrumentation android:name="xtr.keymapper.virtual.VirtualG8Instrumentation" android:targetPackage="${applicationId}" android:label="SIMULATED Virtual G8 recording harness" />
     <instrumentation android:name="xtr.keymapper.ux.UxInstrumentation" android:targetPackage="${applicationId}" android:label="Owned AVD UX checks" />
+    <instrumentation android:name="xtr.keymapper.ux.UniversalEditorInstrumentation" android:targetPackage="${applicationId}" android:label="Isolated universal editor UI replay" />
 </manifest>

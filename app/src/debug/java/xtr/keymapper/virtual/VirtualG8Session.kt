@@ -70,7 +70,15 @@ class VirtualG8Session(private val changed:()->Unit={}) : AutoCloseable {
         touches.add(JSONObject().put("t_ms",time-epoch).put("source","SIMULATED_RECORDING_SINK")
             .put("action",action).put("pointer",pointer).put("x",x).put("y",y).put("active",if(action==MotionEvent.ACTION_CANCEL)0 else live.size))
     }
+    private var customProfile:String?=null
+    fun loadUniversal(document:xtr.keymapper.universal.UniversalMapping) {
+        document.ready()
+        require(document.geometry==xtr.keymapper.universal.MappingGeometry()){ "Virtual sink uses the explicit 2280×1080 plane" }
+        val text=xtr.keymapper.universal.UniversalStorage.pack(document).joinToString("\n")
+        halt();neutralState();customProfile=text;profile="CUSTOM: ${document.name}";start();changed()
+    }
     private fun profileText():String {
+        customProfile?.let{return it}
         if(profile=="BASIC")return "APPLICATION com.mobile.legends\nSCREENSIZE 2280 1080\nENABLED\n"+
             listOf("BTN_GAMEPAD","BTN_EAST","BTN_WEST","BTN_NORTH","BTN_TL","BTN_TR","BTN_TL2","BTN_TR2","BTN_THUMBL","BTN_THUMBR","BTN_START","BTN_SELECT","DPAD_UP","DPAD_DOWN","DPAD_LEFT","DPAD_RIGHT").mapIndexed{i,c->"$c ${100+i*60} 400 0"}.joinToString("\n")
         val hero=if(profile=="BENNETT")HeroGameplayConfig.Hero.BEATRIX else HeroGameplayConfig.Hero.KIMMY
@@ -119,7 +127,8 @@ class VirtualG8Session(private val changed:()->Unit={}) : AutoCloseable {
         when(step.getString("action")) {
             "button"->key(step.getString("code"),step.getBoolean("down"))
             "axis"->axis(step.getString("code"),step.getInt("value"))
-            "profile"->{halt();profile=step.getString("profile");require(profile in listOf("BASIC","BENNETT","KIMMY"));start()}
+            "profile"->{val next=step.getString("profile");require(next in listOf("BASIC","BENNETT","KIMMY"));halt();customProfile=null;profile=next;start()}
+            "universal_profile"->loadUniversal(xtr.keymapper.universal.UniversalCodec.decode(step.getJSONObject("document").toString()))
             "disconnect"->{halt();connected=false;nodes.clear();neutralState()}
             "connect"->{halt();connected=true;neutralState()
                 for((code,key)in listOf("ABS_RX" to "right_x","ABS_RY" to "right_y"))if(step.has(key)){val v=step.getInt(key);require(v in 0..255);axes[code]=v}
