@@ -32,14 +32,14 @@ open class UniversalEditorActivity:ComponentActivity() {
         override fun onInputDeviceRemoved(id:Int){if(observedDevice==id){preview?.engine?.cancel("controller disconnected");detectedInput=null;observedDevice=null;revision++}}
     }
     private fun allowed(id:Int)=xtr.keymapper.devices.InputDeviceDiscovery.connected().any{it.runtimeId==id&&MythicScope.supported(it)}
-    override fun dispatchKeyEvent(event:android.view.KeyEvent):Boolean {
+    private fun controllerKey(event:android.view.KeyEvent):Boolean {
         val code=xtr.keymapper.controller.ObservedAndroidG8.keys[event.keyCode]
         if(code!=null&&allowed(event.deviceId)&&(event.action==0||event.action==1)){
             observedDevice=event.deviceId
             if(event.action==0&&event.repeatCount==0)detectedInput=code
             preview?.button(code,event.action==0,"Android key ${event.keyCode}");revision++;return true
         }
-        return super.dispatchKeyEvent(event)
+        return false
     }
     override fun dispatchGenericMotionEvent(event:android.view.MotionEvent):Boolean {
         if(preview!=null&&allowed(event.deviceId)&&event.action==android.view.MotionEvent.ACTION_MOVE){
@@ -64,6 +64,10 @@ open class UniversalEditorActivity:ComponentActivity() {
     }.onFailure{error="Import rejected; no existing mapping changed: ${it.message}"}}
     override fun onCreate(state:Bundle?) {
         super.onCreate(state);EditorSessionGuard.acquire(this)
+        val original=requireNotNull(window.callback)
+        window.callback=object:android.view.Window.Callback by original {
+            override fun dispatchKeyEvent(event:android.view.KeyEvent)=controllerKey(event)||original.dispatchKeyEvent(event)
+        }
         runCatching {
             val id=intent.getStringExtra(PROFILE)
             if(state?.containsKey("draft")==true){draft=UniversalDraft.restore(state.getString("draft")!!);expected=state.getStringArrayList("expected")!!.toSet();require(draft!!.value.id==id)}

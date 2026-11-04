@@ -14,7 +14,7 @@ import xtr.keymapper.virtual.VirtualG8Session
 class UniversalEditorInstrumentation:Instrumentation() {
     override fun onCreate(arguments:Bundle?){super.onCreate(arguments);start()}
     private fun nodes(n:Node?):List<Node> = if(n==null) emptyList() else listOf(n)+(0 until n.childCount).flatMap{nodes(n.getChild(it))}
-    private fun all():List<Node>{uiAutomation.clearCache();return uiAutomation.windows.flatMap{nodes(it.root)}.filter{it.packageName==targetContext.packageName}}
+    private fun all():List<Node>{if(Build.VERSION.SDK_INT>=34)uiAutomation.clearCache();return uiAutomation.windows.flatMap{nodes(it.root)}.filter{it.packageName==targetContext.packageName}}
     private fun settle(){waitForIdleSync();SystemClock.sleep(100)}
     private fun find(value:String):Node {
         repeat(35){
