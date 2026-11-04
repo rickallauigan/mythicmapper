@@ -44,6 +44,7 @@ jobs:
           python3 tools/virtual_g8.py install
           python3 tools/virtual_g8.py smoke
           python3 tools/virtual_g8.py ux bubble
+          python3 tools/virtual_g8.py ux home
       - name: Collect failure diagnostics
         if: failure()
         run: |

@@ -1,0 +1,19 @@
+{
+  "suite": "physical_ui_auto",
+  "result": {
+    "physical_g8_observed": true,
+    "target_dp": 48.148148,
+    "visible_face_dp_code": 44,
+    "expand_collapse": true,
+    "transparent_collapsed_background": true,
+    "editor_guard_hide_restore": true,
+    "landscape_render": true,
+    "editor_return_transparent": true,
+    "observed_drag_position_change": true,
+    "service_restart_position_retained": true,
+    "overlay_removed_on_stop": true,
+    "gameplay_submission_delta": 0,
+    "personal_profiles_and_favorites_unchanged": true
+  },
+  "status": "PASS"
+}

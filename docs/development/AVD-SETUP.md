@@ -116,3 +116,15 @@ one verified SystemUI Wait recovery is allowed per CLI invocation. If this occur
 during UI smoke, the complete smoke is repeated and its prior result/output are
 retained. Mapping assertion failures and other application ANRs are never retried
 or dismissed. Repeated SystemUI ANRs fail the command.
+
+
+## UI modernization checks
+
+After boot/install, run `python3 tools/virtual_g8.py ux bubble` and
+`python3 tools/virtual_g8.py ux home`. These operate only the owned emulator,
+grant the debug package's overlay appop, save fresh instrumentation results and
+capture actual APK screenshots. Preview data lives under separate ux_preview_*
+and ux_home_* preferences; navigation checks create/remove only their disposable
+UUIDs. No real mapper or physical device is needed. See validation/ui-16 and ui-18.
+`python3 tools/measure_home.py before|after` retains exploratory debug/AVD scroll
+metrics; it is not physical input latency or a release performance benchmark.

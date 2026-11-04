@@ -44,3 +44,19 @@ class VirtualWorkflowTests(unittest.TestCase):
         with patch.object(module,'output',return_value='Application Not Responding: mythicmapper'), patch.object(module,'recover')as recover:
             with self.assertRaises(RuntimeError):module.platform_ready()
             recover.assert_not_called()
+
+    def test_systemui_dismissal_waits_for_asynchronous_window_removal(self):
+        title='Application Not Responding: com.android.systemui'
+        with patch.object(module,'output',side_effect=[title,title,'launcher']),patch.object(module.time,'sleep'),patch.object(module,'adb')as adb:
+            module.wait_for_systemui_dismissal()
+            adb.assert_not_called()
+
+    def test_systemui_dismissal_has_a_deadline(self):
+        with patch.object(module,'output',return_value='Application Not Responding: com.android.systemui'),patch.object(module.time,'monotonic',side_effect=[0,11]),patch.object(module.time,'sleep'),patch.object(module,'adb')as adb:
+            with self.assertRaises(RuntimeError):module.wait_for_systemui_dismissal()
+            adb.assert_not_called()
+
+    def test_systemui_dismissal_does_not_hide_an_application_anr(self):
+        with patch.object(module,'output',return_value='Application Not Responding: mythicmapper'),patch.object(module,'adb')as adb:
+            with self.assertRaises(RuntimeError):module.wait_for_systemui_dismissal()
+            adb.assert_not_called()
