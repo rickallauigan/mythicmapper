@@ -63,6 +63,8 @@ class FavoriteOverlay internal constructor(private val service: Context, private
         WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,PixelFormat.TRANSLUCENT).apply {
         gravity=Gravity.TOP or Gravity.LEFT;x=prefs.getInt("x",16);y=prefs.getInt("y",120)
     }
+    private var gestureActive=false
+    private fun restorePosition(){params.x=prefs.getInt("x",16);params.y=prefs.getInt("y",120)}
     private var attached=false
     private var screenWidth=0
     private var screenHeight=0
@@ -74,12 +76,14 @@ class FavoriteOverlay internal constructor(private val service: Context, private
         if(screenWidth!=metrics.widthPixels || screenHeight!=metrics.heightPixels) {
             screenWidth=metrics.widthPixels;screenHeight=metrics.heightPixels
             panelScroll.layoutParams=LinearLayout.LayoutParams((320*metrics.density).toInt().coerceAtMost(screenWidth),(screenHeight*.65f).toInt())
+            if(!gestureActive)restorePosition()
             clamp();updateWindow()
         }
         handler.postDelayed(this,750)
     } }
     fun show() {
         if(attached || !Settings.canDrawOverlays(service)) return
+        gestureActive=false;screenWidth=0;screenHeight=0
         root.removeAllViews();root.setBackgroundColor(android.graphics.Color.TRANSPARENT);panelScroll.visibility=View.GONE;root.visibility=if(EditorSessionGuard.active)View.GONE else View.VISIBLE
         root.addView(header);root.addView(panelScroll)
         EditorSessionGuard.listen(editorVisibility)
@@ -87,24 +91,25 @@ class FavoriteOverlay internal constructor(private val service: Context, private
         var startX=0f;var startY=0f;var baseX=0;var baseY=0;var dragging=false
         header.setOnTouchListener { view,event ->
             when(event.actionMasked) {
-                MotionEvent.ACTION_DOWN -> {view.isPressed=true;startX=event.rawX;startY=event.rawY;baseX=params.x;baseY=params.y;dragging=false;true}
+                MotionEvent.ACTION_DOWN -> {gestureActive=true;view.isPressed=true;startX=event.rawX;startY=event.rawY;baseX=params.x;baseY=params.y;dragging=false;true}
                 MotionEvent.ACTION_MOVE -> {
                     val dx=event.rawX-startX;val dy=event.rawY-startY
                     if(kotlin.math.hypot(dx,dy)>ViewConfiguration.get(service).scaledTouchSlop)dragging=true
                     if(dragging){params.x=baseX+dx.toInt();params.y=baseY+dy.toInt();clamp();updateWindow()}
                     true
                 }
-                MotionEvent.ACTION_UP -> {view.isPressed=false;if(!dragging)view.performClick();prefs.edit().putInt("x",params.x).putInt("y",params.y).apply();true}
-                MotionEvent.ACTION_CANCEL -> {view.isPressed=false;dragging=false;true}
+                MotionEvent.ACTION_UP -> {gestureActive=false;view.isPressed=false;if(!dragging)view.performClick();prefs.edit().putInt("x",params.x).putInt("y",params.y).apply();true}
+                MotionEvent.ACTION_CANCEL -> {gestureActive=false;view.isPressed=false;dragging=false;true}
                 else -> false
             }
         }
+        restorePosition();root.measure(View.MeasureSpec.UNSPECIFIED,View.MeasureSpec.UNSPECIFIED)
         clamp();try{manager.addView(root,params)}catch(_:RuntimeException){EditorSessionGuard.remove(editorVisibility);return};attached=true
         root.addOnLayoutChangeListener(layoutChanged)
         handler.post(refresh)
     }
     private val layoutChanged=View.OnLayoutChangeListener {_,_,_,_,_,_,_,_,_->
-        if(attached){val x=params.x;val y=params.y;clamp();if(x!=params.x||y!=params.y)updateWindow()}
+        if(attached){val x=params.x;val y=params.y;if(!gestureActive&&panelScroll.visibility!=View.VISIBLE)restorePosition();clamp();if(x!=params.x||y!=params.y)updateWindow()}
     }
     private fun updateWindow(){if(attached)runCatching{manager.updateViewLayout(root,params)}.onFailure{close()}}
     private fun clamp() {
@@ -145,6 +150,7 @@ class FavoriteOverlay internal constructor(private val service: Context, private
     }
     fun isAttached() = attached
     fun close() {
+        gestureActive=false
         EditorSessionGuard.remove(editorVisibility)
         handler.removeCallbacks(refresh)
         root.removeOnLayoutChangeListener(layoutChanged)
