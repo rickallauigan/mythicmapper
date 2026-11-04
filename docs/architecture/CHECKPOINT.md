@@ -432,3 +432,19 @@ dispatch. Issue20 remains OPEN/deferred; do not start15 without user instruction
 Only documentation follows the tested runtime source; inspect the latest dev APK
 workflow for that final documentation commit. Preserve the two untracked referencePNG
 files. Historical draft/pending sections above are superseded by this checkpoint.
+
+## 2026-11-05 — Issue #15 development authorized, separate draft
+
+The user explicitly authorized universal editor implementation after consolidation.
+Branch `feature/15-universal-mapping-editor` starts directly at dev54b18e1; draft
+[PR25](https://github.com/rickallauigan/mythicmapper/pull/25) targets dev. No merge or
+release is authorized. This supersedes the earlier instruction to defer starting15,
+without changing its historical evidence.
+
+Model/runtime and production editor are implemented incrementally. Consult
+[architecture](../editor/UNIVERSAL-MAPPING.md), [schema](../editor/ACTION-SCHEMA.md),
+[calibration](../editor/CALIBRATION.md) and the [live validation report](../validation/universal-editor/REPORT.md).
+Do not confuse successful simulated profile replay with physical gameplay acceptance.
+Existing hero handlers, physical hardware gate and native left-stick behavior remain.
+Physical S10e was not accessed; issue20 remains deferred. Broader editor interaction,
+persistence fault-injection and physical acceptance gaps are explicit in the report.

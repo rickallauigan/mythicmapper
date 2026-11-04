@@ -1,0 +1,13 @@
+{
+  "source_commit": "6c9a61313e9a1115d15b9c6c78954c9441f0e77e",
+  "apk": "app/build/outputs/apk/debug/app-debug.apk",
+  "sha256": "2ce0b0a429d2b36dacfffe438711f12de40be0c9a3b4269ac451b4f96e40b0b6",
+  "avd": "MythicMapper_API36_G8",
+  "api": 36,
+  "abi": "x86_64",
+  "android_unit_tests": 344,
+  "rust_tests": 5,
+  "native_suites": 3,
+  "existing_virtual_scenarios": 7,
+  "physical_acceptance": "NOT TESTED; physical device untouched"
+}
