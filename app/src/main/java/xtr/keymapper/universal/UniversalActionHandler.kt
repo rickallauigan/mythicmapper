@@ -53,7 +53,7 @@ class UniversalActionHandler(mapping:UniversalMapping,private val handler:Handle
         }
         val a=actions.singleOrNull{code in it.inputs}?:return true
         if(a.kind==TouchAction.RESET){if(down)cancel("explicit reset");return true}
-        if(down){if(!neutral){blocked+=code;return true};owners.getOrPut(a.id){linkedSetOf()}.add(code);order[a.id]=++serial}
+        if(down){if(!neutral){blocked+=code;return true};if(a.cancelOthers){cancel("configured action cancellation");blocked.remove(code);pressed.add(code)};owners.getOrPut(a.id){linkedSetOf()}.add(code);order[a.id]=++serial}
         else {owners[a.id]?.remove(code);if(owners[a.id]?.isEmpty()==true)owners.remove(a.id)}
         reconcile();return true
     }
@@ -76,12 +76,15 @@ class UniversalActionHandler(mapping:UniversalMapping,private val handler:Handle
         val focused=wanted.filter{it.aim}.maxWithOrNull(compareBy<UniversalAction>{it.priority}.thenBy{order[it.id]?:0})
         aim.focus(focused?.id)
         val permitted=wanted.filter{!it.aim||focused==null||!focused.exclusiveAim||it.id==focused.id||it.priority==focused.priority}.map{it.id}.toSet()
-        (applied-permitted).toList().forEach(::release)
+        (applied-permitted).toList().forEach{id->
+            // A tap is owned by its bounded timer after a short hardware release.
+            if(targets.single{it.id==id}.kind!=TouchAction.TAP||id !in tapTasks)release(id)
+        }
         wanted.filter{it.id in permitted&&it.id !in applied}.forEach{a->
             applied+=a.id
             when(a.kind){
                 TouchAction.REPEAT->repeat.event(keys.getValue(a.id),pointer(a.id),1)
-                TouchAction.TAP->{aim.trigger(a.id,1);val task=Runnable{tapTasks.remove(a.id);if(running)aim.trigger(a.id,0)};tapTasks[a.id]=task;handler.postDelayed(task,40)}
+                TouchAction.TAP->{aim.trigger(a.id,1);val task=Runnable{tapTasks.remove(a.id);if(running){aim.trigger(a.id,0);if(owners[a.id].isNullOrEmpty())applied.remove(a.id)}};tapTasks[a.id]=task;handler.postDelayed(task,40)}
                 TouchAction.HOLD->aim.trigger(a.id,1)
                 TouchAction.RESET->Unit
             }

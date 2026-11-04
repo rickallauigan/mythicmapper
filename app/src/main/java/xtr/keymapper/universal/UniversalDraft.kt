@@ -5,16 +5,20 @@ package xtr.keymapper.universal
 class UniversalDraft(val original:UniversalMapping) {
     var value=original;private set
     private val back=ArrayDeque<UniversalMapping>();private val forward=ArrayDeque<UniversalMapping>()
+    private var gesture:UniversalMapping?=null
+    fun beginGesture(){if(gesture==null)gesture=value}
+    fun endGesture(){val before=gesture?:return;val next=value;gesture=null;value=before;change(next)}
+    fun cancelGesture(){gesture?.let{value=it};gesture=null}
     val dirty get()=value!=original
     val canUndo get()=back.isNotEmpty();val canRedo get()=forward.isNotEmpty()
-    fun change(next:UniversalMapping){next.validate();if(next==value)return;if(back.size==32)back.removeFirst();back.addLast(value);forward.clear();value=next}
+    fun change(next:UniversalMapping){next.validate();if(next==value)return;if(gesture!=null){value=next;return};if(back.size==32)back.removeFirst();back.addLast(value);forward.clear();value=next}
     fun action(next:UniversalAction){change(value.edited(value.actions.filterNot{it.id==next.id}+next))}
     fun remove(id:String){change(value.edited(value.actions.filterNot{it.id==id}))}
     fun undo(){if(back.isNotEmpty()){forward.addLast(value);value=back.removeLast()}}
     fun redo(){if(forward.isNotEmpty()){back.addLast(value);value=forward.removeLast()}}
     fun reset(){change(original)}
-    fun snapshot()=org.json.JSONObject().put("original",UniversalCodec.encode(original)).put("value",UniversalCodec.encode(value))
-        .put("undo",org.json.JSONArray(back.map(UniversalCodec::encode))).put("redo",org.json.JSONArray(forward.map(UniversalCodec::encode))).toString()
+    fun snapshot():String {endGesture();return org.json.JSONObject().put("original",UniversalCodec.encode(original)).put("value",UniversalCodec.encode(value))
+        .put("undo",org.json.JSONArray(back.map(UniversalCodec::encode))).put("redo",org.json.JSONArray(forward.map(UniversalCodec::encode))).toString()}
     companion object {
         fun restore(text:String):UniversalDraft {
             require(text.toByteArray().size<=262144);val r=org.json.JSONObject(text);val d=UniversalDraft(UniversalCodec.decode(r.getString("original")));d.value=UniversalCodec.decode(r.getString("value"))

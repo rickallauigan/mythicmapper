@@ -34,6 +34,12 @@ public class EditorActivity extends Activity {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 
         String selectedProfile = getIntent().getStringExtra(PROFILE_NAME);
+        if (selectedProfile != null && !getIntent().getBooleanExtra(CAPTURE, false)) {
+            java.util.Set<String> lines=new xtr.keymapper.keymap.KeymapProfiles(this).sharedPref.getStringSet(selectedProfile,null);
+            if(lines!=null && xtr.keymapper.universal.UniversalStorage.document(lines)!=null){
+                startActivity(new android.content.Intent(this,UniversalEditorActivity.class).putExtra(UniversalEditorActivity.PROFILE,selectedProfile));finish();return;
+            }
+        }
         if (selectedProfile == null && !getIntent().getBooleanExtra(CAPTURE, false)) {
             finish();
             return;

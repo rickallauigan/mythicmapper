@@ -18,7 +18,7 @@ enum class TouchAction { TAP, HOLD, REPEAT, RESET }
 data class UniversalAction(val id:String=UUID.randomUUID().toString(),val name:String="",val inputs:Set<String>,
     val kind:TouchAction=TouchAction.HOLD,val x:Float?=null,val y:Float?=null,val enabled:Boolean=true,
     val aim:Boolean=false,val radius:Float=80f,val deadZone:Float=.15f,val sensitivity:Float=1f,
-    val invertY:Boolean=false,val repeatMs:Int=400,val priority:Int=0,val exclusiveAim:Boolean=true,val anchorMs:Int=0) {
+    val invertY:Boolean=false,val repeatMs:Int=400,val priority:Int=0,val exclusiveAim:Boolean=true,val anchorMs:Int=0,val cancelOthers:Boolean=false) {
     fun validate(g:MappingGeometry) {
         require(UUID.fromString(id).toString()==id){"Invalid action UUID"};text(name,80,true)
         require(inputs.isNotEmpty()&&inputs.size<=16&&inputs.all{it in buttons||it==RIGHT_STICK}){"Unsupported input"}
@@ -29,6 +29,7 @@ data class UniversalAction(val id:String=UUID.randomUUID().toString(),val name:S
         require(repeatMs in 60..60000&&anchorMs in 0..250&&anchorMs*2<repeatMs){"Invalid repeat/acquisition timing"}
         require(priority in 0..100){"Invalid priority"}
         require(RIGHT_STICK !in inputs||(aim&&kind==TouchAction.HOLD&&inputs.size==1)){"Stick activation supports continuous directional hold only"}
+        require(!cancelOthers||RIGHT_STICK !in inputs){"Stick activation uses priority rather than global cancellation"}
         require(!aim||kind in setOf(TouchAction.HOLD,TouchAction.REPEAT)){"Only held/repeated contacts accept directional aim"}
         require(kind!=TouchAction.RESET||(!aim&&x==null)){"Reset has no touch target"}
     }
@@ -72,7 +73,7 @@ object UniversalCodec {
             "actions" to d.actions.map{a->mapOf("id" to a.id,"name" to a.name,"inputs" to a.inputs.sorted(),"kind" to a.kind.name,
                 "x" to (a.x?:JSONObject.NULL),"y" to (a.y?:JSONObject.NULL),"enabled" to a.enabled,"aim" to a.aim,
                 "radius" to a.radius,"dead_zone" to a.deadZone,"sensitivity" to a.sensitivity,"invert_y" to a.invertY,
-                "repeat_ms" to a.repeatMs,"priority" to a.priority,"exclusive_aim" to a.exclusiveAim,"anchor_ms" to a.anchorMs)})).toString()
+                "repeat_ms" to a.repeatMs,"priority" to a.priority,"exclusive_aim" to a.exclusiveAim,"anchor_ms" to a.anchorMs,"cancel_others" to a.cancelOthers)})).toString()
     }
     fun decode(text:String):UniversalMapping {
         @Suppress("UNCHECKED_CAST") fun obj(v:Any?):Map<String,Any?> {require(v is Map<*,*>);return v as Map<String,Any?>}
@@ -86,10 +87,10 @@ object UniversalCodec {
         require(i(r,"schema_version")==2);require(s(r,"movement")=="NATIVE_PASSTHROUGH")
         val g=obj(r["geometry"]);exact(g,"width height orientation coordinates");require(s(g,"orientation")=="LANDSCAPE"&&s(g,"coordinates")=="CANONICAL_PIXELS")
         val list=r["actions"]as?List<*>?:error("Actions must be an array");require(list.size<=8)
-        val actions=list.map{v->val a=obj(v);exact(a,"id name inputs kind x y enabled aim radius dead_zone sensitivity invert_y repeat_ms priority exclusive_aim anchor_ms")
+        val actions=list.map{v->val a=obj(v);exact(a,"id name inputs kind x y enabled aim radius dead_zone sensitivity invert_y repeat_ms priority exclusive_aim anchor_ms cancel_others")
             val input=a["inputs"]as?List<*>?:error("Inputs must be an array");require(input.all{it is String}&&input.distinct().size==input.size)
             UniversalAction(s(a,"id"),s(a,"name"),input.map{it as String}.toSet(),TouchAction.valueOf(s(a,"kind")),
-                if(a["x"]==null)null else n(a,"x").toFloat(),if(a["y"]==null)null else n(a,"y").toFloat(),b(a,"enabled"),b(a,"aim"),n(a,"radius").toFloat(),n(a,"dead_zone").toFloat(),n(a,"sensitivity").toFloat(),b(a,"invert_y"),i(a,"repeat_ms"),i(a,"priority"),b(a,"exclusive_aim"),i(a,"anchor_ms"))}
+                if(a["x"]==null)null else n(a,"x").toFloat(),if(a["y"]==null)null else n(a,"y").toFloat(),b(a,"enabled"),b(a,"aim"),n(a,"radius").toFloat(),n(a,"dead_zone").toFloat(),n(a,"sensitivity").toFloat(),b(a,"invert_y"),i(a,"repeat_ms"),i(a,"priority"),b(a,"exclusive_aim"),i(a,"anchor_ms"),b(a,"cancel_others"))}
         return UniversalMapping(s(r,"id"),s(r,"name"),s(r,"hero"),s(r,"origin"),MappingGeometry(i(g,"width"),i(g,"height")),b(r,"calibrated"),b(r,"enabled"),actions,l(r,"created_at"),l(r,"updated_at"),s(r,"game"),s(r,"controller"),i(r,"schema_version")).validate()
     }
 }

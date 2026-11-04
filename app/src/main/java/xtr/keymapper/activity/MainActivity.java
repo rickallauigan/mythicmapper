@@ -375,6 +375,13 @@ public class MainActivity extends AppCompatActivity {
                 .putExtra("profile", profileId));
     }
 
+    public void openUniversalEditorFromCompose(String profileId) {
+        stopPointer();
+        Intent intent=new Intent(this,xtr.keymapper.editor.UniversalEditorActivity.class);
+        if(profileId!=null)intent.putExtra(xtr.keymapper.editor.UniversalEditorActivity.PROFILE,profileId);
+        startActivity(intent);
+    }
+
     public void openHelpFromCompose() {
         startActivity(new Intent(this, InfoActivity.class));
     }

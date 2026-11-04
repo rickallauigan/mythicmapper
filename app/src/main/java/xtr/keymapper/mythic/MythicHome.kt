@@ -69,6 +69,7 @@ private fun MythicHomeContent(activity:MainActivity) {
     }
     fun action(block: ()->Unit) {runCatching{block();refresh()}.onFailure{refresh();error=it.message}}
     fun edit(profile: HeroProfile, capture: Boolean) {
+        if(!capture&&xtr.keymapper.universal.UniversalStorage.document(KeymapProfiles(activity).sharedPref.getStringSet(profile.id,null)?.toSet()?:emptySet())!=null){activity.openUniversalEditorFromCompose(profile.id);return}
         activity.startActivity(Intent(activity,EditorActivity::class.java).putExtra(EditorActivity.PROFILE_NAME,profile.id)
             .putExtra(if(capture)EditorActivity.CAPTURE else EditorActivity.VISUAL,true))
     }
@@ -111,6 +112,7 @@ private fun MythicHomeContent(activity:MainActivity) {
         onHeroSetup={p->activity.openHeroTrainingFromCompose(p.id)},
         controllerName=devices.firstOrNull(MythicScope::supported)?.name ?: "Original GameSir Galileo G8",
         readiness=readiness,permissionGranted=permission,
+        onCreateMapping={activity.openUniversalEditorFromCompose(null)},
         onVirtual=if(xtr.keymapper.BuildConfig.DEBUG)({activity.startActivity(Intent().setClassName(activity,"xtr.keymapper.virtual.VirtualG8Activity"))})else null,
         onPermission={activity.startActivity(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,android.net.Uri.parse("package:${activity.packageName}")))})
     nameRequest?.let {request ->
@@ -137,7 +139,7 @@ fun MythicHomeScreen(library: HeroLibrary, connected: Boolean, active: Boolean, 
     onRestore:(HeroProfile)->Unit, onAssign:(Int,String?)->Unit, onSwap:(Int,Int)->Unit,
     onEditor:(HeroProfile)->Unit, onCalibration:(HeroProfile)->Unit, onDiagnostics:()->Unit, onPermission:()->Unit,
     onRuntimeDiagnostics:()->Unit={},onHeroSetup:(HeroProfile)->Unit={},controllerName:String="Original GameSir Galileo G8",
-    readiness:Map<String,String> = emptyMap(),permissionGranted:Boolean=true,onVirtual:(()->Unit)?=null) {
+    readiness:Map<String,String> = emptyMap(),permissionGranted:Boolean=true,onVirtual:(()->Unit)?=null,onCreateMapping:(()->Unit)?=null) {
     var search by rememberSaveable {mutableStateOf("")}
     var filter by rememberSaveable {mutableStateOf("All")}
     var assignSlot by remember {mutableStateOf<Int?>(null)}
@@ -173,7 +175,7 @@ fun MythicHomeScreen(library: HeroLibrary, connected: Boolean, active: Boolean, 
                 item("actions") {
                     Row(horizontalArrangement=Arrangement.spacedBy(10.dp)) {
                         Button(onClick={if(active)onStop()else chosen?.let(onActivate)},enabled=active||(chosen!=null&&connected),modifier=Modifier.weight(1f).heightIn(min=56.dp),shape=RoundedCornerShape(14.dp)) {Text(if(active)"Stop mapping"else"Start mapping")}
-                        OutlinedButton(onClick={creating=true},modifier=Modifier.weight(1f).heightIn(min=56.dp),shape=RoundedCornerShape(14.dp)){Text("Create mapping")}
+                        OutlinedButton(onClick={if(onCreateMapping!=null)onCreateMapping()else creating=true},modifier=Modifier.weight(1f).heightIn(min=56.dp),shape=RoundedCornerShape(14.dp)){Text("Create mapping")}
                     }
                     Spacer(Modifier.height(8.dp))
                     Row(horizontalArrangement=Arrangement.spacedBy(10.dp)) {
@@ -254,7 +256,7 @@ fun MythicHomeScreen(library: HeroLibrary, connected: Boolean, active: Boolean, 
             }
         }
         if(creating)AlertDialog(onDismissRequest={creating=false},title={Text("Create from a starter")},text={Column {
-            Text("Clone a template, then edit and calibrate your personal mapping. Universal creation is planned in issue #15.")
+            Text("Clone a template, then edit and calibrate your personal mapping. Use Create mapping from Home for a blank universal profile.")
             HeroCatalog.presets.forEach{preset->TextButton(onClick={creating=false;onClone(preset)}){Text(preset.name)}}
         }},confirmButton={TextButton(onClick={creating=false}){Text("Cancel")}})
         assignSlot?.let{slot->AlertDialog(onDismissRequest={assignSlot=null},title={Text("Assign favorite ${slot+1}")},text={LazyColumn(Modifier.heightIn(max=320.dp)) {

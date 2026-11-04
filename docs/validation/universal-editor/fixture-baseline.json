@@ -1,8 +1,6 @@
 {
   "profiles/mlbb/samsung-s10e/GAMESIR-G8.md": "30ebbac0b003c995f464cda8cce2ce2ca8070e8dbbc401cf4c2dbd9bb5a4d51d",
   "profiles/mlbb/samsung-s10e/README.md": "8120b0ca97b9230aa4d6b757a5f534e20f0890c59c52ad40dcd67e3af9e5de85",
-  "profiles/mlbb/samsung-s10e/__pycache__/generate-gamesir-profile.cpython-314.pyc": "89608288852a025a6de2ad6b34ac5831186c62c23b954d83ad9d6ee2d2f5cd98",
-  "profiles/mlbb/samsung-s10e/__pycache__/test_generate_gamesir_profile.cpython-314.pyc": "3073a72856e5fb11845206a89202a3efc07cad4db973dc2691855399a6a39d73",
   "profiles/mlbb/samsung-s10e/generate-gamesir-profile.py": "1f98fa6d958d5a0de4064fd6fd031373662744c519869e25a4cff48355b08d88",
   "profiles/mlbb/samsung-s10e/mlbb-gamesir-g8-phase2-select-chords.txt": "adc9fe35883c4ab1814f00a21877f0bf9b11b3cb6cffb6026d5d9d0269ef1b66",
   "profiles/mlbb/samsung-s10e/mlbb-gamesir-g8-phase2.txt": "610085fc6fa11efc28ba96700d2aa07f2904a0b2fb43859d0b876383d69a914d",

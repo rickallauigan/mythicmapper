@@ -79,4 +79,44 @@ class UniversalMappingTest {
         assertThrows(Exception::class.java){UniversalActionHandler(d.copy(calibrated=false),Handler(Looper.getMainLooper()),Trace().sink,2280f,1080f)}
         val t=Trace();val h=UniversalActionHandler(d,Handler(Looper.getMainLooper()),t.sink,1140f,540f);h.axes(0f,0f);h.button("BTN_GAMEPAD",true);assertEquals(250f,t.events.single().x,0f);h.close()
     }
+    @Test fun shortHardwareTapRetainsBoundedContactButCancelReleasesImmediately(){
+        val t=Trace();val h=UniversalActionHandler(mapping(action("BTN_GAMEPAD").copy(kind=TouchAction.TAP)),Handler(Looper.getMainLooper()),t.sink,2280f,1080f)
+        h.axes(0f,0f);h.button("BTN_GAMEPAD",true);h.button("BTN_GAMEPAD",false)
+        assertEquals(1,t.active.size);shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(39));assertEquals(1,t.active.size)
+        shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(1));assertTrue(t.active.isEmpty())
+        h.button("BTN_GAMEPAD",true);h.cancel("focus lost");assertTrue(t.active.isEmpty());h.close()
+    }
+    @Test fun recallLikeActionCancelsShootingUntilFreshNeutral(){
+        val t=Trace();val attack=action(UniversalAction.RIGHT_STICK).copy(aim=true)
+        val recall=action("BTN_WEST").copy(x=900f,kind=TouchAction.TAP,cancelOthers=true)
+        val h=UniversalActionHandler(mapping(attack,recall),Handler(Looper.getMainLooper()),t.sink,2280f,1080f)
+        h.axes(0f,0f);h.axes(1f,0f);h.button("BTN_WEST",true);h.button("BTN_WEST",false)
+        shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(50));assertTrue(t.active.isEmpty())
+        h.axes(1f,0f);assertTrue(t.active.isEmpty());h.axes(0f,0f);h.axes(1f,0f);assertEquals(1,t.active.size);h.close()
+    }
+    @Test fun dragIsOneUndoAndDraftSurvivesRecreation(){
+        val original=mapping(action("BTN_GAMEPAD"));val d=UniversalDraft(original)
+        d.beginGesture();repeat(20){d.action(d.value.actions.single().copy(x=600f+it))};d.endGesture()
+        assertEquals(619f,d.value.actions.single().x!!,0f);d.undo();assertEquals(original,d.value);d.redo()
+        val restored=UniversalDraft.restore(d.snapshot());assertEquals(d.value,restored.value);restored.undo();assertEquals(original,restored.value)
+        val view=UniversalViewport(1140f,600f,MappingGeometry(),2f,30f,-20f);val point=view.screen(500f,400f);val canonical=view.canonical(point.x,point.y)!!
+        assertEquals(500f,canonical.first,.001f);assertEquals(400f,canonical.second,.001f)
+    }
+
+    @Test fun storageRejectsStaleUnknownAndRenamedOwnersWithoutMutatingPriorData(){
+        val context=org.robolectric.RuntimeEnvironment.getApplication()
+        val store=xtr.keymapper.mythic.HeroLibraryStore(context)
+        val p=store.clone("Owned universal",UniversalStorage.pack(UniversalMapping(name="Owned universal")))
+        try{
+            val d=UniversalStorage.read(context,p.id);val prefs=KeymapProfiles(context).sharedPref
+            val before=prefs.getStringSet(p.id,null)!!.toSet()
+            assertThrows(Exception::class.java){UniversalStorage.save(context,p.id,d.copy(name="Stale"),emptySet(),p.name)}
+            assertThrows(Exception::class.java){UniversalStorage.save(context,p.id,d.copy(id=java.util.UUID.randomUUID().toString()),before,p.name)}
+            assertEquals(before,prefs.getStringSet(p.id,null))
+            val library=store.read();store.update(library,library.copy(profiles=library.profiles.map{if(it.id==p.id)it.copy(name="External rename")else it}))
+            assertThrows(Exception::class.java){UniversalStorage.save(context,p.id,d,before,p.name)}
+            assertEquals("External rename",UniversalStorage.read(context,p.id).name);assertEquals(before,prefs.getStringSet(p.id,null))
+        }finally{store.delete(p.id)}
+    }
+
 }
