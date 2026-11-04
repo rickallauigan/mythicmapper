@@ -1,0 +1,6 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <activity android:name="xtr.keymapper.validation.ValidationActivity" android:exported="true" android:configChanges="orientation|screenSize" android:theme="@style/Theme.XtMapper" />
+    </application>
+    <instrumentation android:name="xtr.keymapper.validation.HardwareValidationInstrumentation" android:targetPackage="${applicationId}" android:label="Controlled MythicMapper hardware validation" />
+</manifest>

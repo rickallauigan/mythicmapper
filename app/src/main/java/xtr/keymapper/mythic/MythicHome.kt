@@ -112,7 +112,7 @@ fun MythicHomeScreen(library: HeroLibrary, connected: Boolean, active: Boolean, 
                     Text("MythicMapper",style=MaterialTheme.typography.headlineLarge)
                     Text("MLBB · original GameSir Galileo G8",style=MaterialTheme.typography.bodyMedium)
                     ControllerSchematic()
-                    Text(if(connected) "G8 connected · observed USB mode" else "G8 disconnected or unsupported mode",color=if(connected)MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface)
+                    Text(if(connected) "G8 connected · observed USB mode" else "G8 not detected · wake controller or check USB mode",color=if(connected)MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface)
                     Text("Selected: ${library.profiles.find{it.id==selected}?.name ?: "None"}")
                     Text(if(active)"Mapper service running" else "Mapper stopped")
                     Row {OutlinedButton(onClick=onDiagnostics){Text("Diagnostics")};Spacer(Modifier.width(8.dp));OutlinedButton(onClick=onPermission){Text("Overlay permission")}}

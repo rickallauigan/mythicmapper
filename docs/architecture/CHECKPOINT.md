@@ -96,3 +96,33 @@ Archived README trailing whitespace was normalized; original attribution/content
 Follow-up review: scoped editor reloads reject unsupported definitions before installing them.
 The local XtMapper remote has its push URL set to DISABLED as an additional guard.
 The runtime parent branch was integrated with a normal local Git merge; no GitHub PR was merged.
+
+
+## S10e validation sprint — 2026-11-02 (supersedes device-untested notes above)
+
+Branch `test/s10e-hardware-validation` starts from merged dev `0bc0869`.
+See `docs/validation/s10e/REPORT.md` and JSON evidence for actual device results.
+256 Android tests, five Rust tests, native regression suites, host JNI and device
+ARM64 JNI pass. Debug APK built/installed; no release/gameplay certification.
+Production fixes: lazy scroll worker; owned getevent teardown/parent-death signal;
+root task-stack subscription with polling fallback; immediate FGS notification.
+Debug harness validates actual root multitouch only on its dedicated safe Activity.
+Overlay rotation, favorites persistence/restoration, normal root lifecycle and idle
+root-process death cleanup passed. Existing XtMapper preferences remain unchanged.
+Both legacy packages disabled to prevent concurrent mapper startup; enable only
+after stopping MythicMapper. No data clearing/uninstall.
+
+Screen-off bounded-wait retest passed after normal user unlock; overlay detached,
+screen woke and keyguard remained locked. The initial 300ms assertion was premature.
+Remaining: complete physical G8 buttons/sticks/triggers, physical disconnect with
+held gestures, and manual MLBB
+training. G8 idle sleep/wake is observed, not physical USB unplug/replug. Physical
+capture is partial; no gameplay claims. Rust stays reference-only. Licensing
+evidence resolves Guava parent metadata and scrcpy reference match but inherited
+raster provenance/final artifact-specific notices remain release blockers.
+
+Resume with status/evidence inspection. Do not bypass keyguard. Do not merge PR or
+publish production releases. Private raw evidence remains ignored under
+`app/build/s10e-private/`; never commit it.
+
+Draft S10e validation PR: https://github.com/rickallauigan/mythicmapper/pull/12.

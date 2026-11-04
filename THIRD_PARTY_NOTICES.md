@@ -31,3 +31,26 @@ are original project artwork under GPL-3.0-or-later. They are not GameSir produc
 photos, MLBB artwork, or vendor endorsements. Inherited raster assets remain in
 history/source and require provenance review before a production release.
 The Rust reference crate has no third-party crate dependencies.
+
+## S10e validation licensing follow-up
+
+The embedded Maven POM in `com.google.guava:listenablefuture:1.0` identifies
+`guava-parent:26.0-android`. The published parent POM declares Apache License 2.0.
+Artifact/POM hashes and the exact parent source are recorded in
+`docs/validation/s10e/license-evidence.json`; the cache-only inventory may still
+show this entry unresolved when no loose POM is cached.
+
+`Pointer` and `PointersState` match scrcpy v1.24 when whitespace is ignored.
+`Point` is adapted, including floating-point coordinates. This identifies a
+verified reference, not proof that v1.24 was the exact original copied revision.
+Comparison hashes/source links: `docs/validation/s10e/scrcpy-comparison.json`.
+The scrcpy v1.24 license is bundled under `assets/licenses/`.
+
+The statically linked Rust 1.99.0 standard library includes additional components.
+Its complete distributed `COPYRIGHT-library.html` is bundled under
+`assets/licenses/rust-1.99.0-COPYRIGHT-library.html`. The crate has no external
+Cargo dependencies; that does not mean the binary contains no third-party runtime.
+GPLv3 and these project notices are also bundled as development APK assets.
+
+Inherited raster asset provenance and a final artifact-specific notice review
+remain release gates. These additions do not assert complete legal clearance.

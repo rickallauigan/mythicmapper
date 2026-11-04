@@ -35,7 +35,8 @@ public class Input implements TouchBackend {
     private volatile boolean submissionFailed;
     public boolean hasSubmissionFailure() { return submissionFailed; }
 
-    private final SmoothScrollThread mScrollThread = new SmoothScrollThread();
+    // Controller-only runtimes never scroll. Do not create an idle worker on each profile switch.
+    private SmoothScrollThread mScrollThread;
 
 
     private void initPointers() {
@@ -217,7 +218,8 @@ public class Input implements TouchBackend {
     }
 
 
-    public void onScrollEvent(float x, float y, float value){
+    public synchronized void onScrollEvent(float x, float y, float value){
+        if (mScrollThread == null) mScrollThread = new SmoothScrollThread();
         mScrollThread.onScrollEvent(x, y, value);
     }
 

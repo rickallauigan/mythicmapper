@@ -1,0 +1,11 @@
+{
+  "suite": "profiles_prepare",
+  "result": {
+    "created_disposable_profiles": 3,
+    "favorite_slots": 5,
+    "rename_duplicate_reorder": true,
+    "future_corrupt_rejected": true,
+    "preset_immutable": true
+  },
+  "status": "PASS"
+}

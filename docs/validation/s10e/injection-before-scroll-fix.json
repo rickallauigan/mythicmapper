@@ -1,0 +1,66 @@
+{
+  "suite": "injection",
+  "result": {
+    "root": {
+      "status": "PASS",
+      "uid": 0,
+      "protocol_operations": 418,
+      "pair_or_down_samples": 206,
+      "pair_or_down_p50_ns": 2901192,
+      "pair_or_down_p95_ns": 5313346,
+      "pair_or_down_p99_ns": 7121115,
+      "scroll_threads_before": 0,
+      "scroll_threads_after": 3,
+      "physical_controller_probe": {
+        "accepted_controller_interfaces": 1,
+        "rx_min": 0,
+        "rx_max": 255,
+        "rx_center_observed": 128,
+        "ry_min": 0,
+        "ry_max": 255,
+        "ry_center_observed": 128,
+        "cached_scan_average_ns": 1544619
+      },
+      "replay_with_waits_ns": 53233462,
+      "runtime_metrics": {
+        "backend_uid": 0,
+        "samples_total": "[0, 0, 431]",
+        "logical_active_touches": 0,
+        "controller_nodes": 0,
+        "buttons": "[]",
+        "right_stick_raw": "0,0",
+        "syn_dropped": 1,
+        "injection_errors": 0,
+        "last_error": "None",
+        "last_event": "EV_SYN SYN_DROPPED 00000000",
+        "last_receipt_jitter_ns": 0,
+        "queue": {
+          "window_samples": 0,
+          "p50_ns": 0,
+          "p95_ns": 0,
+          "p99_ns": 0
+        },
+        "processing_inclusive": {
+          "window_samples": 0,
+          "p50_ns": 0,
+          "p95_ns": 0,
+          "p99_ns": 0
+        },
+        "submission": {
+          "window_samples": 431,
+          "p50_ns": 685615,
+          "p95_ns": 1605385,
+          "p99_ns": 2499576
+        }
+      }
+    },
+    "surface": {
+      "observed_events": 429,
+      "max_pointers": 3,
+      "active_pointers": 0,
+      "sequence_errors": 0,
+      "cancel_events": 0
+    }
+  },
+  "status": "PASS"
+}

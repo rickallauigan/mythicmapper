@@ -1,0 +1,10 @@
+{
+  "suite": "startup",
+  "result": {
+    "root_binder": true,
+    "root_uid": 0,
+    "foreground_callback": true,
+    "mapping_started": false
+  },
+  "status": "PASS"
+}

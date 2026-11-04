@@ -30,3 +30,14 @@ Cargo dependencies. Its distributed `COPYRIGHT-library.html` (from the pinned of
 rustup toolchain) is 1,499,465 bytes, SHA-256 `5647be074c8edf7339fd863055923a8fc80bc5610a8d4661ec3b767b9d392c27`.
 Review its component-specific notices and bundle applicable license copies before production
 distribution; this runtime is not covered by the Maven POM inventory.
+
+## S10e validation follow-up
+
+The loose-cache POM gap for listenablefuture 1.0 was resolved manually using its
+embedded POM and published parent 26.0-android, which declares Apache License 2.0.
+See docs/validation/s10e/license-evidence.json. Pointer/PointersState match the
+scrcpy v1.24 reference ignoring whitespace; Point has coordinate adaptations.
+This is reference comparison evidence, not an invented original revision claim.
+GPLv3, project notices, scrcpy license and Rust library copyright notices are now
+included as APK assets. Remaining artwork/provenance and full transitive notice
+review still prevent a production licensing-clearance claim.

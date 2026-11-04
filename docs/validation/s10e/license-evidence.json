@@ -1,0 +1,15 @@
+{
+  "component": "com.google.guava:listenablefuture:1.0",
+  "artifact_sha256": "e4ad7607e5c0477c6f890ef26a49cb8d1bb4dffb650bab4502afee64644e3069",
+  "embedded_pom_sha256": "53873caf26bc1ed8a567ea6c939ab2aaa3f47a5e32d5cade95ddf5080d23238a",
+  "parent": "com.google.guava:guava-parent:26.0-android",
+  "parent_pom_url": "https://repo.maven.apache.org/maven2/com/google/guava/guava-parent/26.0-android/guava-parent-26.0-android.pom",
+  "parent_pom_sha256": "f8698ab46ca996ce889c1afc8ca4f25eb8ac6b034dc898d4583742360016cc04",
+  "inherited_licenses": [
+    {
+      "name": "The Apache Software License, Version 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.txt"
+    }
+  ],
+  "scope": "Manual parent-POM resolution; does not clear other components or artwork"
+}
