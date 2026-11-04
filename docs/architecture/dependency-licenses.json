@@ -1127,7 +1127,7 @@
     "status": "RECORDED"
   },
   {
-    "module": "pkg:maven/org.yaml/snakeyaml@2.5",
+    "module": "pkg:maven/org.yaml/snakeyaml@2.7",
     "licenses": [
       {
         "license": {
