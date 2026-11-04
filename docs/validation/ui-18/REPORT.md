@@ -84,3 +84,18 @@ Final executed local results:327 Android tests,0 failures/errors/skips;12 tools 
 Final repeat:222 frames,81 janky(36.49%), p50/95/99 36/101/150ms; PSS112471KB. This remains worse than baseline; no performance acceptance or speedup claim. APK SHA256 970dd08af2ddbe43bfb6a670056de080657771b30b6c4f9fed78e5ee1d9bca6b. Hosted final-head checks are linked in the draft PR; they are authoritative over historical runs.
 
 Final review follow-up: the overlay Editor route now uses the common collapse helper, preventing a leftover rounded panel backdrop behind the M after returning. A regression and actual AVD overlay-editor tap verify transparent collapse and eventual Activity/lease teardown. Instrumentation waits up to5s for Android destruction rather than assuming300ms. No lease is forcibly released to make the assertion pass. Final integrated suite has328 Android tests; hosted final-head results are recorded in both drafts.
+
+## Physical S10e follow-up — 2026-11-04
+
+See [physical acceptance report](../s10e/ui-acceptance-2026-11-04/REPORT.md)
+for real-device measurements and screenshots. This supersedes the earlier
+emulator-only physical-pending statement. The actual G8 status, five slots,
+search, personal editor/calibration navigation, rotation and per-Activity1.5×
+large text passed without modifying personal data. An IME covering the searched
+card initially broke the test; dismissing the IME corrected the test navigation.
+
+The read-only selected-profile presentation now follows the stored preferred
+profile while the runtime is correctly paused outside the game. It does not
+activate mappings. Physical debug scroll samples do not demonstrate a speedup;
+no rendering optimization is claimed. Final host suite:330 tests, no failures,
+errors or skips. Issue20 remains deferred; gameplay was not exercised.

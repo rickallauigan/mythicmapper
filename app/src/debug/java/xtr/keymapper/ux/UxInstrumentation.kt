@@ -27,7 +27,7 @@ class UxInstrumentation:Instrumentation() {
     }
     override fun onStart(){
         uiAutomation.serviceInfo=uiAutomation.serviceInfo.apply{flags=flags or android.accessibilityservice.AccessibilityServiceInfo.FLAG_INCLUDE_NOT_IMPORTANT_VIEWS or android.accessibilityservice.AccessibilityServiceInfo.FLAG_REPORT_VIEW_IDS or android.accessibilityservice.AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS}
-        val report=try{check(BuildConfigEmulator());if(args.getString("suite")=="home")home()else bubble()}catch(t:Throwable){File(targetContext.filesDir,"ux-failure.txt").writeText(nodes(uiAutomation.rootInActiveWindow).joinToString("\n"){"${it.viewIdResourceName} text=${it.text} desc=${it.contentDescription} editable=${it.isEditable} visible=${it.isVisibleToUser} actions=${it.actionList}"});JSONObject().put("status","FAIL").put("error",t.stackTraceToString().take(6000))}
+        val report=try{if(args.getString("suite")=="home_physical"){check(xtr.keymapper.BuildConfig.DEBUG&&Build.MODEL=="SM-G970F");physicalHome()}else{check(BuildConfigEmulator());if(args.getString("suite")=="home")home()else bubble()}}catch(t:Throwable){File(targetContext.filesDir,"ux-failure.txt").writeText(nodes(uiAutomation.rootInActiveWindow).joinToString("\n"){"${it.viewIdResourceName} text=${it.text} desc=${it.contentDescription} editable=${it.isEditable} visible=${it.isVisibleToUser} actions=${it.actionList}"});JSONObject().put("status","FAIL").put("error",t.stackTraceToString().take(6000))}
         finish(if(report.optString("status")=="PASS")Activity.RESULT_OK else Activity.RESULT_CANCELED,Bundle().apply{putString("ux",report.toString())})
     }
     private fun BuildConfigEmulator()=xtr.keymapper.BuildConfig.DEBUG&&Build.HARDWARE in setOf("ranchu","goldfish")
@@ -134,6 +134,51 @@ class UxInstrumentation:Instrumentation() {
     private fun scrollToSearch(){
         repeat(40){val node=byId("profile-search");if(node!=null&&node.isVisibleToUser){node.performAction(android.view.accessibility.AccessibilityNodeInfo.AccessibilityAction.ACTION_SHOW_ON_SCREEN.id);settle();return};scrollHome(false)}
         error("Search not reachable")
+    }
+    /** Actual personal library is read, searched and opened; never renamed/assigned/saved. */
+    private fun physicalHome():JSONObject {
+        val store=xtr.keymapper.mythic.HeroLibraryStore(targetContext);val before=store.read()
+        val mappings=xtr.keymapper.keymap.KeymapProfiles(targetContext).sharedPref
+        val protected=before.profiles.associate{it.id to mappings.getStringSet(it.id,null)?.toSet()}
+        check(targetContext.getSystemService(android.app.ActivityManager::class.java).getRunningServices(100).none{it.service.className=="xtr.keymapper.TouchPointer"&&it.started})
+        val connected=xtr.keymapper.devices.InputDeviceDiscovery.connected().any(xtr.keymapper.mythic.MythicScope::supported)
+        val a=startActivitySync(Intent(targetContext,xtr.keymapper.activity.MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+        try {
+            settle();check(text(if(connected)"GameSir G8 connected"else"Physical G8 not detected")!=null)
+            check(text("Virtual G8 · SIMULATED")!=null);shot("physical-home-overview")
+            scrollTo("favorite-strip");shot("physical-home-favorites")
+            repeat(4){if(byId("favorite-4")?.isVisibleToUser!=true)scrollFavorites(true)}
+            check(byId("favorite-4")?.isVisibleToUser==true);check(before.favorites.size==5)
+            val profile=before.profiles.firstOrNull()?:error("No personal profile to navigate safely")
+            scrollTo("profile-search");setText(profile.name)
+            // Dismiss only the IME; its window can cover the matching card on the S10e.
+            if(uiAutomation.windows.any{it.type==android.view.accessibility.AccessibilityWindowInfo.TYPE_INPUT_METHOD}){sendKeyDownUpSync(KeyEvent.KEYCODE_BACK);settle()}
+            scrollTo("profile-${profile.id}");shot("physical-home-library")
+            for((label,capture)in listOf("Visual editor" to false,"Calibrate" to true)) {
+                val monitor=addMonitor(xtr.keymapper.editor.EditorActivity::class.java.name,null,false)
+                try {
+                    click(label);val editor=waitForMonitorWithTimeout(monitor,10000)?:error("Editor route missing")
+                    waitForIdleSync();check(!editor.isFinishing)
+                    check(editor.intent.getStringExtra(xtr.keymapper.editor.EditorActivity.PROFILE_NAME)==profile.id)
+                    check(editor.intent.getBooleanExtra(xtr.keymapper.editor.EditorActivity.CAPTURE,false)==capture)
+                    main{editor.finish()};val end=SystemClock.uptimeMillis()+6000
+                    while((!editor.isDestroyed||EditorSessionGuard.active)&&SystemClock.uptimeMillis()<end)SystemClock.sleep(25)
+                    check(editor.isDestroyed&&!EditorSessionGuard.active);settle()
+                }finally{removeMonitor(monitor)}
+            }
+            repeat(12){homeRoot().performAction(android.view.accessibility.AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD);waitForIdleSync()}
+            main{a.requestedOrientation=android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE};waitForIdleSync();SystemClock.sleep(900);shot("physical-home-landscape")
+        }finally{main{a.finish()};waitForIdleSync()}
+        val large=startActivitySync(Intent(targetContext,PhysicalHomeLargeTextActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+        try {
+            main{large.requestedOrientation=android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT};waitForIdleSync();SystemClock.sleep(900)
+            check(large.resources.configuration.fontScale>=1.5f);check(text("Create mapping")!=null);check(text("Controller Tester")!=null)
+            shot("physical-home-large-text")
+        }finally{main{large.finish()};waitForIdleSync()}
+        check(store.read()==before&&protected.all{(id,lines)->mappings.getStringSet(id,null)?.toSet()==lines})
+        return JSONObject().put("status","PASS").put("physical_g8_observed",connected).put("five_slots",true).put("search",true)
+            .put("personal_editor_and_calibration_navigation",true).put("portrait_landscape",true).put("large_text_scale",1.5)
+            .put("simulated_action_labeled",true).put("personal_data_unchanged",true)
     }
     private fun bubble():JSONObject {
         val a=startActivitySync(Intent(targetContext,BubblePreviewActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))as BubblePreviewActivity

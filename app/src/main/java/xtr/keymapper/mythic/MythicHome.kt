@@ -86,7 +86,7 @@ private fun MythicHomeContent(activity:MainActivity) {
         onDispose {manager.unregisterInputDeviceListener(listener);activity.lifecycle.removeObserver(observer)}
     }
     LaunchedEffect(activity) {
-        activity.repeatOnLifecycle(Lifecycle.State.STARTED){while(true){active=activity.isComposeServiceActive();selected=activity.pointerOverlay?.selectedProfile ?: activity.selectedProfileNameForCompose();delay(750)}}
+        activity.repeatOnLifecycle(Lifecycle.State.STARTED){while(true){active=activity.isComposeServiceActive();selected=activity.pointerOverlay?.selectedProfileForUi() ?: activity.selectedProfileNameForCompose();delay(750)}}
     }
     MythicHomeScreen(library,devices.any(MythicScope::supported),active,selected,
         onActivate={p -> action {
