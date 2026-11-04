@@ -66,28 +66,22 @@ class UxInstrumentation:Instrumentation() {
         }
         error("Destination label not visible after navigation: $value")
     }
-    private fun verifyVirtualNavigation() {
-        val monitor=addMonitor(xtr.keymapper.virtual.VirtualG8Activity::class.java.name,null,false)
+    private fun verifyVirtualNavigation()=verifyHomeNavigation(xtr.keymapper.virtual.VirtualG8Activity::class.java,"Virtual G8 · SIMULATED","SIMULATED — DEV ONLY")
+    private fun verifyHomeNavigation(destinationClass:Class<out Activity>,action:String,label:String) {
+        val monitor=addMonitor(destinationClass.name,null,false)
         try {
             // Landscape has less vertical space: reveal the real Home action before clicking.
-            var revealed=false
-            repeat(12){
-                if(!revealed){
-                    val action=text("Virtual G8 · SIMULATED")
-                    if(action?.isVisibleToUser==true)revealed=true else scrollHome(true)
-                }
-            }
-            check(revealed){"Virtual G8 action unreachable by scrolling Home"}
-            click("Virtual G8 · SIMULATED")
-            val destination=waitForMonitorWithTimeout(monitor,10000)?:error("Virtual G8 Activity not launched")
-            awaitVisibleText("SIMULATED — DEV ONLY")
+            revealHome(action){text(action)}
+            click(action)
+            val destination=waitForMonitorWithTimeout(monitor,10000)?:error("Activity not launched: $action")
+            awaitVisibleText(label)
             check(!destination.isFinishing&&!destination.isDestroyed)
-            shot("home-virtual-g8")
+            shot("home-${destinationClass.simpleName}")
             sendKeyDownUpSync(KeyEvent.KEYCODE_BACK)
             val end=SystemClock.uptimeMillis()+10000
             while(!destination.isDestroyed&&SystemClock.uptimeMillis()<end)SystemClock.sleep(50)
-            check(destination.isDestroyed){"Virtual G8 did not finish on Back"}
-            awaitVisibleText("Virtual G8 · SIMULATED")
+            check(destination.isDestroyed){"$action did not finish on Back"}
+            check(homeRoot().isVisibleToUser){"Back did not restore Home"}
             check(!EditorSessionGuard.active)
         }finally{removeMonitor(monitor)}
     }
@@ -104,12 +98,19 @@ class UxInstrumentation:Instrumentation() {
         fun event(action:Int,ex:Float){val e=MotionEvent.obtain(start,SystemClock.uptimeMillis(),action,ex,y,0);e.source=android.view.InputDevice.SOURCE_TOUCHSCREEN;check(uiAutomation.injectInputEvent(e,true));e.recycle()}
         event(0,x);for(i in 1..8){SystemClock.sleep(20);event(2,x+(end-x)*i/8)};event(1,end);settle()
     }
+    private fun revealHome(label:String,find:()->android.view.accessibility.AccessibilityNodeInfo?):android.view.accessibility.AccessibilityNodeInfo {
+        // Filtering can shrink/clamp the list; rotation can restore focused fields.
+        // Either can place a requested node above OR below the current viewport.
+        for(forward in listOf(false,true))repeat(if(forward)40 else 12){
+            val node=find()
+            if(node?.isVisibleToUser==true)return node
+            scrollHome(forward)
+        }
+        error("Home control unreachable: $label")
+    }
     private fun scrollTo(id:String){
-        repeat(40){
-            val node=byId(id)
-            if(node!=null&&node.isVisibleToUser){node.performAction(android.view.accessibility.AccessibilityNodeInfo.AccessibilityAction.ACTION_SHOW_ON_SCREEN.id);settle();return}
-            scrollHome(true)
-        };error("Not found: $id")
+        revealHome(id){byId(id)}.performAction(android.view.accessibility.AccessibilityNodeInfo.AccessibilityAction.ACTION_SHOW_ON_SCREEN.id)
+        settle()
     }
     private fun setText(value:String){
         val editable=appNodes().firstOrNull{it.isEditable}?:text("Search profiles and starters")?:error("Text field missing")
@@ -158,18 +159,22 @@ class UxInstrumentation:Instrumentation() {
             finally{removeMonitor(monitor);mappings.edit().remove(alpha.id).commit()}
             // Return to the overview, then rotate the same Activity (no global settings).
             repeat(15){byId("mythic-home")?.performAction(android.view.accessibility.AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD);waitForIdleSync()}
-            click("Controller Tester");check(text("GameSir G8 Galileo Tester")!=null);sendKeyDownUpSync(KeyEvent.KEYCODE_BACK);settle()
+            verifyHomeNavigation(xtr.keymapper.tester.TesterActivity::class.java,"Controller Tester","GameSir G8 Galileo Tester")
             verifyVirtualNavigation()
             check(!EditorSessionGuard.active)
             main{a.requestedOrientation=android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE};waitForIdleSync();SystemClock.sleep(1000);shot("home-landscape")
+            // Deterministically reproduce a viewport restored below the navigation actions.
+            scrollTo("profile-search")
             verifyVirtualNavigation()
             return JSONObject().put("status","PASS").put("checks","physical/simulated labels; favorites replace/clear; search; rename; duplicate UUID; delete confirm/cancel; all five slots; editor/Tester/Virtual navigation; ownership cleanup; portrait/landscape").put("source","actual AVD accessibility; isolated disposable preferences").put("mapper_submissions",0)
+        }catch(t:Throwable){
+            // Capture while Home still exists; onStart's catch runs after this finally.
+            File(targetContext.filesDir,"ux-navigation-failure.txt").writeText(appNodes().joinToString("\n"){"${it.viewIdResourceName} text=${it.text} visible=${it.isVisibleToUser}"})
+            runCatching{shot("home-navigation-failure")}
+            throw t
         }finally{main{a.finish()};waitForIdleSync();store.read().profiles.forEach{store.delete(it.id)}}
     }
-    private fun scrollToSearch(){
-        repeat(40){val node=byId("profile-search");if(node!=null&&node.isVisibleToUser){node.performAction(android.view.accessibility.AccessibilityNodeInfo.AccessibilityAction.ACTION_SHOW_ON_SCREEN.id);settle();return};scrollHome(false)}
-        error("Search not reachable")
-    }
+    private fun scrollToSearch()=scrollTo("profile-search")
     /** Actual personal library is read, searched and opened; never renamed/assigned/saved. */
     private fun physicalHome():JSONObject {
         val store=xtr.keymapper.mythic.HeroLibraryStore(targetContext);val before=store.read()

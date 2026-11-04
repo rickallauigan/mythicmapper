@@ -151,6 +151,9 @@ def ux(suite='bubble'):
         adb('exec-out','run-as',PKG,'cat','files/ux/'+name+'.png',stdout=(WORK/(name+'.png')).open('wb'),text=False)
     if report['status']!='PASS':
         adb('exec-out','run-as',PKG,'cat','files/ux-failure.txt',stdout=(WORK/'ux-failure.txt').open('wb'))
+        if suite=='home':
+            adb('exec-out','run-as',PKG,'cat','files/ux-navigation-failure.txt',stdout=(WORK/'ux-navigation-failure.txt').open('wb'))
+            adb('exec-out','run-as',PKG,'cat','files/ux/home-navigation-failure.png',stdout=(WORK/'home-navigation-failure.png').open('wb'),text=False)
         raise RuntimeError('UX suite failed')
 def collect():
     verify();(WORK/'logcat.txt').write_text(output('logcat','-d','-t','1000'));adb('exec-out','screencap','-p',stdout=(WORK/'screenshot.png').open('wb'),text=False)

@@ -130,3 +130,26 @@ actual window disappearance for at most10seconds after that same single tap;
 no extra taps, app-ANR recovery, policy changes or skipped suites are introduced.
 Three tooling regressions verify delayed disappearance, deadline failure and
 refusal to hide a new application ANR. The complete tooling suite now has15 tests.
+
+Run41760183986 reached Home's new landscape navigation assertion. Its screenshot
+shows rotation restored the focused search field into view, placing the viewport
+below the actions rather than above them. Forward-only searching therefore moved
+away from the destination. Navigation now searches backward and forward, with
+bounded steps, before the same strict Activity/label/Back assertions. Failure
+screenshots and app accessibility nodes are captured before Home teardown; the
+previous catch ran afterward and only saw the launcher. This is test navigation
+state restoration, not evidence of a broken Virtual G8 Activity.
+
+Pre-teardown capture also reproduced a search-navigation failure: renaming the
+only filtered profile can shrink the list and clamp the viewport to its top,
+while the old search helper assumed the search field was always above it. The
+shared bounded Home reveal helper now searches in both directions for tags or
+text; search and Virtual navigation reuse it. CRUD, persisted UUID, exact label,
+orientation and teardown assertions are unchanged.
+
+The same immediate-label race reproduced on the Controller Tester route; its
+pre-teardown screenshot contains the correct destination title. Both destinations
+now share the Activity/visible-label/Back lifecycle helper. The landscape repeat
+explicitly visits Search before reopening Virtual G8, making below-actions viewport
+restoration deterministic. The complete owned-AVD Home suite passes locally with
+all CRUD, five-slot, UUID, navigation, orientation and cleanup assertions retained.
