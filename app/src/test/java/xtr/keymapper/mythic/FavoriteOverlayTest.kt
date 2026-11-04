@@ -103,6 +103,19 @@ class FavoriteOverlayTest {
             assertEquals(android.graphics.Color.TRANSPARENT,(root.background as android.graphics.drawable.ColorDrawable).color)
         }finally{overlay.close();controller.destroy();ShadowSettings.setCanDrawOverlays(false)}
     }
+    @Test fun reopeningRestoresSavedAnchorAfterTransientDisplayClamp() {
+        ShadowSettings.setCanDrawOverlays(true)
+        val controller=Robolectric.buildService(TouchPointer::class.java).create()
+        controller.get().getSharedPreferences("mythic_overlay",0).edit().putInt("x",80).putInt("y",100).commit()
+        val overlay=FavoriteOverlay(controller.get()){}
+        try {
+            overlay.show();shadowOf(Looper.getMainLooper()).idle()
+            val params=ReflectionHelpers.getField<android.view.WindowManager.LayoutParams>(overlay,"params")
+            params.x=0;params.y=0 // A transient narrower display constrained the visible position.
+            overlay.close();overlay.show();shadowOf(Looper.getMainLooper()).idle()
+            assertEquals(80,params.x);assertEquals(100,params.y)
+        }finally{overlay.close();controller.destroy();ShadowSettings.setCanDrawOverlays(false)}
+    }
     @Test fun missingPermissionDoesNotAttachAWindow() {
         ShadowSettings.setCanDrawOverlays(false)
         val controller=Robolectric.buildService(TouchPointer::class.java).create()
