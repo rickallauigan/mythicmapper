@@ -122,3 +122,11 @@ The added landscape repeat initially failed because the action was below the fol
 its actual screenshot showed normal Home content and the first action row at the
 viewport edge. The regression now scrolls the real Home surface until the Virtual
 G8 action is visible before clicking. Destination/lifecycle assertions remain strict.
+
+A later hosted run41759552690 failed before application tests because the existing
+single SystemUI-startup-ANR Wait tap was checked after only1second. Its retained
+post-failure screenshot shows the dialog already gone. Recovery now waits for
+actual window disappearance for at most10seconds after that same single tap;
+no extra taps, app-ANR recovery, policy changes or skipped suites are introduced.
+Three tooling regressions verify delayed disappearance, deadline failure and
+refusal to hide a new application ANR. The complete tooling suite now has15 tests.

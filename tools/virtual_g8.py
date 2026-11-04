@@ -162,6 +162,16 @@ def platform_ready():
         recover();AUTO_RECOVERIES+=1;return True
     if 'Application Not Responding:'in windows:raise RuntimeError('Application ANR blocks tests; no automatic recovery')
     return False
+def wait_for_systemui_dismissal():
+    """Wait for the single acknowledged startup dialog; never submit another tap."""
+    deadline=time.monotonic()+10
+    while True:
+        windows=output('shell','dumpsys','window','displays')
+        if 'Application Not Responding:'not in windows:return
+        if 'Application Not Responding: com.android.systemui'not in windows:
+            raise RuntimeError('Application ANR after SystemUI recovery; tests remain blocked')
+        if time.monotonic()>=deadline:raise RuntimeError('SystemUI recovery did not dismiss dialog within10s')
+        time.sleep(.25)
 def recover():
     """One explicit Wait on a verified owned-AVD SystemUI startup ANR, never an app ANR."""
     verify();windows=output('shell','dumpsys','window','displays')
@@ -180,8 +190,7 @@ def recover():
     events=output('logcat','-d','-b','events','-s','am_anr')
     save('boot-recovery.json',{'observed_systemui_startup_anr':True,'action':'Wait on verified owned AVD only','events':events})
     adb('shell','input','tap',str((bounds[0]+bounds[2])//2),str((bounds[1]+bounds[3])//2))
-    time.sleep(1)
-    if title in output('shell','dumpsys','window','displays'):raise RuntimeError('SystemUI recovery did not dismiss dialog')
+    wait_for_systemui_dismissal()
     print('Observed SystemUI startup ANR acknowledged with Wait; rerun the complete failed suite')
 def stop():
     if not (WORK/'owned-process.json').exists():raise RuntimeError('No owned emulator process recorded')
