@@ -43,3 +43,29 @@ data, emulator graphics and host conditions; this is not a release performance g
 Final local:324 Android tests / zero failures/errors/skips;12 Python tests; lint, debug APK and release manifest PASS. Actual AVD bubble suite PASS, JNI61,206 vectors and all seven virtual scenarios PASS / zero final pointers. A cold-boot SystemUI startup ANR was acknowledged by the existing bounded recovery; no security policy changed.
 
 Final review follow-up: editor navigation now uses the same collapse helper as tap/selection, restoring transparent background immediately. Regression checks panel closure and transparent collapsed backdrop. Final-head checks are linked in draft23; prior57d928a green results are historical.
+
+
+## Physical S10e acceptance — 2026-11-04
+
+This section supersedes the earlier emulator-only physical-pending statement.
+The unlocked SM-G970F runs Android16/LineageOS23.2 with the original G8 observed.
+No security or global performance settings changed.
+
+The user confirmed tap/expand/collapse/drag, then reproduced a missing M after
+unlock. The service had survived; its UI restoration depended on gameplay
+activation. Commit15f82e6 restores the overlay independently while retaining
+foreground, keyguard and editor ownership guards. The user subsequently confirmed
+the bubble returned at its moved position.
+
+A separate automatic rotation/restart check exposed a saved-versus-rendered anchor
+mismatch. Commitfcb6150 restores the persisted anchor before display clamping and
+measures the collapsed target before placement. Its regression and the physical
+repeat passed. The actual touch target measured48.15dp; visible face is44dp by
+implementation. The guarded blue-surface suite passed expand/collapse, transparent
+collapsed background, editor ownership hide/restore, landscape, editor return,
+position retention across service restart, and removal on stop. Gameplay touch
+submission delta was0. Profile/favorite snapshots remained identical.
+
+These are UI and safe-surface observations, not MLBB compatibility certification.
+Kimmy active-firing lock issue20 remains deferred. Outside-window gameplay touch
+pass-through and active gameplay ergonomics are not certified by these tests.
