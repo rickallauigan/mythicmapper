@@ -53,6 +53,7 @@ class UniversalActionHandler(mapping:UniversalMapping,private val handler:Handle
         }
         val a=actions.singleOrNull{code in it.inputs}?:return true
         if(a.kind==TouchAction.RESET){if(down)cancel("explicit reset");return true}
+        if(down&&a.kind==TouchAction.TAP&&a.id in applied&&owners[a.id].isNullOrEmpty())release(a.id)
         if(down){if(!neutral){blocked+=code;return true};if(a.cancelOthers){cancel("configured action cancellation");blocked.remove(code);pressed.add(code)};owners.getOrPut(a.id){linkedSetOf()}.add(code);order[a.id]=++serial}
         else {owners[a.id]?.remove(code);if(owners[a.id]?.isEmpty()==true)owners.remove(a.id)}
         reconcile();return true

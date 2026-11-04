@@ -119,4 +119,10 @@ class UniversalMappingTest {
         }finally{store.delete(p.id)}
     }
 
+    @Test fun rapidDistinctTapsDoNotDisappearBehindAnEarlierTapTimer(){
+        val t=Trace();val h=UniversalActionHandler(mapping(action("BTN_GAMEPAD").copy(kind=TouchAction.TAP)),Handler(Looper.getMainLooper()),t.sink,2280f,1080f)
+        h.axes(0f,0f);repeat(10){h.button("BTN_GAMEPAD",true);h.button("BTN_GAMEPAD",false);shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(5))}
+        shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(40));assertEquals(10,t.events.count{it.state==1});assertEquals(10,t.events.count{it.state==0});assertTrue(t.active.isEmpty());h.close()
+    }
+
 }

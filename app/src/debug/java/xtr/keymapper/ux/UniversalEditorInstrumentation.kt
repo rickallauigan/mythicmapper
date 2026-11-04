@@ -17,11 +17,13 @@ class UniversalEditorInstrumentation:Instrumentation() {
     private fun all():List<Node>{if(Build.VERSION.SDK_INT>=34)uiAutomation.clearCache();return uiAutomation.windows.flatMap{nodes(it.root)}.filter{it.packageName==targetContext.packageName}}
     private fun settle(){waitForIdleSync();SystemClock.sleep(100)}
     private fun find(value:String):Node {
-        repeat(35){
+        for(forward in listOf(false,true))for(step in 0 until 45){
             val found=all().firstOrNull{it.viewIdResourceName==value||it.text?.toString()==value}
             if(found!=null){if(found.isVisibleToUser)return found;found.performAction(Node.AccessibilityAction.ACTION_SHOW_ON_SCREEN.id);settle();all().firstOrNull{(it.viewIdResourceName==value||it.text?.toString()==value)&&it.isVisibleToUser}?.let{return it}}
             val root=all().firstOrNull{it.viewIdResourceName=="universal-editor"}
-            root?.performAction(if(it<3)Node.ACTION_SCROLL_BACKWARD else Node.ACTION_SCROLL_FORWARD);settle()
+            val direction=if(forward)Node.ACTION_SCROLL_FORWARD else Node.ACTION_SCROLL_BACKWARD
+            if(root?.actionList?.none{it.id==direction}!=false)break
+            root.performAction(direction);settle()
         };error("Unreachable control $value")
     }
     private fun click(value:String){var n=find(value);while(!n.isClickable&&n.parent!=null)n=n.parent;check(n.performAction(Node.ACTION_CLICK)){"Click failed $value"};settle()}

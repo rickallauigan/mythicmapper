@@ -14,7 +14,8 @@ def command(argv, **kw):
     shown=[str(x) if len(str(x))<200 else '<argument '+str(len(str(x)))+' bytes>' for x in argv]
     print('+ '+shlex.join(shown),file=sys.stderr,flush=True)
     kw.setdefault("text",True)
-    try:return subprocess.run(list(map(str,argv)),check=True,env=ENV,**kw)
+    kw.setdefault("check",True)
+    try:return subprocess.run(list(map(str,argv)),env=ENV,**kw)
     except subprocess.CalledProcessError as error:
         if error.stderr:print(str(error.stderr)[-4000:],file=sys.stderr)
         raise
