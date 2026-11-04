@@ -150,6 +150,10 @@ public class KeymapProfiles {
                             }
                     break;
 
+                case "HERO_GAMEPLAY":
+                    profile.heroGameplay=new xtr.keymapper.controller.HeroGameplayConfig(data);
+                    break;
+
                 case "CHORD":
                     profile.chords.add(new xtr.keymapper.keymap.element.ControllerChord(data));
                     break;
@@ -218,11 +222,17 @@ public class KeymapProfiles {
             }
         });
         if (structured != null && (!structured.getProfile().getEnabled() || xtr.keymapper.structured.StructuredProfiles.pending(lines))) {
-            profile.keys.clear(); profile.aimKeys.clear(); profile.chords.clear(); profile.swipeKeys.clear();
-            java.util.Arrays.fill(profile.dpadArray, null); profile.macroIdMap.clear();
-            profile.camera = null; profile.leftClick = null; profile.rightClick = null;
-            profile.mouseWalk = null; profile.mouseAimConfig = null;
+            profile.disabled = true;
+            // Hero activation has an explicit disabled/calibration barrier. Retain its
+            // marker definitions for editing; generic blocked imports keep prior behavior.
+            if (profile.heroGameplay == null) {
+                profile.keys.clear(); profile.aimKeys.clear(); profile.chords.clear(); profile.swipeKeys.clear();
+                java.util.Arrays.fill(profile.dpadArray, null); profile.macroIdMap.clear();
+                profile.camera = null; profile.leftClick = null; profile.rightClick = null;
+                profile.mouseWalk = null; profile.mouseAimConfig = null;
+            }
         }
+        if (profile.heroGameplay != null && !profile.heroGameplay.calibrated) profile.disabled = true;
         return profile;
     }
 }

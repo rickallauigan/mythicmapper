@@ -40,10 +40,14 @@ import xtr.keymapper.server.event.KeyEventHandler;
 
 public class RemoteService extends IRemoteService.Stub {
     private String currentDevice = "";
+    private volatile IBinder diagnosticOwner;
+    private IBinder.DeathRecipient diagnosticDeath;
+    private volatile Process inputReaderProcess;
+    private volatile boolean readerStopping;
     private final RuntimeRequestGate<InputService> runtimeRequests = new RuntimeRequestGate<>();
     private OnKeyEventListener mOnKeyEventListener;
     boolean isWaylandClient = false;
-    private ActivityObserverService activityObserverService;
+    private volatile ActivityObserverService activityObserverService;
     String nativeLibraryDir = System.getProperty("java.library.path");
     private View cursorView;
     private int TYPE_SECURE_SYSTEM_OVERLAY;
@@ -85,6 +89,8 @@ public class RemoteService extends IRemoteService.Stub {
         }
 
         Looper.getMainLooper().getThread().setUncaughtExceptionHandler((t, e) -> {
+            try { runtimeRequests.discardOwned(runtimeRequests.invalidateAndGetOwner(), this::stopRuntime); }
+            catch (Throwable cleanupFailure) { Log.e(TAG, "Crash cleanup failed", cleanupFailure); }
             try {
                 ApplicationErrorReport.CrashInfo crashInfo = new ApplicationErrorReport.CrashInfo(e);
 
@@ -165,23 +171,40 @@ public class RemoteService extends IRemoteService.Stub {
         if (isWaylandClient) {
             getevent = new BufferedReader(new InputStreamReader(System.in));
         } else {
-            getevent = Utils.geteventStream(nativeLibraryDir);
+            inputReaderProcess = Utils.startGeteventProcess(nativeLibraryDir);
+            if (readerStopping) inputReaderProcess.destroy();
+            getevent = new BufferedReader(new InputStreamReader(inputReaderProcess.getInputStream()));
         }
         String line;
         while ((line = getevent.readLine()) != null) {
+            final long receipt = System.nanoTime();
             String[] data = line.split(":"); // split a string like "/dev/input/event2: EV_REL REL_X ffffffff"
             // The reader only produces frames. Runtime selection and handling happen
             // on the same looper as initialization, teardown, pause, resume and reload.
             final String frame = line;
             RuntimeRequestGate.Frame<InputService> target = runtimeRequests.captureFrame();
-            mHandler.post(() -> handleInputFrame(target, data, frame));
+            mHandler.post(() -> {
+                long dispatch = System.nanoTime();
+                RuntimeMetrics.record(0, dispatch - receipt);
+                try { handleInputFrame(target, data, frame); }
+                finally { RuntimeMetrics.record(1, System.nanoTime() - dispatch); }
+            });
         }
     } catch (Exception e){
-        Log.e(TAG, e.getMessage(), e);
+        if (!readerStopping) RuntimeMetrics.error("Controller reader failed: " + e.getClass().getSimpleName());
+        Log.e(TAG, "Controller reader failed", e);
+    } finally {
+        Process reader = inputReaderProcess;
+        if (reader != null) reader.destroy();
+        if (!readerStopping) {
+            RuntimeMetrics.error("Controller reader stopped; restart mapper service");
+            long request = runtimeRequests.next();
+            mHandler.post(() -> runtimeRequests.commit(request, () -> stopServer(request, false)));
+        }
     }}
 
     private void handleInputFrame(RuntimeRequestGate.Frame<InputService> target, String[] data, String line) {
-        if (!runtimeRequests.accepts(target) || !addNewDevices(data)) return;
+        if (diagnosticOwner != null || !runtimeRequests.accepts(target) || !addNewDevices(data)) return;
         InputService current = target.owner;
         if (current == null) return;
         try {
@@ -231,8 +254,13 @@ public class RemoteService extends IRemoteService.Stub {
      */
     @Override
     public void startServer(KeymapProfile profile, KeymapConfig keymapConfig, IRemoteServiceCallback cb, int screenWidth, int screenHeight, int displayId) throws RemoteException {
+        xtr.keymapper.mythic.MythicScope.validateActivation(profile);
+        // Controller MVP never starts the legacy grabbing touchpad paths.
+        keymapConfig.touchpadInputMode = KeymapConfig.TOUCHPAD_DISABLED;
+        keymapConfig.pointerMode = KeymapConfig.POINTER_SYSTEM;
         long request = runtimeRequests.next();
         mHandler.post(() -> runtimeRequests.commit(request, () -> {
+            if (diagnosticOwner != null) return;
             runtimeRequests.discardOwned(runtimeRequests.takeOwned(request), this::stopRuntime);
             if (!runtimeRequests.isCurrent(request)) return;
             if (cb != null) try {
@@ -247,7 +275,7 @@ public class RemoteService extends IRemoteService.Stub {
             final InputService candidate;
             try {
                 candidate = new InputService(profile, keymapConfig, cb, screenWidth, screenHeight,
-                    cursorView, isWaylandClient, displayId);
+                    cursorView, isWaylandClient, displayId, null, true);
                 if (!isWaylandClient) {
                     candidate.setMouseLock(true);
                     candidate.openDevice(currentDevice);
@@ -289,7 +317,24 @@ public class RemoteService extends IRemoteService.Stub {
 
     private void stopServer(long request, boolean exitProcess) {
         runtimeRequests.discardOwned(runtimeRequests.takeOwned(request), this::stopRuntime);
-        if (!startedFromShell && exitProcess && runtimeRequests.isCurrent(request)) System.exit(0);
+        if (!startedFromShell && exitProcess && runtimeRequests.isCurrent(request)) {
+            stopInputReader();
+            if (activityObserverService != null) activityObserverService.stop();
+            System.exit(0);
+        }
+    }
+
+    private void stopInputReader() {
+        readerStopping = true;
+        Process reader = inputReaderProcess;
+        if (reader != null) reader.destroy();
+    }
+
+    /** RootService destruction must release resources synchronously, before its process exits. */
+    public void shutdown() {
+        stopInputReader();
+        runtimeRequests.discardOwned(runtimeRequests.invalidateAndGetOwner(), this::stopRuntime);
+        if (activityObserverService != null) activityObserverService.stop();
     }
 
     private void stopRuntime(InputService stopping, boolean releaseSharedResources) {
@@ -337,7 +382,12 @@ public class RemoteService extends IRemoteService.Stub {
     public void registerActivityObserver(ActivityObserver callback) {
         if (activityObserverService != null)
             activityObserverService.stop();
-        activityObserverService = new ActivityObserverService(callback);
+        activityObserverService = new ActivityObserverService(context, callback);
+    }
+
+    @Override
+    public void refreshActivityObserver() {
+        if (activityObserverService != null) activityObserverService.refresh();
     }
 
     @Override
@@ -365,7 +415,7 @@ public class RemoteService extends IRemoteService.Stub {
         long request = runtimeRequests.next();
         mHandler.post(() -> runtimeRequests.commit(request, () -> {
             InputService current = runtimeRequests.currentOwner();
-            if (current != null && current.stopEvents) current.pauseResumeKeymap();
+            if (diagnosticOwner == null && current != null && current.stopEvents) current.pauseResumeKeymap();
         }));
     }
 
@@ -387,6 +437,60 @@ public class RemoteService extends IRemoteService.Stub {
     public boolean isMappingPaused() {
         RuntimeRequestGate.Frame<InputService> frame = runtimeRequests.captureFrame();
         return (frame.owner == null || frame.owner.isPausedAndReleased()) && runtimeRequests.accepts(frame);
+    }
+
+    /** Synchronous acknowledgement only after the existing runtime owner releases all pointers.
+     * Client death drops the lease but never resumes a mapping. */
+    @Override public boolean beginDiagnostics(IBinder owner) {
+        if (owner == null) return false;
+        java.util.concurrent.CountDownLatch done = new java.util.concurrent.CountDownLatch(1);
+        java.util.concurrent.atomic.AtomicBoolean accepted = new java.util.concurrent.atomic.AtomicBoolean();
+        java.util.concurrent.atomic.AtomicBoolean cancelled = new java.util.concurrent.atomic.AtomicBoolean();
+        mHandler.post(() -> {
+            try {
+                if (cancelled.get() || (diagnosticOwner != null && diagnosticOwner != owner)) return;
+                if (diagnosticOwner == owner) { accepted.set(true); return; }
+                diagnosticDeath = () -> mHandler.post(() -> {
+                    if (diagnosticOwner != owner) return;
+                    diagnosticOwner = null; diagnosticDeath = null;
+                    stopServer(runtimeRequests.next(), true);
+                });
+                owner.linkToDeath(diagnosticDeath, 0);
+                diagnosticOwner = owner;
+                InputService previous = runtimeRequests.invalidateAndGetOwner();
+                runtimeRequests.discardOwned(previous, this::stopRuntime);
+                accepted.set(isMappingPaused() && (previous == null || previous.isDiagnosticSafe()));
+            } catch (RemoteException dead) { diagnosticOwner = null; }
+            catch (RuntimeException cleanupFailure) { RuntimeMetrics.error("Diagnostic cleanup failed: " + cleanupFailure.getClass().getSimpleName()); }
+            finally { done.countDown(); }
+        });
+        try {
+            if (done.await(3, java.util.concurrent.TimeUnit.SECONDS)) return accepted.get();
+            cancelled.set(true); endDiagnostics(owner); return false;
+        }
+        catch (InterruptedException interrupted) { cancelled.set(true); endDiagnostics(owner); Thread.currentThread().interrupt(); return false; }
+    }
+    @Override public void endDiagnostics(IBinder owner) {
+        mHandler.post(() -> {
+            if (diagnosticOwner != owner) return;
+            if (diagnosticDeath != null) owner.unlinkToDeath(diagnosticDeath, 0);
+            diagnosticOwner = null; diagnosticDeath = null;
+            // Explicit Home action is required to restart mapping; never resume on client death.
+        });
+    }
+
+    private boolean isReaderAlive() {
+        Process reader = inputReaderProcess;
+        if (reader == null) return false;
+        try { reader.exitValue(); return false; }
+        catch (IllegalThreadStateException running) { return true; }
+    }
+
+    @Override
+    public String diagnostics() {
+        try { return new org.json.JSONObject(RuntimeMetrics.snapshot()).put("foreground_observer",
+            activityObserverService == null ? "inactive" : activityObserverService.mode()).put("reader_running", isReaderAlive()).put("diagnostic_exclusive", diagnosticOwner != null).toString(2); }
+        catch (org.json.JSONException error) { return RuntimeMetrics.snapshot(); }
     }
 
     @Override

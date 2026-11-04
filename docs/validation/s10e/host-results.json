@@ -1,0 +1,27 @@
+{
+  "android_unit_tests": {
+    "tests": 256,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "gradle_test_lint_debug_build_release_manifest": "PASS",
+  "native_controller_probe": "PASS",
+  "native_mouse_reader": "PASS",
+  "native_reader_parent_death": "PASS",
+  "rust_unit_tests": {
+    "passed": 5,
+    "failed": 0
+  },
+  "host_jni_parity_vectors": 242406,
+  "s10e_fixture_hashes_matching": 12,
+  "profile_python_tests_passed": 12,
+  "tool_python_tests_passed": 4,
+  "secret_guard_findings": 0,
+  "physical_gameplay_test": false,
+  "actual_kotlin_jni_roundtrip": "PASS",
+  "actual_kotlin_missing_library_handling": "PASS",
+  "dependency_inventory": "PASS",
+  "osv_maven_components_queried": 104,
+  "osv_components_with_advisory_records": 0
+}

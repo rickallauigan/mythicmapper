@@ -1,0 +1,409 @@
+{
+  "elapsed_ms": 30252,
+  "app_cpu_ms": 18744,
+  "app_cpu_one_core_percent": 61.95953986513288,
+  "pss_before_kb": 176057,
+  "pss_after_kb": 172294,
+  "frames": 757,
+  "janky_frames": 178,
+  "janky_percent": 23.513870541611624,
+  "frame_metric_callback_drops": 0,
+  "work": {
+    "screen_compositions": {
+      "count": 756,
+      "total_ns": 0
+    },
+    "controller_compositions": {
+      "count": 746,
+      "total_ns": 0
+    },
+    "stick_compositions": {
+      "count": 1360,
+      "total_ns": 0
+    },
+    "trigger_compositions": {
+      "count": 47,
+      "total_ns": 0
+    },
+    "controller_draw_recording": {
+      "count": 747,
+      "total_ns": 559386534
+    },
+    "reducer": {
+      "count": 5623,
+      "total_ns": 1301949152
+    },
+    "snapshot": {
+      "count": 775,
+      "total_ns": 408737115
+    },
+    "log_append": {
+      "count": 14595,
+      "total_ns": 31965772
+    }
+  },
+  "art.gc.bytes-allocated": 68820992,
+  "art.gc.gc-count": 3,
+  "art.gc.gc-time": 101,
+  "art.gc.blocking-gc-count": 1,
+  "frame_total": {
+    "samples": 757,
+    "p50_ns": 15799736,
+    "p95_ns": 20133152,
+    "p99_ns": 25776846
+  },
+  "layout_measure": {
+    "samples": 757,
+    "p50_ns": 41346,
+    "p95_ns": 53961,
+    "p99_ns": 106962
+  },
+  "draw": {
+    "samples": 757,
+    "p50_ns": 6060269,
+    "p95_ns": 7624770,
+    "p99_ns": 11625038
+  },
+  "sync": {
+    "samples": 757,
+    "p50_ns": 305000,
+    "p95_ns": 463462,
+    "p99_ns": 617692
+  },
+  "command_issue": {
+    "samples": 757,
+    "p50_ns": 2762230,
+    "p95_ns": 3959385,
+    "p99_ns": 6134308
+  },
+  "input_handling": {
+    "samples": 757,
+    "p50_ns": 279538,
+    "p95_ns": 341846,
+    "p99_ns": 461115
+  },
+  "protocol": "g8-physical-v1-30s",
+  "build_type": "debug",
+  "render_revision": "baseline-b8e72c5",
+  "source": "Live physical Android input; identical timed prompts required",
+  "aborted": null,
+  "root_before": {
+    "mapping_active": false,
+    "exclusive": true,
+    "logical_touches": 0,
+    "submission_samples": 0
+  },
+  "root_after": {
+    "mapping_active": false,
+    "exclusive": true,
+    "logical_touches": 0,
+    "submission_samples": 0
+  },
+  "observed_events": 14595,
+  "queue_overflows": 0,
+  "orientation": 2,
+  "held_at_end": [],
+  "input_queue": {
+    "samples": 5623,
+    "p50_ns": 847154,
+    "p95_ns": 1576423,
+    "p99_ns": 2051653,
+    "total_samples": 5623,
+    "window_truncated": false
+  },
+  "ranges": {
+    "L": {
+      "normalized_extents": [
+        -1,
+        1,
+        -1,
+        1
+      ],
+      "outer_sectors": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "directions": [
+        "E",
+        "N",
+        "S",
+        "W"
+      ]
+    },
+    "R": {
+      "normalized_extents": [
+        -1,
+        1,
+        -1,
+        1
+      ],
+      "outer_sectors": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "directions": [
+        "E",
+        "N",
+        "S",
+        "W"
+      ]
+    },
+    "LT": {
+      "normalized_min": 0,
+      "normalized_max": 1
+    },
+    "RT": {
+      "normalized_min": 0,
+      "normalized_max": 1
+    }
+  },
+  "evidence": {
+    "schema": 1,
+    "source": "Observed Android events; no independent rear identities",
+    "controls": [
+      {
+        "label": "A",
+        "downs": 2,
+        "ups": 2,
+        "pairs": 2,
+        "samples": [
+          {
+            "uptime_ms": 602840253,
+            "source": "Android KEY_ACTION",
+            "code": 96,
+            "raw": 0,
+            "down": true
+          },
+          {
+            "uptime_ms": 602840387,
+            "source": "Android KEY_ACTION",
+            "code": 96,
+            "raw": 1,
+            "down": false
+          },
+          {
+            "uptime_ms": 602867153,
+            "source": "Android KEY_ACTION",
+            "code": 96,
+            "raw": 0,
+            "down": true
+          },
+          {
+            "uptime_ms": 602870170,
+            "source": "Android KEY_ACTION",
+            "code": 96,
+            "raw": 1,
+            "down": false
+          }
+        ]
+      },
+      {
+        "label": "R3",
+        "downs": 2,
+        "ups": 2,
+        "pairs": 2,
+        "samples": [
+          {
+            "uptime_ms": 602854125,
+            "source": "Android KEY_ACTION",
+            "code": 107,
+            "raw": 0,
+            "down": true
+          },
+          {
+            "uptime_ms": 602854420,
+            "source": "Android KEY_ACTION",
+            "code": 107,
+            "raw": 1,
+            "down": false
+          },
+          {
+            "uptime_ms": 602867989,
+            "source": "Android KEY_ACTION",
+            "code": 107,
+            "raw": 0,
+            "down": true
+          },
+          {
+            "uptime_ms": 602868266,
+            "source": "Android KEY_ACTION",
+            "code": 107,
+            "raw": 1,
+            "down": false
+          }
+        ]
+      },
+      {
+        "label": "RT",
+        "downs": 3,
+        "ups": 3,
+        "pairs": 3,
+        "samples": [
+          {
+            "uptime_ms": 602854976,
+            "source": "Android KEY_ACTION",
+            "code": 105,
+            "raw": 0,
+            "down": true
+          },
+          {
+            "uptime_ms": 602855161,
+            "source": "Android KEY_ACTION",
+            "code": 105,
+            "raw": 1,
+            "down": false
+          },
+          {
+            "uptime_ms": 602855352,
+            "source": "Android KEY_ACTION",
+            "code": 105,
+            "raw": 0,
+            "down": true
+          },
+          {
+            "uptime_ms": 602855528,
+            "source": "Android KEY_ACTION",
+            "code": 105,
+            "raw": 1,
+            "down": false
+          },
+          {
+            "uptime_ms": 602858422,
+            "source": "Android KEY_ACTION",
+            "code": 105,
+            "raw": 0,
+            "down": true
+          },
+          {
+            "uptime_ms": 602861047,
+            "source": "Android KEY_ACTION",
+            "code": 105,
+            "raw": 1,
+            "down": false
+          }
+        ]
+      },
+      {
+        "label": "LT",
+        "downs": 4,
+        "ups": 4,
+        "pairs": 4,
+        "samples": [
+          {
+            "uptime_ms": 602855005,
+            "source": "Android KEY_ACTION",
+            "code": 104,
+            "raw": 0,
+            "down": true
+          },
+          {
+            "uptime_ms": 602855160,
+            "source": "Android KEY_ACTION",
+            "code": 104,
+            "raw": 1,
+            "down": false
+          },
+          {
+            "uptime_ms": 602855261,
+            "source": "Android KEY_ACTION",
+            "code": 104,
+            "raw": 0,
+            "down": true
+          },
+          {
+            "uptime_ms": 602855956,
+            "source": "Android KEY_ACTION",
+            "code": 104,
+            "raw": 1,
+            "down": false
+          },
+          {
+            "uptime_ms": 602858431,
+            "source": "Android KEY_ACTION",
+            "code": 104,
+            "raw": 0,
+            "down": true
+          },
+          {
+            "uptime_ms": 602861049,
+            "source": "Android KEY_ACTION",
+            "code": 104,
+            "raw": 1,
+            "down": false
+          },
+          {
+            "uptime_ms": 602870209,
+            "source": "Android KEY_ACTION",
+            "code": 104,
+            "raw": 0,
+            "down": true
+          },
+          {
+            "uptime_ms": 602870467,
+            "source": "Android KEY_ACTION",
+            "code": 104,
+            "raw": 1,
+            "down": false
+          }
+        ]
+      },
+      {
+        "label": "B",
+        "downs": 2,
+        "ups": 2,
+        "pairs": 2,
+        "samples": [
+          {
+            "uptime_ms": 602867125,
+            "source": "Android KEY_ACTION",
+            "code": 97,
+            "raw": 0,
+            "down": true
+          },
+          {
+            "uptime_ms": 602868107,
+            "source": "Android KEY_ACTION",
+            "code": 97,
+            "raw": 1,
+            "down": false
+          },
+          {
+            "uptime_ms": 602868201,
+            "source": "Android KEY_ACTION",
+            "code": 97,
+            "raw": 0,
+            "down": true
+          },
+          {
+            "uptime_ms": 602869625,
+            "source": "Android KEY_ACTION",
+            "code": 97,
+            "raw": 1,
+            "down": false
+          }
+        ]
+      }
+    ],
+    "overlaps": [
+      {
+        "labels": "A + B",
+        "duration_ms": 1424,
+        "released": true
+      }
+    ],
+    "disconnects": [],
+    "aliases": []
+  }
+}

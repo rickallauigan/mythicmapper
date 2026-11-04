@@ -1,0 +1,24 @@
+{
+  "failed_run": "https://github.com/rickallauigan/mythicmapper/actions/runs/41455233159",
+  "failed_test": "ActivityObserverLifecycleTest.fallbackDeduplicatesAndStopCancelsFutureCallbacks",
+  "failure": "NullPointerException constructing Handler with null looper after observer.stop()",
+  "cause": "HandlerThread.getLooper() returns null after termination; assertion raced thread shutdown. CI artifact confirms Handler constructor at old test line 33.",
+  "deterministic_reproduction": "Joining stopped thread before original assertion reproduced identical NullPointerException locally.",
+  "fix_commit": "e05532f6eed3097ad7a2a5358fdff7c848227d1b",
+  "fix": "Cache Handler/Looper before stop, join thread and assert termination, assert rejected posts and no late refresh callbacks, exercise repeated stop, cleanup in finally.",
+  "test_disabled_or_skipped": false,
+  "local_focused": "PASS",
+  "local_full": {
+    "tests": 282,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "lint": "PASS",
+    "dependency_inventory": "PASS",
+    "debug_apk": "PASS",
+    "release_manifest": "PASS"
+  },
+  "remote_run": "https://github.com/rickallauigan/mythicmapper/actions/runs/41461355489",
+  "remote_status": "SUCCESS",
+  "remote_confirmed_commit": "e05532f6eed3097ad7a2a5358fdff7c848227d1b"
+}

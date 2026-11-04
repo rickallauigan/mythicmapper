@@ -8,6 +8,9 @@ import xtr.keymapper.keymap.KeymapConfig;
 import xtr.keymapper.keymap.KeymapProfile;
 
 interface IRemoteService {
+    void refreshActivityObserver() = 16; // Fresh foreground sample after unlock settles.
+    boolean beginDiagnostics(IBinder owner) = 14;
+    void endDiagnostics(IBinder owner) = 15;
     void destroy() = 16777114; // Destroy method defined by Shizuku server
 
 
@@ -24,6 +27,7 @@ interface IRemoteService {
     void pauseMouse() = 9;
     void reloadKeymap() = 10;
     boolean isActive() = 11;
+    String diagnostics() = 13;
     boolean isMappingPaused() = 12; // Readiness after existing touch cleanup, not a second input state.
 
 }

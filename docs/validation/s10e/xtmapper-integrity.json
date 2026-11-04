@@ -1,0 +1,12 @@
+{
+  "preference_files_compared": 6,
+  "all_preferences_unchanged": true,
+  "profile_files_unchanged": true,
+  "packages_disabled_for_conflict_prevention": [
+    "xtr.keymapper.debug",
+    "xtr.keymapper.debug.s10etest"
+  ],
+  "app_data_modified_by_validation": false,
+  "uninstalled": false,
+  "note": "An older XtMapper root process reappeared during the sprint; it and its reader were stopped before resuming. Disabled packages prevent accidental launch. No data was restored or overwritten."
+}

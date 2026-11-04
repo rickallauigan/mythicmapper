@@ -1,0 +1,43 @@
+{
+  "suite": "runtime",
+  "result": {
+    "production_binder_start_pause_resume_reload_replace_stop": true,
+    "empty_mapping_only": true,
+    "no_game_launch": true,
+    "root_metrics": {
+      "backend_uid": 0,
+      "samples_total": "[0, 0, 0]",
+      "logical_active_touches": 0,
+      "controller_nodes": 0,
+      "buttons": "[]",
+      "right_stick_raw": "0,0",
+      "syn_dropped": 0,
+      "injection_errors": 0,
+      "last_error": "None",
+      "last_event": "No controller event",
+      "last_receipt_jitter_ns": 0,
+      "queue": {
+        "window_samples": 0,
+        "p50_ns": 0,
+        "p95_ns": 0,
+        "p99_ns": 0
+      },
+      "processing_inclusive": {
+        "window_samples": 0,
+        "p50_ns": 0,
+        "p95_ns": 0,
+        "p99_ns": 0
+      },
+      "submission": {
+        "window_samples": 0,
+        "p50_ns": 0,
+        "p95_ns": 0,
+        "p99_ns": 0
+      },
+      "foreground_observer": "inactive",
+      "reader_running": true
+    },
+    "root_exit_observed": true
+  },
+  "status": "PASS"
+}

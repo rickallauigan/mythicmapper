@@ -27,6 +27,8 @@ public class InputService implements IInputInterface {
     private KeymapConfig keymapConfig;
     private KeymapProfile keymapProfile;
     private final Input input;
+    private final TouchBackend touchBackend;
+    private final boolean scopeRestricted;
     private final java.util.Map<Integer, float[]> activeTouches = new java.util.HashMap<>();
     private volatile boolean acceptingTouches = true;
     private final int screenWidth, screenHeight;
@@ -49,8 +51,23 @@ public class InputService implements IInputInterface {
                         View cursorView,
                         boolean isWaylandClient,
                         int displayId) throws RemoteException {
+        this(profile, keymapConfig, mCallback, screenWidth, screenHeight, cursorView, isWaylandClient, displayId, null);
+    }
+
+    public InputService(KeymapProfile profile, KeymapConfig keymapConfig, IRemoteServiceCallback mCallback,
+                        int screenWidth, int screenHeight, View cursorView, boolean isWaylandClient,
+                        int displayId, TouchBackend backend) throws RemoteException {
+        this(profile, keymapConfig, mCallback, screenWidth, screenHeight, cursorView, isWaylandClient, displayId, backend, false);
+    }
+
+    public InputService(KeymapProfile profile, KeymapConfig keymapConfig, IRemoteServiceCallback mCallback,
+                        int screenWidth, int screenHeight, View cursorView, boolean isWaylandClient,
+                        int displayId, TouchBackend backend, boolean scopeRestricted) throws RemoteException {
+        this.scopeRestricted = scopeRestricted;
+        if (scopeRestricted) xtr.keymapper.mythic.MythicScope.validateActivation(profile);
         this.screenWidth = screenWidth; this.screenHeight = screenHeight;
         input = new Input(displayId);
+        touchBackend = backend == null ? input : backend;
         profile.scale(screenWidth, screenHeight);
         this.keymapProfile = profile;
         this.keymapConfig = keymapConfig;
@@ -94,18 +111,24 @@ public class InputService implements IInputInterface {
             if (action == UP) activeTouches.remove(pointerId);
             else activeTouches.put(pointerId, new float[]{x, y});
         }
+        RuntimeMetrics.touches(activeTouches.size());
         InputDiagnostics.touch(pointerId, action, activeTouches.size());
         switch (action) {
             case UP:
-                input.injectTouch(MotionEvent.ACTION_UP, pointerId, 0.0f, x, y);
+                touchBackend.injectTouch(MotionEvent.ACTION_UP, pointerId, 0.0f, x, y);
                 break;
             case DOWN:
-                input.injectTouch(MotionEvent.ACTION_DOWN, pointerId, 1.0f, x, y);
+                touchBackend.injectTouch(MotionEvent.ACTION_DOWN, pointerId, 1.0f, x, y);
                 break;
             case MOVE:
                 // MOVE updates a held finger; zero pressure incorrectly signals an unloaded contact.
-                input.injectTouch(MotionEvent.ACTION_MOVE, pointerId, 1.0f, x, y);
+                touchBackend.injectTouch(MotionEvent.ACTION_MOVE, pointerId, 1.0f, x, y);
                 break;
+        }
+        if (touchBackend.hasSubmissionFailure()) {
+            acceptingTouches = false;
+            stopEvents = true;
+            mHandler.post(this::stop); // release producers and attempt UP on the lifecycle looper
         }
     }
 
@@ -131,6 +154,7 @@ public class InputService implements IInputInterface {
 
     @Override
     public void pauseResumeKeymap() {
+        if (touchBackend.hasSubmissionFailure()) { stopEvents = true; stop(); return; }
         stopEvents = !stopEvents;
         if (stopEvents) stop();
         else {
@@ -227,6 +251,7 @@ public class InputService implements IInputInterface {
         try {
             KeymapProfile nextProfile = mCallback.requestKeymapProfile();
             KeymapConfig nextConfig = mCallback.requestKeymapConfig();
+            if (scopeRestricted) xtr.keymapper.mythic.MythicScope.validateActivation(nextProfile);
             stop();
             nextProfile.scale(screenWidth, screenHeight);
             keymapProfile = nextProfile;
@@ -239,25 +264,42 @@ public class InputService implements IInputInterface {
                 startControllers();
             }
         } catch (Exception e) {
+            stopEvents = true;
             stop();
-            Log.e(RemoteService.TAG, e.getMessage(), e);
+            RuntimeMetrics.error("Profile reload rejected: " + e.getClass().getSimpleName());
+            Log.e(RemoteService.TAG, "Profile reload rejected", e);
         }
     }
 
     public void stop() {
+        // Kimmy's continuous attack must be aborted on lifecycle interruption,
+        // rather than treated as a normal user release. Other profiles retain UP.
+        if (keymapProfile != null && keymapProfile.heroGameplay != null && keymapProfile.heroGameplay.hero ==
+                xtr.keymapper.controller.HeroGameplayConfig.Hero.KIMMY) synchronized (this) {
+            acceptingTouches = false;
+            if (touchBackend.cancelOwnedGesture()) {
+                activeTouches.clear(); RuntimeMetrics.touches(0);
+            }
+        }
         if (controllers != null) { controllers.stop(); controllers = null; }
         keyEventHandler.stop();
         mouseEventHandler.stop();
         synchronized (this) {
             acceptingTouches = false;
             // Includes fixed keys, D-pad, swipe/macro pointers and pending mode transitions.
-            activeTouches.forEach((id, point) -> input.injectTouch(MotionEvent.ACTION_UP, id, 0, point[0], point[1]));
+            activeTouches.forEach((id, point) -> touchBackend.injectTouch(MotionEvent.ACTION_UP, id, 0, point[0], point[1]));
             activeTouches.clear();
+            RuntimeMetrics.touches(0);
         }
     }
 
     public synchronized boolean isPausedAndReleased() {
         return stopEvents && !acceptingTouches && activeTouches.isEmpty();
+    }
+
+    /** Logical release alone is insufficient if the backend rejected the cleanup submission. */
+    public synchronized boolean isDiagnosticSafe() {
+        return isPausedAndReleased() && !touchBackend.hasSubmissionFailure();
     }
 
     public void stopTouchpad() {

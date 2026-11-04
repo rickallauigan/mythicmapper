@@ -1,0 +1,35 @@
+{
+  "candidate": "Kimmy-owned gesture cancellation on runtime stop; Bennett retains UP",
+  "android_tests": 303,
+  "android_test_failures": 0,
+  "lint_build": "PASS",
+  "host_checks": "Rust/native/JNI/fixtures/profile checks PASS",
+  "screen_off_safe_surface": {
+    "suite": "kimmy_screen_cleanup",
+    "result": {
+      "root": {
+        "status": "PASS",
+        "screen_off_observed": true,
+        "submission_failure": false,
+        "logical_contacts_after_stop": 0,
+        "source": "Owned blue-surface gesture only; no gameplay injection or keyguard dismissal"
+      },
+      "surface": {
+        "observed_events": 3,
+        "max_pointers": 1,
+        "active_pointers": 0,
+        "sequence_errors": 0,
+        "cancel_events": 1
+      },
+      "same_activity": true,
+      "injector_binder_dead_after_unbind": false,
+      "manual_unlock": true,
+      "gameplay_test": false
+    },
+    "status": "PASS"
+  },
+  "gameplay_screen_off_retest": "FAIL: user reported same stuck-firing behavior on candidate 5e0f17a",
+  "profiles_and_favorites_unchanged": true,
+  "bennett_unchanged": true,
+  "scope": "Blue-surface cancellation passed; does not establish MLBB cleanup. Lock/unlock session retention is a separate follow-up."
+}

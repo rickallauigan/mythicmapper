@@ -1,0 +1,52 @@
+{
+  "source": "Measured actual Kimmy HUD, existing safe HeroTrainingProfiles.save UI path",
+  "screen": [
+    2280,
+    1080
+  ],
+  "centers": {
+    "BTN_GAMEPAD": [
+      1311,
+      965
+    ],
+    "BTN_WEST": [
+      1160,
+      963
+    ],
+    "BTN_EAST": [
+      1463,
+      970
+    ],
+    "BTN_TL": [
+      1955,
+      634
+    ],
+    "BTN_TL2": [
+      1943,
+      908
+    ],
+    "BTN_TR": [
+      1646,
+      943
+    ],
+    "BTN_TR2": [
+      1755,
+      743
+    ]
+  },
+  "center_uncertainty_px": 6,
+  "aim_radii_px": 80,
+  "radius_and_gesture_acceptance": "NOT TESTED; initial training values",
+  "kimmy_geometry_confirmed": true,
+  "kimmy_physical_controls_passed": [],
+  "bennett_unchanged": true,
+  "bennett_repeat_ms": 400,
+  "bennett_attack_radius_px": 180,
+  "other_profiles_unchanged": true,
+  "entire_library_favorites_unchanged": true,
+  "actual_hud_skill_labels": {
+    "RB": "Speed Up",
+    "RT": "CC",
+    "LB": "AOE"
+  }
+}

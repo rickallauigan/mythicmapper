@@ -21,13 +21,14 @@ public class Utils {
     }
 
     public static BufferedReader geteventStream(String nativeLibraryDir) throws IOException {
-        Process sh = Runtime.getRuntime().exec("sh");
-        DataOutputStream outputStream = new DataOutputStream(sh.getOutputStream());
+        return new BufferedReader(new InputStreamReader(startGeteventProcess(nativeLibraryDir).getInputStream()));
+    }
 
-        outputStream.writeBytes("exec env LD_PRELOAD=" + nativeLibraryDir + "/libgetevent.so getevent -ql\n");
-        outputStream.flush();
-
-        return new BufferedReader(new InputStreamReader(sh.getInputStream()));
+    /** Direct owned child: teardown can terminate exactly this reader, without process-name matching. */
+    public static Process startGeteventProcess(String nativeLibraryDir) throws IOException {
+        ProcessBuilder builder = new ProcessBuilder("getevent", "-ql");
+        builder.environment().put("LD_PRELOAD", nativeLibraryDir + "/libgetevent.so");
+        return builder.start();
     }
 
     public static WindowManager.LayoutParams getPointerLayoutParams(int type) {

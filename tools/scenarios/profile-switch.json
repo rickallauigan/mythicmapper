@@ -1,0 +1,64 @@
+{
+  "schema": 1,
+  "id": "profile-switch",
+  "source": "synthetic",
+  "description": "Dispose owner while held; new hero never inherits old logical contact.",
+  "steps": [
+    {
+      "at_ms": 10,
+      "code": "ABS_RX",
+      "value": 255,
+      "action": "axis",
+      "expect": {
+        "active_pointers": 1
+      }
+    },
+    {
+      "at_ms": 20,
+      "profile": "BENNETT",
+      "action": "profile",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 30,
+      "code": "BTN_TL2",
+      "down": true,
+      "action": "button",
+      "expect": {
+        "active_pointers": 1
+      }
+    },
+    {
+      "at_ms": 40,
+      "profile": "KIMMY",
+      "action": "profile",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 50,
+      "code": "ABS_RX",
+      "value": 128,
+      "action": "axis"
+    },
+    {
+      "at_ms": 60,
+      "code": "ABS_RX",
+      "value": 255,
+      "action": "axis",
+      "expect": {
+        "active_pointers": 1
+      }
+    },
+    {
+      "at_ms": 70,
+      "action": "release_all",
+      "expect": {
+        "active_pointers": 0
+      }
+    }
+  ]
+}

@@ -55,3 +55,23 @@ Java_xtr_keymapper_controller_ControllerDeviceMonitor_identity(JNIEnv *env, jcla
     if (result) (*env)->SetLongArrayRegion(env, result, 0, 2, data);
     return result;
 }
+
+/* Restrict MythicMapper to the historically observed original G8 USB mode.
+ * VID/PID alone is Sony's identity and is insufficient evidence. No device grab. */
+JNIEXPORT jboolean JNICALL
+Java_xtr_keymapper_controller_ControllerDeviceMonitor_isOriginalG8(JNIEnv *env, jclass cls, jstring path) {
+    (void)cls;
+    const char *name = (*env)->GetStringUTFChars(env, path, NULL);
+    if (!name) return JNI_FALSE;
+    int fd = open(name, O_RDONLY | O_NONBLOCK | O_CLOEXEC);
+    (*env)->ReleaseStringUTFChars(env, path, name);
+    if (fd < 0) return JNI_FALSE;
+    struct input_id id = {0};
+    char device_name[256] = {0};
+    int valid = ioctl(fd, EVIOCGID, &id) >= 0
+        && ioctl(fd, EVIOCGNAME(sizeof(device_name) - 1), device_name) >= 0
+        && id.bustype == BUS_USB && id.vendor == 0x054c && id.product == 0x0ce6
+        && strcmp(device_name, "Sony Interactive Entertainment GameSir-G8") == 0;
+    close(fd);
+    return valid ? JNI_TRUE : JNI_FALSE;
+}

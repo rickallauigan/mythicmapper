@@ -1,0 +1,73 @@
+{
+  "source": "Observed Android InputDevice events",
+  "ready": true,
+  "status": "Connected",
+  "event_history_count": 38,
+  "passed_checks": [
+    "L3",
+    "R3"
+  ],
+  "applicable_checks": 23,
+  "held": [
+    "R3"
+  ],
+  "queue_overflows": 0,
+  "repeated_downs": 0,
+  "events": [
+    "1964ms Android KEY_ACTION code=107 R3 raw=0.0  DOWN",
+    "2150ms Android KEY_ACTION code=107 R3 raw=1.0  UP",
+    "2707ms Android KEY_ACTION code=107 R3 raw=0.0  DOWN",
+    "2899ms Android KEY_ACTION code=107 R3 raw=1.0  UP",
+    "3016ms Android KEY_ACTION code=107 R3 raw=0.0  DOWN",
+    "3210ms Android KEY_ACTION code=107 R3 raw=1.0  UP",
+    "3973ms Android AXIS code=16 HAT_Y raw=0.0 norm=0.000 MOVE",
+    "3973ms Android AXIS code=15 HAT_X raw=0.0 norm=0.000 MOVE",
+    "3973ms Android AXIS code=18 RTRIGGER raw=0.0 norm=0.000 MOVE",
+    "3973ms Android AXIS code=22 GAS raw=0.0 norm=-1.000 MOVE",
+    "3973ms Android AXIS code=14 RZ raw=0.003921628 norm=0.004 MOVE",
+    "3973ms Android AXIS code=11 Z raw=0.003921628 norm=0.004 MOVE",
+    "3973ms Android AXIS code=17 LTRIGGER raw=0.0 norm=0.000 MOVE",
+    "3973ms Android AXIS code=23 BRAKE raw=0.0 norm=-1.000 MOVE",
+    "3973ms Android AXIS code=1 Y raw=0.003921628 norm=0.004 MOVE",
+    "3973ms Android AXIS code=0 X raw=0.011764765 norm=0.012 MOVE",
+    "3986ms Android AXIS code=0 X raw=0.019607902 norm=0.020 MOVE",
+    "4003ms Android AXIS code=0 X raw=0.027451038 norm=0.027 MOVE",
+    "4086ms Android AXIS code=0 X raw=0.035294175 norm=0.035 MOVE",
+    "4066ms Android AXIS code=0 X raw=0.027451038 norm=0.027 MOVE",
+    "4070ms Android AXIS code=0 X raw=0.019607902 norm=0.020 MOVE",
+    "4090ms Android AXIS code=0 X raw=0.011764765 norm=0.012 MOVE",
+    "4121ms Android AXIS code=0 X raw=0.003921628 norm=0.004 MOVE",
+    "6252ms Android KEY_ACTION code=106 L3 raw=0.0  DOWN",
+    "6399ms Android KEY_ACTION code=106 L3 raw=1.0  UP",
+    "6531ms Android KEY_ACTION code=106 L3 raw=0.0  DOWN",
+    "6653ms Android KEY_ACTION code=106 L3 raw=1.0  UP",
+    "6926ms Android KEY_ACTION code=106 L3 raw=0.0  DOWN",
+    "7054ms Android KEY_ACTION code=106 L3 raw=1.0  UP",
+    "7165ms Android KEY_ACTION code=106 L3 raw=0.0  DOWN",
+    "7259ms Android KEY_ACTION code=106 L3 raw=1.0  UP",
+    "7392ms Android KEY_ACTION code=106 L3 raw=0.0  DOWN",
+    "7502ms Android KEY_ACTION code=106 L3 raw=1.0  UP",
+    "7650ms Android KEY_ACTION code=106 L3 raw=0.0  DOWN",
+    "7802ms Android KEY_ACTION code=106 L3 raw=1.0  UP",
+    "7864ms Android KEY_ACTION code=107 R3 raw=0.0  DOWN",
+    "8026ms Android KEY_ACTION code=107 R3 raw=1.0  UP",
+    "8104ms Android KEY_ACTION code=107 R3 raw=0.0  DOWN"
+  ],
+  "receipt_to_reducer_ns": {
+    "samples": 30,
+    "p50": 515654,
+    "p95": 1940270,
+    "p99": 10890885
+  },
+  "app_cpu_ms": 23313,
+  "uptime_ms": 598325946,
+  "app_pss_kb": 197442,
+  "root": {
+    "backend_uid": 0,
+    "logical_active_touches": 0,
+    "diagnostic_exclusive": true,
+    "reader_running": true,
+    "injection_errors": 0,
+    "injection_submission_samples": 0
+  }
+}

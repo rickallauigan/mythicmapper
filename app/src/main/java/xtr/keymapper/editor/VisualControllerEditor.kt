@@ -57,6 +57,7 @@ fun VisualControllerEditor(session: VisualMappingSession, overlay: Boolean, read
     var size by remember { mutableStateOf(IntSize.Zero) }
     val profile = remember(revision) { session.profile }
     val context = androidx.compose.ui.platform.LocalContext.current
+    val displayName = remember(session.profileId) { runCatching { xtr.keymapper.mythic.HeroLibraryStore(context).read().profiles.find { it.id == session.profileId }?.name }.getOrNull() ?: session.profileId }
     val rows = remember(revision) { ProfileMappingSummary.from(profile, try { CapturedTargetStore(context).read() } catch (_: Exception) { emptyList() }).rows }
     fun load(code: String) {
         selected = code; error = null; placing = false; advanced = false
@@ -137,7 +138,7 @@ fun VisualControllerEditor(session: VisualMappingSession, overlay: Boolean, read
             } else {
                 Surface(Modifier.fillMaxSize()) {
                     Column(Modifier.safeDrawingPadding().padding(12.dp).verticalScroll(rememberScrollState())) {
-                        Text("Controller • ${session.profileId}${if (session.dirty) " • Unsaved" else ""}", style = MaterialTheme.typography.titleLarge)
+                        Text("Controller • $displayName${if (session.dirty) " • Unsaved" else ""}", style = MaterialTheme.typography.titleLarge)
                         Text(applicationName, style = MaterialTheme.typography.bodyMedium)
                         Text(deviceDescription, style = MaterialTheme.typography.bodySmall)
                         if (!overlay) Text("Fullscreen fallback: open the game behind the editor using overlay permission for live HUD measurement. Do not place unseen game targets.", color = MaterialTheme.colorScheme.secondary)

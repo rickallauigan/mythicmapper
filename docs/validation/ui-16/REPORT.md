@@ -1,0 +1,71 @@
+# Circular floating selector — issue16
+
+Based on draft22 (ea94416), preserving the #14/#13/#12 stack. Original Canvas M,
+44dp circular face, transparent48dp window when collapsed, accessible Button label.
+Expanded dark card preserves five slots, selected UUID, editor and Collapse.
+No vendor/game assets copied from the reference board. Native M artwork is original.
+
+Tap/drag use Android touch slop. Drag never invokes selection; position persists
+only after gesture completion. Window bounds include conservative system/cutout
+insets; layout and display changes reclamp. The 750ms permission/display check is
+inherited; there is no new controller polling or animation loop. WindowManager
+updates occur on drag/size/clamp changes, not every refresh. Paint is reused.
+
+Production constructor retains the real G8 check and existing TouchPointer switch
+callback. The internal context seam allows a debug-only preview with isolated
+`ux_preview_*` preferences and a recording selection callback, never mapping.
+No gameplay/runtime/hero/fixture files changed. Existing service screen-off/unlock
+restoration remains the owner; editor/tester leases hide the overlay immediately.
+Permission loss detaches on the next bounded refresh; close/show are idempotent.
+
+AVD interaction command: `python3 tools/virtual_g8.py ux bubble` after boot/install.
+It verifies owned emulator identity and grants only this debug APK's overlay appop
+on the emulator. Debug instrumentation additionally requires ranchu/goldfish hardware.
+Actual touch gestures target the preview overlay; no root or game touch backend.
+Checks cover48dp target, expand/collapse, drag-without-selection, favorite callback,
+position retained through close/show, duplicate show, editor/tester guard hide,
+rotation and detached final view. Host tests cover stale-position bounds, permission
+revocation, initial lease visibility and lifecycle. Native pale button backgrounds
+found in screenshot inspection were corrected to dark high-contrast surfaces.
+
+Screenshots and exact final results are recorded alongside this report. Screenshots
+are from the APK, not reference assets. Physical MLBB/S10e overlay acceptance remains
+PENDING PHYSICAL; the phone was not commanded. No FPS improvement is claimed: no
+comparable physical rendering benchmark was performed. Process death releases windows
+through Android; this is distinct from graceful service teardown and root touch cleanup.
+
+`tools/measure_home.py before|after` is an exploratory debug-only AVD workload:
+12 alternating250ms swipes with explicit Home foreground checks. It retains raw
+gfxinfo/meminfo/cpuinfo and parsed frame percentiles; it does not infer physical
+latency or isolated workload CPU from sampled dumpsys. Compare only like orientation,
+data, emulator graphics and host conditions; this is not a release performance gate.
+
+Final local:324 Android tests / zero failures/errors/skips;12 Python tests; lint, debug APK and release manifest PASS. Actual AVD bubble suite PASS, JNI61,206 vectors and all seven virtual scenarios PASS / zero final pointers. A cold-boot SystemUI startup ANR was acknowledged by the existing bounded recovery; no security policy changed.
+
+Final review follow-up: editor navigation now uses the same collapse helper as tap/selection, restoring transparent background immediately. Regression checks panel closure and transparent collapsed backdrop. Final-head checks are linked in draft23; prior57d928a green results are historical.
+
+
+## Physical S10e acceptance — 2026-11-04
+
+This section supersedes the earlier emulator-only physical-pending statement.
+The unlocked SM-G970F runs Android16/LineageOS23.2 with the original G8 observed.
+No security or global performance settings changed.
+
+The user confirmed tap/expand/collapse/drag, then reproduced a missing M after
+unlock. The service had survived; its UI restoration depended on gameplay
+activation. Commit15f82e6 restores the overlay independently while retaining
+foreground, keyguard and editor ownership guards. The user subsequently confirmed
+the bubble returned at its moved position.
+
+A separate automatic rotation/restart check exposed a saved-versus-rendered anchor
+mismatch. Commitfcb6150 restores the persisted anchor before display clamping and
+measures the collapsed target before placement. Its regression and the physical
+repeat passed. The actual touch target measured48.15dp; visible face is44dp by
+implementation. The guarded blue-surface suite passed expand/collapse, transparent
+collapsed background, editor ownership hide/restore, landscape, editor return,
+position retention across service restart, and removal on stop. Gameplay touch
+submission delta was0. Profile/favorite snapshots remained identical.
+
+These are UI and safe-surface observations, not MLBB compatibility certification.
+Kimmy active-firing lock issue20 remains deferred. Outside-window gameplay touch
+pass-through and active gameplay ergonomics are not certified by these tests.

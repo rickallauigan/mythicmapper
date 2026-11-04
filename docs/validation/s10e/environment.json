@@ -1,0 +1,30 @@
+{
+  "device_model": "SM-G970F",
+  "android_release": "16",
+  "sdk": 36,
+  "lineage": "23.2-20260725-NIGHTLY-beyond0lte",
+  "abi": "arm64-v8a",
+  "root_uid": 0,
+  "selinux": "Enforcing",
+  "cpu_cores": 8,
+  "mem_total_kb": 5545028,
+  "initial_mem_available_kb": 2521268,
+  "data_storage_gb": {
+    "total": 111,
+    "used": 52,
+    "available": 59
+  },
+  "physical_display_pixels": [
+    1080,
+    2280
+  ],
+  "physical_density_dpi": 480,
+  "override_density_dpi": 432,
+  "package": "io.github.rickallauigan.mythicmapper.debug",
+  "version": "0.1.0-dev",
+  "overlay_permission": true,
+  "notification_permission": true,
+  "mlbb_installed": true,
+  "mlbb_launched_by_validation": false,
+  "identifiers_redacted": true
+}

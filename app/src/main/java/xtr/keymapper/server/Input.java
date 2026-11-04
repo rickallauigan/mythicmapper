@@ -19,7 +19,7 @@ import java.lang.reflect.Method;
 
 import xtr.keymapper.server.event.MouseEventHandler;
 
-public class Input {
+public class Input implements TouchBackend {
 
     static Method injectInputEventMethod;
     static Object inputManager;
@@ -32,8 +32,11 @@ public class Input {
     private final int displayId;
     private long lastTouchDown;
     private int pointerCount = 0;
+    private volatile boolean submissionFailed;
+    public boolean hasSubmissionFailure() { return submissionFailed; }
 
-    private final SmoothScrollThread mScrollThread = new SmoothScrollThread();
+    // Controller-only runtimes never scroll. Do not create an idle worker on each profile switch.
+    private SmoothScrollThread mScrollThread;
 
 
     private void initPointers() {
@@ -105,6 +108,23 @@ public class Input {
                 0, 0, 1f, 1f,
                 0, 0, source, 0);
         injectInputEvent(motionEvent);
+    }
+
+    /** Cancels our tracked injection stream, never the system-wide touch state. */
+    @Override public synchronized boolean cancelOwnedGesture() {
+        int count = pointersState.update(pointerProperties, pointerCoords);
+        if (count == 0) { pointerCount = 0; return true; }
+        for (int i=0;i<count;i++) {
+            Pointer pointer = pointersState.get(i);
+            pointer.setUp(true); pointer.setPressure(0);
+        }
+        pointersState.update(pointerProperties, pointerCoords);
+        pointerCount = 0;
+        MotionEvent event = MotionEvent.obtain(lastTouchDown, SystemClock.uptimeMillis(),
+                MotionEvent.ACTION_CANCEL, count, pointerProperties, pointerCoords,
+                0, 0, 1f, 1f, 0, 0, InputDevice.SOURCE_TOUCHSCREEN, 0);
+        injectInputEvent(event);
+        return true;
     }
 
     synchronized void injectMouseClick(long pointerId, float x, float y, boolean pressed, int actionButton) {
@@ -215,7 +235,8 @@ public class Input {
     }
 
 
-    public void onScrollEvent(float x, float y, float value){
+    public synchronized void onScrollEvent(float x, float y, float value){
+        if (mScrollThread == null) mScrollThread = new SmoothScrollThread();
         mScrollThread.onScrollEvent(x, y, value);
     }
 
@@ -239,6 +260,7 @@ public class Input {
     }
 
     private void injectInputEvent(MotionEvent motionEvent)  {
+        long submissionStart = System.nanoTime();
         try {
             InputDiagnostics.motion(motionEvent);
             // Set display ID for the motion event using reflection
@@ -247,10 +269,17 @@ public class Input {
             }
             // The second argument is injection MODE, not the target display.
             // Display routing is set on the event above; keep delivery asynchronous.
-            injectInputEventMethod.invoke(inputManager, motionEvent, 0);
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            Log.e(RemoteService.TAG, e.getMessage(), e);
+            Object result = injectInputEventMethod.invoke(inputManager, motionEvent, 0);
+            if (Boolean.FALSE.equals(result)) {
+                submissionFailed = true;
+                RuntimeMetrics.error("InputManager rejected asynchronous submission");
+            }
+        } catch (IllegalAccessException | InvocationTargetException | RuntimeException e) {
+            submissionFailed = true;
+            RuntimeMetrics.error(e.getClass().getSimpleName());
+            Log.e(RemoteService.TAG, "Touch submission failed", e);
         } finally {
+            RuntimeMetrics.record(2, System.nanoTime() - submissionStart);
             motionEvent.recycle();
         }
     }
