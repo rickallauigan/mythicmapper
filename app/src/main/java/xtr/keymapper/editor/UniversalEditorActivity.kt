@@ -56,14 +56,14 @@ open class UniversalEditorActivity:ComponentActivity() {
         contentResolver.takePersistableUriPermission(uri,Intent.FLAG_GRANT_READ_URI_PERMISSION);loadImage(uri)
     }.onFailure{error=it.message}}
     private val export=registerForActivityResult(ActivityResultContracts.CreateDocument("application/json")){uri->if(uri!=null)runCatching{
-        contentResolver.openOutputStream(uri,"wt")!!.use{it.write(requireNotNull(exportText).toByteArray(Charsets.UTF_8))};status="Exported universal schema2 JSON"
+        UniversalStorage.exportSnapshot(exportText){requireNotNull(contentResolver.openOutputStream(uri,"wt")){"Document provider refused export"}};status="Exported universal schema2 JSON"
     }.onFailure{error="Export failed: ${it.message}"}}
     private val importFile=registerForActivityResult(ActivityResultContracts.OpenDocument()){uri->if(uri!=null)runCatching{
         val text=contentResolver.openInputStream(uri)!!.use(xtr.keymapper.structured.ProfileCodec::read)
         val d=UniversalCodec.decode(text);create(d.cloned(d.name))
     }.onFailure{error="Import rejected; no existing mapping changed: ${it.message}"}}
     override fun onCreate(state:Bundle?) {
-        super.onCreate(state);EditorSessionGuard.acquire(this)
+        super.onCreate(state);exportText=state?.getString("export");EditorSessionGuard.acquire(this)
         val original=requireNotNull(window.callback)
         window.callback=object:android.view.Window.Callback by original {
             override fun dispatchKeyEvent(event:android.view.KeyEvent)=controllerKey(event)||original.dispatchKeyEvent(event)
@@ -115,6 +115,6 @@ open class UniversalEditorActivity:ComponentActivity() {
     }
     private fun stopPreview(){preview?.close();preview=null}
     override fun onStop(){getSystemService(android.hardware.input.InputManager::class.java).unregisterInputDeviceListener(deviceListener);stopPreview();revision++;super.onStop()}
-    override fun onSaveInstanceState(out:Bundle){draft?.let{out.putString("draft",it.snapshot());out.putStringArrayList("expected",ArrayList(expected))};imageUri?.let{out.putString("image",it)};super.onSaveInstanceState(out)}
+    override fun onSaveInstanceState(out:Bundle){exportText?.let{out.putString("export",it)};draft?.let{out.putString("draft",it.snapshot());out.putStringArrayList("expected",ArrayList(expected))};imageUri?.let{out.putString("image",it)};super.onSaveInstanceState(out)}
     override fun onDestroy(){stopPreview();EditorSessionGuard.release(this);super.onDestroy()}
 }

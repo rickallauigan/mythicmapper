@@ -10,6 +10,12 @@ import xtr.keymapper.structured.StructuredProfiles
 /** Uses existing string-set transactions. Neither legacy nor starter data is rewritten. */
 object UniversalStorage {
     const val TAG="UNIVERSAL_MAPPING_V2"
+    /** Validate before invoking a document provider that may truncate its destination on open. */
+    fun exportSnapshot(snapshot:String?,open:()->java.io.OutputStream){
+        val text=requireNotNull(snapshot){"Export session expired; choose Export again"}
+        val bytes=UniversalCodec.encode(UniversalCodec.decode(text)).toByteArray(Charsets.UTF_8)
+        open().use{it.write(bytes)}
+    }
     @JvmStatic fun contains(text:String)=text.lineSequence().any{it.trim().startsWith("$TAG ")}
     fun pack(d:UniversalMapping):Set<String> = setOf("APPLICATION ${d.game}","SCREENSIZE ${d.geometry.width} ${d.geometry.height}",
         "$TAG ${Base64.encodeToString(UniversalCodec.encode(d).toByteArray(Charsets.UTF_8),Base64.NO_WRAP)}")+(if(d.enabled&&d.calibrated)setOf("ENABLED")else emptySet())

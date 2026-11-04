@@ -125,4 +125,19 @@ class UniversalMappingTest {
         shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(40));assertEquals(10,t.events.count{it.state==1});assertEquals(10,t.events.count{it.state==0});assertTrue(t.active.isEmpty());h.close()
     }
 
+    @Test fun invalidOrExpiredExportNeverOpensDestinationAndSavedSnapshotRoundTrips(){
+        var opened=false
+        for(bad in listOf(null,"not JSON",UniversalCodec.encode(mapping(action("BTN_GAMEPAD"))).replace("\"schema_version\":2","\"schema_version\":99"))){
+            assertThrows(Exception::class.java){UniversalStorage.exportSnapshot(bad){opened=true;java.io.ByteArrayOutputStream()}}
+            assertFalse(opened)
+        }
+        val d=mapping(action("BTN_GAMEPAD"));val state=Bundle().apply{putString("export",UniversalCodec.encode(d))}
+        val parcel=Parcel.obtain()
+        try{
+            state.writeToParcel(parcel,0);parcel.setDataPosition(0);val restored=Bundle.CREATOR.createFromParcel(parcel)
+            val bytes=java.io.ByteArrayOutputStream();UniversalStorage.exportSnapshot(restored.getString("export")){bytes}
+            assertEquals(d,UniversalCodec.decode(bytes.toString("UTF-8")))
+        }finally{parcel.recycle()}
+    }
+
 }
