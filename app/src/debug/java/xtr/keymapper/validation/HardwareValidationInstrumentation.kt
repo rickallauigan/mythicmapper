@@ -173,7 +173,7 @@ class HardwareValidationInstrumentation: Instrumentation() {
         repeat(java.size){val x=(it%201-100)/100f;val t=System.nanoTime();consumed+=ControllerAimHandler.vector(x,.3f,.15f,1f,1f,false)[0];java[it]=System.nanoTime()-t}
         repeat(rust.size){val x=(it%201-100)/100f;val t=System.nanoTime();consumed+=RustMappingMath.vectorPacked(x,.3f,.15f,1f,1f,false);rust[it]=System.nanoTime()-t}
         check(!consumed.isNaN())
-        return JSONObject().put("abi","arm64-v8a").put("parity_vectors",vectors).put("max_abs_error",maxError.toDouble())
+        return JSONObject().put("abi",Build.SUPPORTED_ABIS.first()).put("process_64bit",android.os.Process.is64Bit()).put("parity_vectors",vectors).put("max_abs_error",maxError.toDouble())
             .put("missing_library_error_caught",missing).put("invalid_input_neutral",true).put("java_reference_math",stats(java)).put("rust_jni_reference_math",stats(rust))
             .put("measurement","Device math microbenchmark; timer/sink overhead included; no physical display latency or hot-path migration")
     }

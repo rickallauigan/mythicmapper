@@ -39,7 +39,14 @@ android {
             storePassword keystoreProperties['storePassword']
         }
     }
-    testOptions { unitTests.includeAndroidResources = true }
+    testOptions {
+        unitTests.includeAndroidResources = true
+        unitTests.all {
+            inputs.files(rootProject.fileTree('tools/scenarios') { include '*.json' })
+            // Same Maven Central artifacts; avoid repo1 CI rate-limit failures.
+            systemProperty 'robolectric.dependency.repo.url', 'https://repo.maven.apache.org/maven2'
+        }
+    }
 
     buildTypes {
         release {

@@ -332,3 +332,37 @@ ADB confirms screen_suspendedfalse/unlocked/sessionrunning/overlayattached/mappi
 active after SCREEN_ON. Existing gameplay firing-during-lock bug remains OPEN.
 Keep current Kimmy session; user asked to center after test. No more physical test
 needed for the scoped restoration request. Draft14 updated; no merge/release.
+
+### Issue #21: AVD + Virtual G8 development
+
+Branch `feature/21-virtual-g8-avd`, draft PR22, base7efcf35 on
+#14 → #13 → #12 → dev. Main/controller/hero source and profiles are unchanged.
+No physical S10e commands were issued. Bennett180/400, Kimmy and screen-unlock
+restoration remain preserved; gameplay issue20 remains deferred.
+
+Debug-only VirtualG8Session/UI/Instrumentation use the existing monitor,
+InputService/Hero/Aim/Bindings/ledger and a recording TouchBackend. No privileged
+reader, root requirement, USB identity spoofing or game touch submission. The
+root-free debug Home adapter reuses Home and changes only the root-warning UI.
+Simulation is explicit, labeled, default off, bounded and unavailable in release.
+
+Actual owned AOSP API36 default x86_64 revision2 AVD runs headless with KVM,
+2280×1080/4GB/four cores, explicit emulator-5580. Local37.1.11 and hosted37.2.13
+executed. Local322 Android and12 tools tests, lint/debug build/release compilation,
+Rust5/native3/hostJNI242406/Kotlin bridge/generator12 and12 protected hashes pass.
+AVD JNI61206 zero error, UI/orientation smoke and seven replays pass with final
+zero recording pointers. This does not establish physical or MLBB compatibility.
+
+CLI verifies owned process/serial/name; reports require fresh stdout, replay nonce
+and scenario hashes. Local cold boots and one later hosted run encountered a
+SystemUI startup ANR. Bounded target-specific Wait recovery retains evidence;
+non-SystemUI ANRs and mapper assertion failures are never dismissed/retried.
+Source4c5b6da CI follow-up is recorded in PR22; prior source3d985e3/a68dd5a had
+both hosted checks green. Do not infer final-head status from historical runs.
+
+See docs/development/{AVD-SETUP,VIRTUAL-G8,TEST-MATRIX}.md and
+ docs/validation/virtual-g8/{REPORT.md,evidence.json}. Generated disks/reports are
+ignored. Migration MIGRATION.md and docs/MYTHICMAPPER-AVD.md were updated locally
+in the separate dirty migration repository; no commit/push there. Keep PR22 draft,
+preserve unrelated design PNG and all stack branches. Never merge or touch phone
+without a separate physical request.

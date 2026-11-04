@@ -2,7 +2,12 @@
     <!-- Bounded CPU wake lock only during the controlled screen-off validation. -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <application>
+        <activity android:name="xtr.keymapper.virtual.VirtualHomeActivity" android:exported="true" android:theme="@style/Theme.XtMapper" android:label="Development Home · recording only" />
+        <activity android:name="xtr.keymapper.virtual.VirtualG8Activity" android:exported="true" android:configChanges="orientation|screenSize" android:theme="@style/Theme.XtMapper" android:label="Virtual G8 — DEV ONLY">
+            <intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter>
+        </activity>
         <activity android:name="xtr.keymapper.validation.ValidationActivity" android:exported="true" android:configChanges="orientation|screenSize" android:theme="@style/Theme.XtMapper" />
     </application>
     <instrumentation android:name="xtr.keymapper.validation.HardwareValidationInstrumentation" android:targetPackage="${applicationId}" android:label="Controlled MythicMapper hardware validation" />
+    <instrumentation android:name="xtr.keymapper.virtual.VirtualG8Instrumentation" android:targetPackage="${applicationId}" android:label="SIMULATED Virtual G8 recording harness" />
 </manifest>
