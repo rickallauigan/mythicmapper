@@ -139,6 +139,17 @@ def smoke():
     save('smoke.json',report);print(json.dumps(report))
     if report['status']!='PASS':raise RuntimeError('UI smoke failed')
     for p in sorted((ROOT/'tools/scenarios').glob('*.json')):run(p)
+def ux(suite='bubble'):
+    if suite not in ('bubble','home'):raise ValueError('Unknown UX suite')
+    verify();platform_ready()
+    # App-scoped overlay permission on this owned emulator only; no root/system policy changes.
+    adb('shell','appops','set',PKG,'SYSTEM_ALERT_WINDOW','allow')
+    log=adb('shell','am','instrument','-w','-e','suite',suite,PKG+'/xtr.keymapper.ux.UxInstrumentation',capture_output=True,timeout=120).stdout
+    (WORK/('ux-'+suite+'.instrumentation.txt')).write_text(log)
+    report=instrument_report(log,'ux');save('ux-'+suite+'.json',report);print(json.dumps(report))
+    for name in (['bubble-collapsed','bubble-expanded','bubble-portrait']if suite=='bubble'else ['home-overview','home-favorites','home-library','home-landscape']):
+        adb('exec-out','run-as',PKG,'cat','files/ux/'+name+'.png',stdout=(WORK/(name+'.png')).open('wb'),text=False)
+    if report['status']!='PASS':raise RuntimeError('UX suite failed')
 def collect():
     verify();(WORK/'logcat.txt').write_text(output('logcat','-d','-t','1000'));adb('exec-out','screencap','-p',stdout=(WORK/'screenshot.png').open('wb'),text=False)
 def platform_ready():
@@ -181,12 +192,13 @@ def stop():
         time.sleep(.5)
     raise RuntimeError('Owned emulator shutdown timeout; marker retained')
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('command',choices=['doctor','setup','boot','wait','build','install','ui','home','run','smoke','collect','recover','stop']);p.add_argument('scenario',nargs='?');p.add_argument('--install-sdk',action='store_true');p.add_argument('--gui',action='store_true');p.add_argument('--gpu',default='auto');a=p.parse_args()
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('command',choices=['doctor','setup','boot','wait','build','install','ui','home','run','smoke','collect','recover','stop','ux']);p.add_argument('scenario',nargs='?');p.add_argument('--install-sdk',action='store_true');p.add_argument('--gui',action='store_true');p.add_argument('--gpu',default='auto');a=p.parse_args()
     if a.command=='setup':create(a.install_sdk)
     elif a.command=='boot':boot(a.gui,a.gpu)
     elif a.command=='run':
         if not a.scenario:p.error('run requires a scenario JSON path')
         run(a.scenario)
+    elif a.command=='ux':ux(a.scenario or 'bubble')
     elif a.command=='ui':verify();adb('shell','am','start','-W','-n',PKG+'/xtr.keymapper.virtual.VirtualG8Activity','--ez','enable_virtual_g8','true')
     else:globals()[a.command]()
 if __name__=='__main__':
