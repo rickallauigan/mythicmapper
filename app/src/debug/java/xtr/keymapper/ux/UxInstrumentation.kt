@@ -57,6 +57,31 @@ class UxInstrumentation:Instrumentation() {
         check(target.performAction(android.view.accessibility.AccessibilityNodeInfo.ACTION_CLICK)){"Cannot click $value"}
         settle()
     }
+    /** Navigation idle does not imply Compose accessibility is published after rotation. */
+    private fun awaitVisibleText(value:String) {
+        val end=SystemClock.uptimeMillis()+10000
+        while(SystemClock.uptimeMillis()<end){
+            if(text(value)?.isVisibleToUser==true)return
+            SystemClock.sleep(50)
+        }
+        error("Destination label not visible after navigation: $value")
+    }
+    private fun verifyVirtualNavigation() {
+        val monitor=addMonitor(xtr.keymapper.virtual.VirtualG8Activity::class.java.name,null,false)
+        try {
+            click("Virtual G8 · SIMULATED")
+            val destination=waitForMonitorWithTimeout(monitor,10000)?:error("Virtual G8 Activity not launched")
+            awaitVisibleText("SIMULATED — DEV ONLY")
+            check(!destination.isFinishing&&!destination.isDestroyed)
+            shot("home-virtual-g8")
+            sendKeyDownUpSync(KeyEvent.KEYCODE_BACK)
+            val end=SystemClock.uptimeMillis()+10000
+            while(!destination.isDestroyed&&SystemClock.uptimeMillis()<end)SystemClock.sleep(50)
+            check(destination.isDestroyed){"Virtual G8 did not finish on Back"}
+            awaitVisibleText("Virtual G8 · SIMULATED")
+            check(!EditorSessionGuard.active)
+        }finally{removeMonitor(monitor)}
+    }
     private fun scrollHome(forward:Boolean) {
         val r=android.graphics.Rect();homeRoot().getBoundsInScreen(r)
         val x=r.centerX().toFloat();val startY=r.top+r.height()*(if(forward).75f else .35f)
@@ -125,9 +150,10 @@ class UxInstrumentation:Instrumentation() {
             // Return to the overview, then rotate the same Activity (no global settings).
             repeat(15){byId("mythic-home")?.performAction(android.view.accessibility.AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD);waitForIdleSync()}
             click("Controller Tester");check(text("GameSir G8 Galileo Tester")!=null);sendKeyDownUpSync(KeyEvent.KEYCODE_BACK);settle()
-            click("Virtual G8 · SIMULATED");check(text("SIMULATED — DEV ONLY")!=null);sendKeyDownUpSync(KeyEvent.KEYCODE_BACK);settle()
+            verifyVirtualNavigation()
             check(!EditorSessionGuard.active)
             main{a.requestedOrientation=android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE};waitForIdleSync();SystemClock.sleep(1000);shot("home-landscape")
+            verifyVirtualNavigation()
             return JSONObject().put("status","PASS").put("checks","physical/simulated labels; favorites replace/clear; search; rename; duplicate UUID; delete confirm/cancel; all five slots; editor/Tester/Virtual navigation; ownership cleanup; portrait/landscape").put("source","actual AVD accessibility; isolated disposable preferences").put("mapper_submissions",0)
         }finally{main{a.finish()};waitForIdleSync();store.read().profiles.forEach{store.delete(it.id)}}
     }

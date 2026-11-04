@@ -149,7 +149,9 @@ def ux(suite='bubble'):
     report=instrument_report(log,'ux');save('ux-'+suite+'.json',report);print(json.dumps(report))
     for name in (['bubble-collapsed','bubble-expanded','bubble-portrait']if suite=='bubble'else ['home-overview','home-favorites','home-library','home-landscape']):
         adb('exec-out','run-as',PKG,'cat','files/ux/'+name+'.png',stdout=(WORK/(name+'.png')).open('wb'),text=False)
-    if report['status']!='PASS':raise RuntimeError('UX suite failed')
+    if report['status']!='PASS':
+        adb('exec-out','run-as',PKG,'cat','files/ux-failure.txt',stdout=(WORK/'ux-failure.txt').open('wb'))
+        raise RuntimeError('UX suite failed')
 def collect():
     verify();(WORK/'logcat.txt').write_text(output('logcat','-d','-t','1000'));adb('exec-out','screencap','-p',stdout=(WORK/'screenshot.png').open('wb'),text=False)
 def platform_ready():

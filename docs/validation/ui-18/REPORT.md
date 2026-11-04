@@ -99,3 +99,21 @@ profile while the runtime is correctly paused outside the game. It does not
 activate mappings. Physical debug scroll samples do not demonstrate a speedup;
 no rendering optimization is claimed. Final host suite:330 tests, no failures,
 errors or skips. Issue20 remains deferred; gameplay was not exercised.
+
+## Consolidation: hosted navigation regression
+
+Run41754552456 attempt2 failed on the immediate Virtual G8 warning-label assertion.
+The retained screenshot actually displays that exact warning. Logcat records
+VirtualG8Activity launched/displayed during a rotation transition; the label check
+ran before the destination accessibility tree settled. No application crash is
+shown before instrumentation completion (its process teardown follows the failure).
+The original artifact did not retain ux-failure.txt, so a contemporaneous hierarchy
+cannot be reconstructed. The CLI now preserves that file on any future UX failure.
+
+Navigation now installs an Activity monitor before clicking, awaits the exact
+visible simulated-mode label with a10-second deadline, verifies the destination
+is alive, then requires Back to destroy it and restore the Home action. The same
+route runs in portrait and landscape, preserving the original assertion and adding
+lifecycle/teardown coverage. This addresses synchronization rather than hiding an
+emulator failure or retrying the complete test until it passes. Only the owned AVD
+is used; no physical S10e commands are part of consolidation.
