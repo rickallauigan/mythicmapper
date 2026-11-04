@@ -20,7 +20,7 @@ class UniversalEditorInstrumentation:Instrumentation() {
         for(forward in listOf(false,true))for(step in 0 until 45){
             val found=all().firstOrNull{it.viewIdResourceName==value||it.text?.toString()==value}
             if(found!=null){if(found.isVisibleToUser)return found;found.performAction(Node.AccessibilityAction.ACTION_SHOW_ON_SCREEN.id);settle();all().firstOrNull{(it.viewIdResourceName==value||it.text?.toString()==value)&&it.isVisibleToUser}?.let{return it}}
-            val root=all().firstOrNull{it.viewIdResourceName=="universal-editor"}
+            val root=all().firstOrNull{it.viewIdResourceName in setOf("universal-editor","mythic-home")}
             val direction=if(forward)Node.ACTION_SCROLL_FORWARD else Node.ACTION_SCROLL_BACKWARD
             if(root?.actionList?.none{it.id==direction}!=false)break
             root.performAction(direction);settle()
@@ -34,12 +34,17 @@ class UniversalEditorInstrumentation:Instrumentation() {
         uiAutomation.serviceInfo=uiAutomation.serviceInfo.apply{flags=flags or 0x10 or 0x40 or 0x100}
         val dir=File(targetContext.filesDir,"universal-editor").apply{mkdirs()}
         var activity:UniversalEditorTestActivity?=null
+        var home:Activity?=null
         var session:VirtualG8Session?=null
         val context=object:android.content.ContextWrapper(targetContext){override fun getSharedPreferences(n:String,m:Int)=super.getSharedPreferences("ux_home_$n",m)}
         val store=xtr.keymapper.mythic.HeroLibraryStore(context)
         val before=store.read()
+        val originalLibrary=xtr.keymapper.mythic.HeroLibraryStore(targetContext).read()
+        val originalMappings=xtr.keymapper.keymap.KeymapProfiles(targetContext).sharedPref.all.toMap()
         val result=try{
-            activity=startActivitySync(Intent(targetContext,UniversalEditorTestActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) as UniversalEditorTestActivity
+            home=startActivitySync(Intent(targetContext,xtr.keymapper.virtual.VirtualHomeActivity::class.java).putExtra("ux_test",true).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+            val entry=addMonitor(UniversalEditorTestActivity::class.java.name,null,false)
+            try{settle();click("Create mapping");activity=waitForMonitorWithTimeout(entry,10000) as? UniversalEditorTestActivity?:error("Home Create mapping route failed")}finally{removeMonitor(entry)}
             settle();text("create-name","UI TEST Custom Hero");click("create-blank")
             for((code,x,y)in listOf(Triple("BTN_GAMEPAD",300,800),Triple("BTN_EAST",600,800),Triple("BTN_TR",1000,800),Triple("BTN_TR2",1300,600),Triple("BTN_TL",1700,400),Triple("BTN_TL2",1900,800))){
                 click("palette-$code");text("binding-name",code);if(code in setOf("BTN_GAMEPAD","BTN_EAST"))click("Tap")
@@ -68,10 +73,13 @@ class UniversalEditorInstrumentation:Instrumentation() {
             }
             main{session!!.close()};val trace=session!!.report();check(trace.getInt("final_pointers")==0&&trace.getInt("total_touches")>=12)
             File(dir,"replay.json").writeText(trace.toString(2))
-            JSONObject().put("status","PASS").put("favorite_assigned_through_ui",true).put("created_through_ui",true).put("bindings",6).put("right_stick_aim",true).put("reopened",true).put("undo_redo",true).put("draft_recreation",true).put("final_pointers",0).put("platform_touch_submissions",0)
+            JSONObject().put("status","PASS").put("favorite_assigned_through_ui",true).put("home_create_entry",true).put("created_through_ui",true).put("bindings",6).put("right_stick_aim",true).put("reopened",true).put("undo_redo",true).put("draft_recreation",true).put("final_pointers",0).put("platform_touch_submissions",0)
         }catch(t:Throwable){File(dir,"failure-nodes.txt").writeText(all().joinToString("\n"){"${it.viewIdResourceName}: ${it.text} visible=${it.isVisibleToUser}"});JSONObject().put("status","FAIL").put("error",t.stackTraceToString())}
-        finally{main{session?.close();activity?.finish()};settle();store.read().profiles.filter{p->p.id !in before.profiles.map{it.id}}.forEach{store.delete(it.id)}}
+        finally{main{session?.close();activity?.finish();home?.finish()};settle();store.read().profiles.filter{p->p.id !in before.profiles.map{it.id}}.forEach{store.delete(it.id)}}
         check(store.read()==before){"Isolated library/favorites changed"}
+        check(xtr.keymapper.mythic.HeroLibraryStore(targetContext).read()==originalLibrary){"Original library changed"}
+        check(xtr.keymapper.keymap.KeymapProfiles(targetContext).sharedPref.all==originalMappings){"Original mappings changed"}
+        result.put("original_library_and_mappings_unchanged",true)
         File(dir,"result.json").writeText(result.toString(2));finish(if(result.getString("status")=="PASS")Activity.RESULT_OK else Activity.RESULT_CANCELED,Bundle().apply{putString("universal_editor",result.toString())})
     }
 }
