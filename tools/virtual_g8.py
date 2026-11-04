@@ -144,12 +144,17 @@ def ux(suite='bubble'):
     verify();platform_ready()
     # App-scoped overlay permission on this owned emulator only; no root/system policy changes.
     adb('shell','appops','set',PKG,'SYSTEM_ALERT_WINDOW','allow')
-    log=adb('shell','am','instrument','-w','-e','suite',suite,PKG+'/xtr.keymapper.ux.UxInstrumentation',capture_output=True,timeout=120).stdout
+    log=adb('shell','am','instrument','-w','-e','suite',suite,PKG+'/xtr.keymapper.ux.UxInstrumentation',capture_output=True,timeout=180 if suite=='home'else 120).stdout
     (WORK/('ux-'+suite+'.instrumentation.txt')).write_text(log)
     report=instrument_report(log,'ux');save('ux-'+suite+'.json',report);print(json.dumps(report))
     for name in (['bubble-collapsed','bubble-expanded','bubble-portrait']if suite=='bubble'else ['home-overview','home-favorites','home-library','home-landscape']):
         adb('exec-out','run-as',PKG,'cat','files/ux/'+name+'.png',stdout=(WORK/(name+'.png')).open('wb'),text=False)
-    if report['status']!='PASS':raise RuntimeError('UX suite failed')
+    if report['status']!='PASS':
+        adb('exec-out','run-as',PKG,'cat','files/ux-failure.txt',stdout=(WORK/'ux-failure.txt').open('wb'))
+        if suite=='home':
+            adb('exec-out','run-as',PKG,'cat','files/ux-navigation-failure.txt',stdout=(WORK/'ux-navigation-failure.txt').open('wb'))
+            adb('exec-out','run-as',PKG,'cat','files/ux/home-navigation-failure.png',stdout=(WORK/'home-navigation-failure.png').open('wb'),text=False)
+        raise RuntimeError('UX suite failed')
 def collect():
     verify();(WORK/'logcat.txt').write_text(output('logcat','-d','-t','1000'));adb('exec-out','screencap','-p',stdout=(WORK/'screenshot.png').open('wb'),text=False)
 def platform_ready():
@@ -160,6 +165,16 @@ def platform_ready():
         recover();AUTO_RECOVERIES+=1;return True
     if 'Application Not Responding:'in windows:raise RuntimeError('Application ANR blocks tests; no automatic recovery')
     return False
+def wait_for_systemui_dismissal():
+    """Wait for the single acknowledged startup dialog; never submit another tap."""
+    deadline=time.monotonic()+10
+    while True:
+        windows=output('shell','dumpsys','window','displays')
+        if 'Application Not Responding:'not in windows:return
+        if 'Application Not Responding: com.android.systemui'not in windows:
+            raise RuntimeError('Application ANR after SystemUI recovery; tests remain blocked')
+        if time.monotonic()>=deadline:raise RuntimeError('SystemUI recovery did not dismiss dialog within10s')
+        time.sleep(.25)
 def recover():
     """One explicit Wait on a verified owned-AVD SystemUI startup ANR, never an app ANR."""
     verify();windows=output('shell','dumpsys','window','displays')
@@ -178,8 +193,7 @@ def recover():
     events=output('logcat','-d','-b','events','-s','am_anr')
     save('boot-recovery.json',{'observed_systemui_startup_anr':True,'action':'Wait on verified owned AVD only','events':events})
     adb('shell','input','tap',str((bounds[0]+bounds[2])//2),str((bounds[1]+bounds[3])//2))
-    time.sleep(1)
-    if title in output('shell','dumpsys','window','displays'):raise RuntimeError('SystemUI recovery did not dismiss dialog')
+    wait_for_systemui_dismissal()
     print('Observed SystemUI startup ANR acknowledged with Wait; rerun the complete failed suite')
 def stop():
     if not (WORK/'owned-process.json').exists():raise RuntimeError('No owned emulator process recorded')

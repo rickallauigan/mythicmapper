@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "physical_g8_observed": true,
+  "five_slots": true,
+  "search": true,
+  "personal_editor_and_calibration_navigation": true,
+  "portrait_landscape": true,
+  "large_text_scale": 1.5,
+  "simulated_action_labeled": true,
+  "personal_data_unchanged": true
+}
