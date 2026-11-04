@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "source": "Real device normal Home Use -> Home Hero training setup -> return to existing Training; released controls",
+  "root_and_reader_absent_after_exit": true,
+  "setup_exclusive_ready": false,
+  "setup_availability": "FAIL: transient IllegalArgumentException on binder handoff; save correctly unavailable",
+  "profile_saved": false,
+  "follow_up": "Root diagnostic reconnection needs separate stabilization; do not claim lease ready from this run"
+}

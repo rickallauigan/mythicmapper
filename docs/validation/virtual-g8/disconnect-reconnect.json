@@ -1,0 +1,624 @@
+{
+  "source": "SIMULATED:Virtual-G8:0",
+  "profile": "KIMMY",
+  "connected": true,
+  "paused": false,
+  "diagnostics": false,
+  "unlocked": true,
+  "game_foreground": true,
+  "active_pointers": 0,
+  "total_touches": 9,
+  "max_pointers": 1,
+  "blocked": 1,
+  "touches_since_checkpoint": 9,
+  "held": [],
+  "axes": {
+    "ABS_X": 128,
+    "ABS_Y": 128,
+    "ABS_RX": 128,
+    "ABS_RY": 128,
+    "ABS_Z": 0,
+    "ABS_RZ": 0
+  },
+  "trace_dropped": 0,
+  "input_dropped": 0,
+  "final_pointers": 0,
+  "touch_trace": [
+    {
+      "t_ms": 307,
+      "source": "SIMULATED_RECORDING_SINK",
+      "action": 0,
+      "pointer": 51,
+      "x": 1981.08,
+      "y": 946.58,
+      "active": 1
+    },
+    {
+      "t_ms": 307,
+      "source": "SIMULATED_RECORDING_SINK",
+      "action": 2,
+      "pointer": 51,
+      "x": 2061.0798,
+      "y": 946.58,
+      "active": 1
+    },
+    {
+      "t_ms": 439,
+      "source": "SIMULATED_RECORDING_SINK",
+      "action": 1,
+      "pointer": 51,
+      "x": 2061.0798,
+      "y": 946.58,
+      "active": 0
+    },
+    {
+      "t_ms": 515,
+      "source": "SIMULATED_RECORDING_SINK",
+      "action": 0,
+      "pointer": 51,
+      "x": 1981.08,
+      "y": 946.58,
+      "active": 1
+    },
+    {
+      "t_ms": 515,
+      "source": "SIMULATED_RECORDING_SINK",
+      "action": 2,
+      "pointer": 51,
+      "x": 2061.0798,
+      "y": 946.58,
+      "active": 1
+    },
+    {
+      "t_ms": 526,
+      "source": "SIMULATED_RECORDING_SINK",
+      "action": 1,
+      "pointer": 51,
+      "x": 2061.0798,
+      "y": 946.58,
+      "active": 0
+    },
+    {
+      "t_ms": 561,
+      "source": "SIMULATED_RECORDING_SINK",
+      "action": 0,
+      "pointer": 51,
+      "x": 1981.08,
+      "y": 946.58,
+      "active": 1
+    },
+    {
+      "t_ms": 561,
+      "source": "SIMULATED_RECORDING_SINK",
+      "action": 2,
+      "pointer": 51,
+      "x": 2061.0798,
+      "y": 946.58,
+      "active": 1
+    },
+    {
+      "t_ms": 571,
+      "source": "SIMULATED_RECORDING_SINK",
+      "action": 1,
+      "pointer": 51,
+      "x": 2061.0798,
+      "y": 946.58,
+      "active": 0
+    }
+  ],
+  "input_trace": [
+    {
+      "at_ms": 10,
+      "action": "axis",
+      "code": "ABS_RX",
+      "value": 255,
+      "expect": {
+        "active_pointers": 1
+      },
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 307
+    },
+    {
+      "packet": "EV_ABS ABS_RX ff",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 307
+    },
+    {
+      "packet": "EV_SYN SYN_REPORT 0",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 307
+    },
+    {
+      "at_ms": 20,
+      "action": "disconnect",
+      "expect": {
+        "active_pointers": 0,
+        "connected": false
+      },
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 439
+    },
+    {
+      "at_ms": 30,
+      "action": "button",
+      "code": "BTN_TR2",
+      "down": true,
+      "expect": {
+        "active_pointers": 0
+      },
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 454
+    },
+    {
+      "packet": "EV_KEY BTN_TR2 DOWN",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 454
+    },
+    {
+      "at_ms": 40,
+      "action": "connect",
+      "right_x": 255,
+      "expect": {
+        "active_pointers": 0
+      },
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 475
+    },
+    {
+      "at_ms": 50,
+      "action": "axis",
+      "code": "ABS_RX",
+      "value": 255,
+      "expect": {
+        "active_pointers": 0
+      },
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 494
+    },
+    {
+      "packet": "EV_ABS ABS_RX ff",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 494
+    },
+    {
+      "packet": "EV_SYN SYN_REPORT 0",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 494
+    },
+    {
+      "at_ms": 60,
+      "action": "axis",
+      "code": "ABS_RX",
+      "value": 128,
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 505
+    },
+    {
+      "packet": "EV_ABS ABS_RX 80",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 505
+    },
+    {
+      "packet": "EV_SYN SYN_REPORT 0",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 505
+    },
+    {
+      "at_ms": 70,
+      "action": "axis",
+      "code": "ABS_RX",
+      "value": 255,
+      "expect": {
+        "active_pointers": 1
+      },
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 515
+    },
+    {
+      "packet": "EV_ABS ABS_RX ff",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 515
+    },
+    {
+      "packet": "EV_SYN SYN_REPORT 0",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 515
+    },
+    {
+      "at_ms": 80,
+      "action": "syn_dropped",
+      "expect": {
+        "active_pointers": 0
+      },
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 526
+    },
+    {
+      "packet": "EV_SYN SYN_DROPPED 0",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 526
+    },
+    {
+      "at_ms": 90,
+      "action": "reset",
+      "expect": {
+        "active_pointers": 0
+      },
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 537
+    },
+    {
+      "at_ms": 100,
+      "action": "axis",
+      "code": "ABS_RX",
+      "value": 128,
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 550
+    },
+    {
+      "packet": "EV_ABS ABS_RX 80",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 550
+    },
+    {
+      "packet": "EV_SYN SYN_REPORT 0",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 550
+    },
+    {
+      "at_ms": 110,
+      "action": "axis",
+      "code": "ABS_RX",
+      "value": 255,
+      "expect": {
+        "active_pointers": 1
+      },
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 561
+    },
+    {
+      "packet": "EV_ABS ABS_RX ff",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 561
+    },
+    {
+      "packet": "EV_SYN SYN_REPORT 0",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 561
+    },
+    {
+      "at_ms": 120,
+      "action": "release_all",
+      "expect": {
+        "active_pointers": 0
+      },
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 571
+    }
+  ],
+  "platform_touch_submissions": 0,
+  "movement_note": "ABS_X/Y remain native/pass-through in production; no fake movement touch",
+  "physical_gameplay": "UNVERIFIED; issue #20 deferred",
+  "request_id": "58b86efeec8242a78af7da57465140bc",
+  "schema": 1,
+  "id": "disconnect-reconnect",
+  "status": "PASS",
+  "provenance": "synthetic",
+  "observations": [
+    {
+      "source": "SIMULATED:Virtual-G8:0",
+      "profile": "KIMMY",
+      "connected": true,
+      "paused": false,
+      "diagnostics": false,
+      "unlocked": true,
+      "game_foreground": true,
+      "active_pointers": 1,
+      "total_touches": 2,
+      "max_pointers": 1,
+      "blocked": 0,
+      "touches_since_checkpoint": 2,
+      "held": [],
+      "axes": {
+        "ABS_X": 128,
+        "ABS_Y": 128,
+        "ABS_RX": 255,
+        "ABS_RY": 128,
+        "ABS_Z": 0,
+        "ABS_RZ": 0
+      },
+      "trace_dropped": 0,
+      "input_dropped": 0,
+      "step": 0
+    },
+    {
+      "source": "SIMULATED:Virtual-G8:0",
+      "profile": "KIMMY",
+      "connected": false,
+      "paused": false,
+      "diagnostics": false,
+      "unlocked": true,
+      "game_foreground": true,
+      "active_pointers": 0,
+      "total_touches": 3,
+      "max_pointers": 1,
+      "blocked": 0,
+      "touches_since_checkpoint": 3,
+      "held": [],
+      "axes": {
+        "ABS_X": 128,
+        "ABS_Y": 128,
+        "ABS_RX": 128,
+        "ABS_RY": 128,
+        "ABS_Z": 0,
+        "ABS_RZ": 0
+      },
+      "trace_dropped": 0,
+      "input_dropped": 0,
+      "step": 1
+    },
+    {
+      "source": "SIMULATED:Virtual-G8:0",
+      "profile": "KIMMY",
+      "connected": false,
+      "paused": false,
+      "diagnostics": false,
+      "unlocked": true,
+      "game_foreground": true,
+      "active_pointers": 0,
+      "total_touches": 3,
+      "max_pointers": 1,
+      "blocked": 1,
+      "touches_since_checkpoint": 3,
+      "held": [
+        "BTN_TR2"
+      ],
+      "axes": {
+        "ABS_X": 128,
+        "ABS_Y": 128,
+        "ABS_RX": 128,
+        "ABS_RY": 128,
+        "ABS_Z": 0,
+        "ABS_RZ": 0
+      },
+      "trace_dropped": 0,
+      "input_dropped": 0,
+      "step": 2
+    },
+    {
+      "source": "SIMULATED:Virtual-G8:0",
+      "profile": "KIMMY",
+      "connected": true,
+      "paused": false,
+      "diagnostics": false,
+      "unlocked": true,
+      "game_foreground": true,
+      "active_pointers": 0,
+      "total_touches": 3,
+      "max_pointers": 1,
+      "blocked": 1,
+      "touches_since_checkpoint": 3,
+      "held": [],
+      "axes": {
+        "ABS_X": 128,
+        "ABS_Y": 128,
+        "ABS_RX": 255,
+        "ABS_RY": 128,
+        "ABS_Z": 0,
+        "ABS_RZ": 0
+      },
+      "trace_dropped": 0,
+      "input_dropped": 0,
+      "step": 3
+    },
+    {
+      "source": "SIMULATED:Virtual-G8:0",
+      "profile": "KIMMY",
+      "connected": true,
+      "paused": false,
+      "diagnostics": false,
+      "unlocked": true,
+      "game_foreground": true,
+      "active_pointers": 0,
+      "total_touches": 3,
+      "max_pointers": 1,
+      "blocked": 1,
+      "touches_since_checkpoint": 3,
+      "held": [],
+      "axes": {
+        "ABS_X": 128,
+        "ABS_Y": 128,
+        "ABS_RX": 255,
+        "ABS_RY": 128,
+        "ABS_Z": 0,
+        "ABS_RZ": 0
+      },
+      "trace_dropped": 0,
+      "input_dropped": 0,
+      "step": 4
+    },
+    {
+      "source": "SIMULATED:Virtual-G8:0",
+      "profile": "KIMMY",
+      "connected": true,
+      "paused": false,
+      "diagnostics": false,
+      "unlocked": true,
+      "game_foreground": true,
+      "active_pointers": 0,
+      "total_touches": 3,
+      "max_pointers": 1,
+      "blocked": 1,
+      "touches_since_checkpoint": 3,
+      "held": [],
+      "axes": {
+        "ABS_X": 128,
+        "ABS_Y": 128,
+        "ABS_RX": 128,
+        "ABS_RY": 128,
+        "ABS_Z": 0,
+        "ABS_RZ": 0
+      },
+      "trace_dropped": 0,
+      "input_dropped": 0,
+      "step": 5
+    },
+    {
+      "source": "SIMULATED:Virtual-G8:0",
+      "profile": "KIMMY",
+      "connected": true,
+      "paused": false,
+      "diagnostics": false,
+      "unlocked": true,
+      "game_foreground": true,
+      "active_pointers": 1,
+      "total_touches": 5,
+      "max_pointers": 1,
+      "blocked": 1,
+      "touches_since_checkpoint": 5,
+      "held": [],
+      "axes": {
+        "ABS_X": 128,
+        "ABS_Y": 128,
+        "ABS_RX": 255,
+        "ABS_RY": 128,
+        "ABS_Z": 0,
+        "ABS_RZ": 0
+      },
+      "trace_dropped": 0,
+      "input_dropped": 0,
+      "step": 6
+    },
+    {
+      "source": "SIMULATED:Virtual-G8:0",
+      "profile": "KIMMY",
+      "connected": true,
+      "paused": false,
+      "diagnostics": false,
+      "unlocked": true,
+      "game_foreground": true,
+      "active_pointers": 0,
+      "total_touches": 6,
+      "max_pointers": 1,
+      "blocked": 1,
+      "touches_since_checkpoint": 6,
+      "held": [],
+      "axes": {
+        "ABS_X": 128,
+        "ABS_Y": 128,
+        "ABS_RX": 128,
+        "ABS_RY": 128,
+        "ABS_Z": 0,
+        "ABS_RZ": 0
+      },
+      "trace_dropped": 0,
+      "input_dropped": 0,
+      "step": 7
+    },
+    {
+      "source": "SIMULATED:Virtual-G8:0",
+      "profile": "KIMMY",
+      "connected": true,
+      "paused": false,
+      "diagnostics": false,
+      "unlocked": true,
+      "game_foreground": true,
+      "active_pointers": 0,
+      "total_touches": 6,
+      "max_pointers": 1,
+      "blocked": 1,
+      "touches_since_checkpoint": 6,
+      "held": [],
+      "axes": {
+        "ABS_X": 128,
+        "ABS_Y": 128,
+        "ABS_RX": 128,
+        "ABS_RY": 128,
+        "ABS_Z": 0,
+        "ABS_RZ": 0
+      },
+      "trace_dropped": 0,
+      "input_dropped": 0,
+      "step": 8
+    },
+    {
+      "source": "SIMULATED:Virtual-G8:0",
+      "profile": "KIMMY",
+      "connected": true,
+      "paused": false,
+      "diagnostics": false,
+      "unlocked": true,
+      "game_foreground": true,
+      "active_pointers": 0,
+      "total_touches": 6,
+      "max_pointers": 1,
+      "blocked": 1,
+      "touches_since_checkpoint": 6,
+      "held": [],
+      "axes": {
+        "ABS_X": 128,
+        "ABS_Y": 128,
+        "ABS_RX": 128,
+        "ABS_RY": 128,
+        "ABS_Z": 0,
+        "ABS_RZ": 0
+      },
+      "trace_dropped": 0,
+      "input_dropped": 0,
+      "step": 9
+    },
+    {
+      "source": "SIMULATED:Virtual-G8:0",
+      "profile": "KIMMY",
+      "connected": true,
+      "paused": false,
+      "diagnostics": false,
+      "unlocked": true,
+      "game_foreground": true,
+      "active_pointers": 1,
+      "total_touches": 8,
+      "max_pointers": 1,
+      "blocked": 1,
+      "touches_since_checkpoint": 8,
+      "held": [],
+      "axes": {
+        "ABS_X": 128,
+        "ABS_Y": 128,
+        "ABS_RX": 255,
+        "ABS_RY": 128,
+        "ABS_Z": 0,
+        "ABS_RZ": 0
+      },
+      "trace_dropped": 0,
+      "input_dropped": 0,
+      "step": 10
+    },
+    {
+      "source": "SIMULATED:Virtual-G8:0",
+      "profile": "KIMMY",
+      "connected": true,
+      "paused": false,
+      "diagnostics": false,
+      "unlocked": true,
+      "game_foreground": true,
+      "active_pointers": 0,
+      "total_touches": 9,
+      "max_pointers": 1,
+      "blocked": 1,
+      "touches_since_checkpoint": 9,
+      "held": [],
+      "axes": {
+        "ABS_X": 128,
+        "ABS_Y": 128,
+        "ABS_RX": 128,
+        "ABS_RY": 128,
+        "ABS_Z": 0,
+        "ABS_RZ": 0
+      },
+      "trace_dropped": 0,
+      "input_dropped": 0,
+      "step": 11
+    }
+  ],
+  "scenario_sha256": "e0bfa46723479fef637961ddfb21eb787cffb760e1e1dafff7ba17fe3858c737"
+}

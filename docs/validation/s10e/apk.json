@@ -1,0 +1,14 @@
+{
+  "variant": "debug",
+  "version": "0.1.0-dev",
+  "sha256": "7fbb246014f88804a75144f9174e6e2f513bb6e7d15dc9cbb5b201c0e6ffff8d",
+  "bytes": 26565576,
+  "installed_on_s10e": true,
+  "bundled_license_files": [
+    "assets/licenses/GPL-3.0.txt",
+    "assets/licenses/rust-1.99.0-COPYRIGHT-library.html",
+    "assets/licenses/scrcpy-v1.24-LICENSE.txt",
+    "assets/licenses/THIRD_PARTY_NOTICES.txt"
+  ],
+  "production_release": false
+}

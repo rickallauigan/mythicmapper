@@ -1,0 +1,6 @@
+{
+  "controller_present_after_wake": true,
+  "descriptor_stable_since_initial_probe": true,
+  "identity_values_redacted": true,
+  "sleep_cause": "User reports automatic idle sleep; no cable disconnection assumed"
+}

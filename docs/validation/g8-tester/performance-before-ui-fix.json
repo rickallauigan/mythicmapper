@@ -1,0 +1,17 @@
+{
+  "source": "Initial physical exercise, debug capture enabled; includes idle and navigation",
+  "gfx_summary": [
+    "Total frames rendered: 341",
+    "Janky frames: 284 (83.28%)",
+    "50th percentile: 31ms",
+    "90th percentile: 48ms",
+    "95th percentile: 53ms",
+    "99th percentile: 85ms"
+  ],
+  "app_observation_ms": 428015,
+  "app_cpu_ms": 34863,
+  "app_cpu_average_one_core_percent": 8.145275282408328,
+  "app_pss_kb_after": 177719,
+  "physical_display_latency_measured": false,
+  "note": "Not a sustained-input CPU benchmark. Debug capture adds PSS/Binder/disk overhead; rendering baseline motivated theme/state invalidation fixes."
+}

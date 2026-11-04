@@ -1,0 +1,26 @@
+{
+  "source_commits": [
+    "5e7999b",
+    "28c605b"
+  ],
+  "apk_sha256": "092669eff3dd92dc7cea8c5628793e030538bb6f8cd87346fb80bf8fddbd2d93",
+  "installed_with_data_retained": true,
+  "android_tests": 297,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "lint_debug": "PASS",
+  "debug_build": "PASS",
+  "device_pulse_anchor_to_first_move_ms": [
+    43,
+    44
+  ],
+  "safe_surface_active_pointers_at_end": 0,
+  "safe_surface_sequence_errors": 0,
+  "diagnostic_gameplay_submission_delta": 0,
+  "profile_library_and_favorites_preserved": true,
+  "normal_setup_exit_root_and_reader_absent": true,
+  "setup_connection_availability": "FAIL: transient handoff exception; guarded save stayed disabled",
+  "physical_neighboring_skill_regression": "PENDING human Training retest",
+  "scope": "Beatrix PULSE acquisition; generic tap timing, Kimmy and held native policies unchanged"
+}

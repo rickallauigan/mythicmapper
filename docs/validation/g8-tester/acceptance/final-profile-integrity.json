@@ -1,0 +1,11 @@
+{
+  "files_compared": 4,
+  "unchanged": true,
+  "changes": 0,
+  "scope": "Four MythicMapper preference files before acceptance work vs after final APK updates; hashes/names/content not exported",
+  "xtmapper_legacy_packages_disabled": 2,
+  "xtmapper_legacy_processes": 0,
+  "xtmapper_data_operations": "None; no data clear/uninstall/profile writes",
+  "baseline_reports_preserved": true,
+  "after_exact_final_apk_validation": true
+}

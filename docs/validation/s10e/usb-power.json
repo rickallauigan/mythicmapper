@@ -1,0 +1,11 @@
+{
+  "device": "Original GameSir G8 in historically validated USB mode",
+  "control_before": "on",
+  "control_after": "on",
+  "runtime_status_before": "active",
+  "runtime_status_after": "active",
+  "autosuspend_delay_ms": "2000",
+  "firmware_standby_disabled": false,
+  "only_exact_controller_device_inspected": true,
+  "usb_power_setting_changed": false
+}

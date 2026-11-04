@@ -33,6 +33,10 @@ public final class ProfileConfiguration {
                 data[1] = xtr.keymapper.controller.ControllerBindings.canonical(data[1]);
             try {
                 switch (tag) {
+                    case "HERO_GAMEPLAY":
+                        new xtr.keymapper.controller.HeroGameplayConfig(data);
+                        if(!singletons.add(tag))fail("Duplicate hero policy");
+                        break;
                     case "CHORD":
                         count(data, 6); floats(data, 3, 5);
                         data[1] = xtr.keymapper.controller.ControllerBindings.canonical(data[1]);

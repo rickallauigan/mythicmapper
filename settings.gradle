@@ -16,6 +16,6 @@ dependencyResolutionManagement {
         maven { url 'https://jitpack.io' }
     }
 }
-rootProject.name = "XtMapper"
+rootProject.name = "MythicMapper"
 include ':app'
 include ':app:hidden-api'

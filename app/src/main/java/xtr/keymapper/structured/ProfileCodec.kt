@@ -45,6 +45,7 @@ object ProfileCodec {
         fun token(key:String):String {
             val v=field(key) ?: when(key){"offset"->0;"repeat_ms"->return "";else->error("$path.$key: required")}
             return when {
+                key in MappingFields.strings -> string(v,"$path.$key",32)
                 key in MappingFields.booleans||key=="toggle"->{require(v is Boolean){"$path.$key: expected boolean"};if(v) "1" else "0"}
                 key in MappingFields.identities->{val code=string(v,"$path.$key",100).let { if(it in setOf("BTN_RIGHT","BTN_MOUSE")) it else ControllerBindings.editorCode(it) };require(ControllerBindings.isBinding(code)||code in setOf("BTN_RIGHT","BTN_MOUSE")){"$path.$key: invalid input"};code}
                 key=="macro_id"->{val id=string(v,"$path.$key",100);require(id.matches(Regex("[A-Za-z0-9_-]+(\\.json)?"))){"$path.macro_id: local ID only, no paths"};id}

@@ -18,11 +18,11 @@ android {
     compileSdk 37
 
     defaultConfig {
-        applicationId "xtr.keymapper"
+        applicationId "io.github.rickallauigan.mythicmapper"
         minSdk 25
         targetSdk 34
-        versionCode 24
-        versionName '2.5.0'
+        versionCode 1
+        versionName '0.1.0-dev'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -39,7 +39,14 @@ android {
             storePassword keystoreProperties['storePassword']
         }
     }
-    testOptions { unitTests.includeAndroidResources = true }
+    testOptions {
+        unitTests.includeAndroidResources = true
+        unitTests.all {
+            inputs.files(rootProject.fileTree('tools/scenarios') { include '*.json' })
+            // Same Maven Central artifacts; avoid repo1 CI rate-limit failures.
+            systemProperty 'robolectric.dependency.repo.url', 'https://repo.maven.apache.org/maven2'
+        }
+    }
 
     buildTypes {
         release {
@@ -49,9 +56,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
+        benchmark {
+            initWith release
+            applicationIdSuffix ".debug"
+            signingConfig signingConfigs.debug
+            matchingFallbacks = ['release']
+            resValue("string", "app_name", "MythicMapper (Benchmark)")
+        }
         debug {
             applicationIdSuffix ".debug"
-            resValue("string", "app_name", "XtMapper(Debug)")
+            resValue("string", "app_name", "MythicMapper (Dev)")
         }
 
     }
@@ -161,4 +175,16 @@ tasks.register('dependencyInventory') {
         new File(destination,'sbom.json').text=groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(bom))
         new File(destination,'licenses.json').text=groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(bomComponents.collect { [module:it.purl,licenses:it.licenses,status:it.licenses ? 'RECORDED' : 'UNRESOLVED'] }))
     }
+}
+
+// Dependency-free reference core; build before ndk-build resolves static archives.
+def buildRustReference = tasks.register('buildRustReference', Exec) {
+    inputs.files(rootProject.fileTree('engine/src'), rootProject.file('engine/Cargo.toml'), rootProject.file('engine/Cargo.lock'))
+    outputs.files(['aarch64-linux-android','armv7-linux-androideabi','i686-linux-android','x86_64-linux-android'].collect {
+        rootProject.file("engine/target/${it}/release/libmythicmapper_core.a")
+    })
+    commandLine 'bash', rootProject.file('tools/build-rust-android.sh')
+}
+tasks.configureEach {
+    if (name.startsWith('configureNdkBuild') || name.startsWith('buildNdkBuild')) dependsOn(buildRustReference)
 }

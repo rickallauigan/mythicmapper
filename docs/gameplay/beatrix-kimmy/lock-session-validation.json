@@ -1,0 +1,134 @@
+{
+  "change": "Retain foreground mapping session while screen-off pauses runtime; fresh foreground check after normal unlock",
+  "android_tests": 308,
+  "failures": 0,
+  "lint_debug_build_release_manifest": "PASS",
+  "device_safe_surface_touch": {
+    "suite": "heroes_touch",
+    "result": {
+      "root": {
+        "status": "PASS",
+        "uid": 0,
+        "hero_touch_policies": 3,
+        "beatrix_pulse_anchor_to_first_move_ms": [
+          45,
+          42
+        ],
+        "kimmy_skill_up_to_attack_down_ms": [
+          42
+        ],
+        "kimmy_resumed_attack_anchor_to_first_move_ms": [
+          46
+        ],
+        "source": "Deterministic hero engine replay into guarded blue surface; not physical controller input or MLBB gameplay",
+        "reload_and_pulse_cleanup": true,
+        "runtime_metrics": {
+          "backend_uid": 0,
+          "samples_total": "[0, 0, 40]",
+          "logical_active_touches": 0,
+          "controller_nodes": 0,
+          "buttons": "[]",
+          "right_stick_raw": "0,0",
+          "syn_dropped": 0,
+          "injection_errors": 0,
+          "last_error": "None",
+          "last_event": "EV_KEY BTN_THUMBL UP",
+          "last_receipt_jitter_ns": 0,
+          "queue": {
+            "window_samples": 0,
+            "p50_ns": 0,
+            "p95_ns": 0,
+            "p99_ns": 0
+          },
+          "processing_inclusive": {
+            "window_samples": 0,
+            "p50_ns": 0,
+            "p95_ns": 0,
+            "p99_ns": 0
+          },
+          "submission": {
+            "window_samples": 40,
+            "p50_ns": 692077,
+            "p95_ns": 2550308,
+            "p99_ns": 2938423
+          }
+        }
+      },
+      "surface": {
+        "observed_events": 40,
+        "max_pointers": 7,
+        "active_pointers": 0,
+        "sequence_errors": 0,
+        "cancel_events": 1
+      }
+    },
+    "status": "PASS"
+  },
+  "device_diagnostic_ownership": {
+    "suite": "heroes",
+    "result": {
+      "exclusive_root_lease": true,
+      "production_start_resume_blocked": true,
+      "injection_submission_delta": 0,
+      "observed_android_event_history": 0,
+      "passed_checks": [
+        "A",
+        "B",
+        "LT",
+        "RT",
+        "L3",
+        "R3",
+        "L stick \u00b7 all directions",
+        "L stick \u00b7 full range",
+        "R stick \u00b7 all directions",
+        "R stick \u00b7 full range",
+        "LT analog range",
+        "RT analog range"
+      ],
+      "applicable_checks": 23,
+      "held_at_end": [],
+      "queue_overflows": 0,
+      "source": "Automated ownership/lifecycle only; no synthetic controller events generated",
+      "configuration_retained_activity_and_lease": true,
+      "receipt_to_reducer": {
+        "n": 6,
+        "p50_ns": 383654,
+        "p95_ns": 11074731,
+        "p99_ns": 11074731
+      },
+      "hero_profiles_exclusivity_checked": true,
+      "uncalibrated_heroes_rejected_across_binder": 2,
+      "root_exit_on_tester_exit": true,
+      "lease_released_on_exit": true,
+      "mapping_not_resumed": true
+    },
+    "status": "PASS"
+  },
+  "device_service_retention": {
+    "suite": "screen",
+    "result": {
+      "screen": {
+        "screen_off_on": true,
+        "overlay_removed_on_screen_off": true,
+        "mapping_foreground_service_retained_while_locked": true,
+        "mapping_paused_while_locked": true,
+        "keyguard_locked_after_wake": true
+      },
+      "foreground_service_notification": true,
+      "notification_flags": 98,
+      "attached": true,
+      "favorite_slots": 5,
+      "expand_collapse": true,
+      "drag_reposition": true,
+      "editor_lease_hide_restore": true,
+      "activity_rotation_reclamp": true,
+      "gameplay_mapping_inactive": true
+    },
+    "status": "PASS"
+  },
+  "data_retained": true,
+  "bennett_unchanged": true,
+  "physical_training_resume": "FAIL: user locked while shooting; after unlock M icon absent, controller unresponsive, game still firing. ADB shows foreground service/root/reader remained alive. Session resumption not established.",
+  "known_separate_failure": "Kimmy game may retain firing when locked during shooting; prior CANCEL candidate did not fix gameplay observation",
+  "apk_sha256": "3218a176e362b555d084925a17df8b501a07452d0deced2045673b60d69fcfc5"
+}

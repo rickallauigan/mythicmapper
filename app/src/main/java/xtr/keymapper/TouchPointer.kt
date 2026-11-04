@@ -48,12 +48,96 @@ class TouchPointer : Service() {
     var activityCallback: MainActivityCallback? = null
     @Volatile var mService: IRemoteService? = null
     @Volatile var selectedProfile: String? = null
+    private var mythicProfileChoice: String? = null
     private val mHandler = Handler(Looper.getMainLooper())
     private var activityRemoteCallback = false
     private var mWindowManager: WindowManager? = null
     private var displayId = 0
     private val foreground = ForegroundProfileSession()
     private var profileDialog: AlertDialog? = null
+    @Volatile private var screenSuspended = false
+    @Volatile private var lastScreenAction = "none"
+    override fun dump(fd: java.io.FileDescriptor, writer: java.io.PrintWriter, args: Array<out String>?) {
+        writer.println("screen_suspended=$screenSuspended last_screen_action=$lastScreenAction")
+        writer.println("interactive=${getSystemService(android.os.PowerManager::class.java).isInteractive} keyguard_locked=${getSystemService(android.app.KeyguardManager::class.java).isKeyguardLocked}")
+        writer.println("session_running=${foreground.current()!=null} profile_selected=${selectedProfile!=null} editor_active=${xtr.keymapper.editor.EditorSessionGuard.active}")
+        writer.println("overlay_attached=${favoriteOverlay?.isAttached()==true}")
+        try {
+            writer.println("root_alive=${mService?.asBinder()?.isBinderAlive==true} mapping_paused=${mService?.isMappingPaused}")
+            writer.println(mService?.diagnostics())
+        } catch(error:RemoteException) {writer.println("root_error=${error.javaClass.simpleName}")}
+    }
+    private fun screenReady() = !screenSuspended &&
+        getSystemService(android.os.PowerManager::class.java).isInteractive &&
+        !getSystemService(android.app.KeyguardManager::class.java).isKeyguardLocked
+
+    private val screenOff = object : android.content.BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            lastScreenAction = intent?.action ?: "none"
+            Log.i("MythicMapperLifecycle", "Screen transition $lastScreenAction interactive=${getSystemService(android.os.PowerManager::class.java).isInteractive} keyguard=${getSystemService(android.app.KeyguardManager::class.java).isKeyguardLocked}")
+            when (intent?.action) {
+                Intent.ACTION_SCREEN_OFF -> {
+                    // Retain the foreground service/profile; invalidate all queued activations.
+                    screenSuspended = true
+                    cancelScreenChecks()
+                    foreground.stop { pauseMapping() }
+                    profileDialog?.dismiss(); profileDialog = null
+                    favoriteOverlay?.close()
+                }
+                Intent.ACTION_SCREEN_ON, Intent.ACTION_USER_PRESENT -> resumeAfterUnlock()
+            }
+        }
+    }
+
+    private var unlockChecks = 0
+    private val unlockCheck = Runnable { resumeAfterUnlock() }
+    private var foregroundChecks = 0
+    private val foregroundCheck = object : Runnable {
+        override fun run() {
+            if (!screenReady() || foreground.current()==null) return
+            try { mService?.refreshActivityObserver() }
+            catch(error:RemoteException) { Log.e("MythicMapperLifecycle", "Foreground resample failed",error);return }
+            if (++foregroundChecks<3) mHandler.postDelayed(this,if(foregroundChecks==1)700 else 1500)
+        }
+    }
+    private fun cancelScreenChecks() {
+        mHandler.removeCallbacks(unlockCheck);mHandler.removeCallbacks(foregroundCheck)
+        unlockChecks=0;foregroundChecks=0
+    }
+    private fun resumeAfterUnlock() {
+        if (!screenSuspended || !getSystemService(android.os.PowerManager::class.java).isInteractive) return
+        mHandler.removeCallbacks(unlockCheck)
+        // USER_PRESENT/SCREEN_ON can precede KeyguardManager's unlocked snapshot.
+        // Bounded settling only; never dismiss keyguard or keep polling when asleep.
+        if (getSystemService(android.app.KeyguardManager::class.java).isKeyguardLocked) {
+            if (++unlockChecks<=40) mHandler.postDelayed(unlockCheck,250)
+            return
+        }
+        screenSuspended = false
+        // Restore UI independently; gameplay still waits for the fresh foreground decision.
+        // FavoriteOverlay itself hides its window while an editor/tester UI lease is held.
+        favoriteOverlay?.show()
+        val request = foreground.start()
+        RemoteServiceHelper.getInstance(this) { service ->
+            mHandler.post {
+                foreground.commit(request) {
+                    if (!screenReady() || service == null) return@commit
+                    try {
+                        mService = service
+                        service.registerActivityObserver(mActivityObserverCallback)
+                        activityRemoteCallback = true
+                        // The first snapshot can still name SystemUI during unlock.
+                        // Resample briefly without allocating another observer/reader.
+                        foregroundChecks=0;mHandler.postDelayed(foregroundCheck,300)
+                    } catch (error: RemoteException) {
+                        foreground.stop { pauseMapping() }
+                        Log.e("MythicMapper", "Unlock foreground check unavailable", error)
+                    }
+                }
+            }
+        }
+    }
+    private var favoriteOverlay: xtr.keymapper.mythic.FavoriteOverlay? = null
     private var displayListener: DisplayListener? = null
     private var connectedIdentities = emptySet<String>()
     private val profilePreferences by lazy { getSharedPreferences("profiles", MODE_PRIVATE) }
@@ -78,6 +162,9 @@ class TouchPointer : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        androidx.core.content.ContextCompat.registerReceiver(this, screenOff, android.content.IntentFilter().apply {
+            addAction(Intent.ACTION_SCREEN_OFF); addAction(Intent.ACTION_SCREEN_ON); addAction(Intent.ACTION_USER_PRESENT)
+        }, androidx.core.content.ContextCompat.RECEIVER_NOT_EXPORTED)
         xtr.keymapper.editor.EditorSessionGuard.listen(editorListener)
         profilePreferences.registerOnSharedPreferenceChangeListener(preferencesListener)
         devicePreferences.registerOnSharedPreferenceChangeListener(preferencesListener)
@@ -109,6 +196,7 @@ class TouchPointer : Service() {
         }
 
         foreground.start()
+        if (!screenReady()) screenSuspended = true
         profileDialog?.dismiss()
         pauseMapping()
         // Launch default profile
@@ -144,10 +232,11 @@ class TouchPointer : Service() {
 
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
         val notification = builder.setOngoing(true)
+            .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
             .setContentTitle("Keymapper service running")
             .setContentText("Touch to launch editor")
             .setContentIntent(pendingIntent)
-            .setSmallIcon(R.mipmap.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.mythic_notification)
             .setCategory(Notification.CATEGORY_SERVICE)
             .build()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
@@ -158,8 +247,19 @@ class TouchPointer : Service() {
 
         this.displayId = i.getIntExtra(DISPLAY_ID, Display.DEFAULT_DISPLAY)
 
-        val keymapProfile = KeymapProfiles(this).getProfile(selectedProfile, true)
-        connectRemoteService(keymapProfile)
+        mythicProfileChoice = selectedProfile
+        val keymapProfile = KeymapProfiles(this).getProfile(selectedProfile, false)
+        try {
+            xtr.keymapper.mythic.MythicScope.validateActivation(keymapProfile)
+            connectRemoteService(keymapProfile)
+            favoriteOverlay?.close()
+            favoriteOverlay = xtr.keymapper.mythic.FavoriteOverlay(this, this::launchProfile)
+            if (screenReady()) favoriteOverlay?.show()
+        } catch (error: Exception) {
+            Log.e("MythicMapper", "Mapping startup rejected", error)
+            stopSelf()
+            return START_NOT_STICKY
+        }
 
         displayListener?.let { getSystemService(DisplayManager::class.java).unregisterDisplayListener(it) }
         displayListener = object :
@@ -169,6 +269,8 @@ class TouchPointer : Service() {
 
             override fun onDisplayChanged(displayId: Int) {
                 if (displayId != this@TouchPointer.displayId) return
+                if (screenSuspended) { resumeAfterUnlock();return }
+                if (xtr.keymapper.editor.EditorSessionGuard.active) return
                 // Re-read the current profile and scale on connection, never the startup snapshot.
                 if (KeymapConfig(this@TouchPointer).disableAutoProfiling) launchProfile(selectedProfile)
                 else refreshForeground()
@@ -183,16 +285,24 @@ class TouchPointer : Service() {
         return super.onStartCommand(i, flags, startId)
     }
 
+    /** Selection for presentation/editor access; never used to authorize gameplay input. */
+    fun selectedProfileForUi():String? = selectedProfile?.takeIf{profilePreferences.contains(it)}
+        ?: mythicProfileChoice?.takeIf{profilePreferences.contains(it)}
+
     fun launchProfile(profileName: String?) {
         if (profileName == null) return
+        val keymapProfile = KeymapProfiles(this).getProfile(profileName, false)
+        xtr.keymapper.mythic.MythicScope.validateActivation(keymapProfile)
+        check(!xtr.keymapper.editor.EditorSessionGuard.active) { "Close the editor before switching profiles" }
+        mythicProfileChoice = profileName
         this.selectedProfile = profileName
-        val keymapProfile = KeymapProfiles(this).getProfile(selectedProfile, true)
-        connectRemoteService(keymapProfile)
+        if (KeymapConfig(this).disableAutoProfiling) connectRemoteService(keymapProfile)
+        else refreshForeground()
     }
 
     private fun connectRemoteService(profile: KeymapProfile,
                                      request: ForegroundProfileSession.Request? = foreground.current()) {
-        if (request == null || xtr.keymapper.editor.EditorSessionGuard.active) return
+        if (request == null || !screenReady() || xtr.keymapper.editor.EditorSessionGuard.active) return
         val profileName = selectedProfile
         val expectedDecision = request.packageName?.let { decision(it) }
         val expectedLines = profileName?.let { profilePreferences.getStringSet(it, null)?.toSet() }
@@ -200,7 +310,7 @@ class TouchPointer : Service() {
         RemoteServiceHelper.getInstance(this) { service ->
             mHandler.post {
                 foreground.commit(request) {
-                    if (xtr.keymapper.editor.EditorSessionGuard.active || selectedProfile != profileName ||
+                    if (!screenReady() || xtr.keymapper.editor.EditorSessionGuard.active || selectedProfile != profileName ||
                         expectedLines != profileName?.let { profilePreferences.getStringSet(it, null)?.toSet() } ||
                         (request.packageName != null &&
                             (decision(request.packageName) != expectedDecision || !canActivate(request, profileName))))
@@ -220,6 +330,7 @@ class TouchPointer : Service() {
                         }
                         if (config.disableAutoProfiling || (request.packageName != null && !profile.disabled)) {
                             service.startServer(profile, config, mCallback, size.x, size.y, displayId)
+                            favoriteOverlay?.show()
                             if (config.showControls && !profile.disabled) ShowKeymapService.start(this, profileName)
                         }
                     } catch (error: Exception) {
@@ -234,6 +345,9 @@ class TouchPointer : Service() {
     }
 
     override fun onDestroy() {
+        cancelScreenChecks()
+        runCatching { unregisterReceiver(screenOff) }
+        favoriteOverlay?.close(); favoriteOverlay = null
         xtr.keymapper.editor.EditorSessionGuard.remove(editorListener)
         foreground.stop { pauseMapping() }
         profileDialog?.dismiss()
@@ -284,7 +398,7 @@ class TouchPointer : Service() {
         }
 
         override fun requestKeymapProfile(): KeymapProfile {
-            return selectedProfile?.let { KeymapProfiles(this@TouchPointer).getProfile(it, true) }
+            return selectedProfile?.let { KeymapProfiles(this@TouchPointer).getProfile(it, false) }
                 ?: KeymapProfile().apply { disabled = true }
         }
 
@@ -411,14 +525,20 @@ class TouchPointer : Service() {
     }
 
     private fun decision(packageName: String): AutomaticProfileResolver.Decision {
+        if (packageName != xtr.keymapper.mythic.MythicScope.GAME) return AutomaticProfileResolver.Decision.Unconfigured
         val profiles = KeymapProfiles(this).getAllProfilesForApp(packageName)
+        mythicProfileChoice?.let { chosen ->
+            profiles[chosen]?.let { profile ->
+                return if (profile.disabled) AutomaticProfileResolver.Decision.Disabled(chosen) else AutomaticProfileResolver.Decision.Activate(chosen)
+            }
+        }
         val store = DeviceMappingStore(this)
         return AutomaticProfileResolver.resolve(packageName, profiles, store.listGroups(),
             store.listBindings(), connectedDeviceIdentities())
     }
 
     private fun canActivate(request: ForegroundProfileSession.Request, profile: String?): Boolean {
-        if (xtr.keymapper.editor.EditorSessionGuard.active) return false
+        if (!screenReady() || xtr.keymapper.editor.EditorSessionGuard.active) return false
         val packageName = request.packageName ?: return false
         val existing = KeymapProfiles(this).getAllProfilesForApp(packageName)[profile] ?: return false
         if (existing.disabled) return false
@@ -432,7 +552,7 @@ class TouchPointer : Service() {
     private fun activate(request: ForegroundProfileSession.Request, profile: String?) {
         if (!canActivate(request, profile)) return
         selectedProfile = profile
-        connectRemoteService(KeymapProfiles(this).getProfile(profile, true), request)
+        connectRemoteService(KeymapProfiles(this).getProfile(profile, false), request)
     }
 
     private fun refreshForeground() {
@@ -441,12 +561,13 @@ class TouchPointer : Service() {
     }
 
     private fun observeForeground(packageName: String, force: Boolean = false) {
+        if (!screenReady()) return
         val request = foreground.observe(packageName, { pauseMapping() }, force) ?: return
         mHandler.post {
             foreground.commit(request) {
                 profileDialog?.dismiss()
                 profileDialog = null
-                if (xtr.keymapper.editor.EditorSessionGuard.active) return@commit
+                if (!screenReady() || xtr.keymapper.editor.EditorSessionGuard.active) return@commit
                 when (val next = decision(packageName)) {
                     AutomaticProfileResolver.Decision.Unconfigured -> selectedProfile = null
                     is AutomaticProfileResolver.Decision.Disabled -> selectedProfile = next.profile

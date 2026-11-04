@@ -1,0 +1,25 @@
+{
+  "suite": "tester",
+  "result": {
+    "exclusive_root_lease": true,
+    "production_start_resume_blocked": true,
+    "injection_submission_delta": 0,
+    "observed_android_event_history": 0,
+    "passed_checks": [],
+    "applicable_checks": 23,
+    "held_at_end": [],
+    "queue_overflows": 0,
+    "source": "Automated ownership/lifecycle only; no synthetic controller events generated",
+    "configuration_retained_activity_and_lease": true,
+    "receipt_to_reducer": {
+      "n": 5,
+      "p50_ns": 221538,
+      "p95_ns": 1149961,
+      "p99_ns": 1149961
+    },
+    "root_exit_on_tester_exit": true,
+    "lease_released_on_exit": true,
+    "mapping_not_resumed": true
+  },
+  "status": "PASS"
+}

@@ -1,0 +1,8 @@
+{
+  "source": "ADB lifecycle observations on comparison APK",
+  "normal_back_left_tester": true,
+  "root_process_after_back": false,
+  "reader_after_back": false,
+  "physical_result_before_exit_zero_touches": true,
+  "final_apk": false
+}
