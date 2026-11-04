@@ -1,0 +1,110 @@
+[
+  {
+    "trial": 1,
+    "elapsed_seconds": 7.39,
+    "frames": [
+      "458"
+    ],
+    "janky": [
+      "0 (0.00%)"
+    ],
+    "percentiles_ms": [
+      [
+        "50th percentile",
+        "5ms"
+      ],
+      [
+        "90th percentile",
+        "6ms"
+      ],
+      [
+        "95th percentile",
+        "7ms"
+      ],
+      [
+        "99th percentile",
+        "9ms"
+      ]
+    ],
+    "pss_kb": [
+      "81181"
+    ],
+    "screen": [
+      1080,
+      2280
+    ],
+    "source": "physical S10e; minified benchmark variant with debug signing, DEBUG=false; 12 alternating250ms Home swipes; software rendering, not input/display latency"
+  },
+  {
+    "trial": 2,
+    "elapsed_seconds": 7.169,
+    "frames": [
+      "427"
+    ],
+    "janky": [
+      "0 (0.00%)"
+    ],
+    "percentiles_ms": [
+      [
+        "50th percentile",
+        "5ms"
+      ],
+      [
+        "90th percentile",
+        "5ms"
+      ],
+      [
+        "95th percentile",
+        "6ms"
+      ],
+      [
+        "99th percentile",
+        "7ms"
+      ]
+    ],
+    "pss_kb": [
+      "92091"
+    ],
+    "screen": [
+      1080,
+      2280
+    ],
+    "source": "physical S10e; minified benchmark variant with debug signing, DEBUG=false; 12 alternating250ms Home swipes; software rendering, not input/display latency"
+  },
+  {
+    "trial": 3,
+    "elapsed_seconds": 7.191,
+    "frames": [
+      "425"
+    ],
+    "janky": [
+      "0 (0.00%)"
+    ],
+    "percentiles_ms": [
+      [
+        "50th percentile",
+        "5ms"
+      ],
+      [
+        "90th percentile",
+        "6ms"
+      ],
+      [
+        "95th percentile",
+        "6ms"
+      ],
+      [
+        "99th percentile",
+        "7ms"
+      ]
+    ],
+    "pss_kb": [
+      "92329"
+    ],
+    "screen": [
+      1080,
+      2280
+    ],
+    "source": "physical S10e; minified benchmark variant with debug signing, DEBUG=false; 12 alternating250ms Home swipes; software rendering, not input/display latency"
+  }
+]

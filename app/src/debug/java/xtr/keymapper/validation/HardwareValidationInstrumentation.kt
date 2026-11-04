@@ -27,6 +27,7 @@ class HardwareValidationInstrumentation: Instrumentation() {
         try {
             when(suite){
                 "jni" -> report.put("result",jni())
+                "physical_ui", "physical_ui_auto" -> report.put("result",physicalUi(suite=="physical_ui_auto"))
                 "profiles_prepare" -> report.put("result",profiles(false))
                 "profiles_verify" -> report.put("result",profiles(true))
                 "injection" -> report.put("result",injection())
@@ -45,7 +46,7 @@ class HardwareValidationInstrumentation: Instrumentation() {
             report.put("status","PASS")
         } catch(error:Throwable) {
             result=Activity.RESULT_CANCELED
-            report.put("status","FAIL").put("error",error.javaClass.simpleName+": "+error.message)
+            report.put("status","FAIL").put("error",error.javaClass.simpleName+": "+error.message).put("stack",error.stackTraceToString().take(6000))
         }
         val destination=File(targetContext.filesDir,"validation/$suite.json");destination.parentFile!!.mkdirs();destination.writeText(report.toString(2))
         finish(result,Bundle().apply{putString("validation",report.toString())})
@@ -237,6 +238,124 @@ class HardwareValidationInstrumentation: Instrumentation() {
         runOnMainSync{controlled.finish();activity.finish()}
         return JSONObject().put("root_binder",true).put("root_uid",0).put("foreground_callback",transition).put("mapping_started",false)
             .put("foreground_observer",mode).put("launch_to_away_callback_ns",awayNs).put("launch_to_return_callback_ns",backNs)
+    }
+    /** Real service/overlay on the S10e; never rewrites favorites or mapping preferences. */
+    private fun physicalUi(automatic:Boolean=false):JSONObject {
+        check(Build.MODEL=="SM-G970F"&&Build.SUPPORTED_ABIS.contains("arm64-v8a"))
+        fun serviceStarted()=targetContext.getSystemService(android.app.ActivityManager::class.java).getRunningServices(100).any{it.service.className=="xtr.keymapper.TouchPointer"&&it.started}
+        check(!serviceStarted()){"Stop mapping before UI acceptance"}
+        check(!xtr.keymapper.keymap.KeymapConfig(targetContext).disableAutoProfiling){"Foreground safety must already be enabled; preferences will not be changed"}
+        check(android.provider.Settings.canDrawOverlays(targetContext))
+        check(xtr.keymapper.devices.InputDeviceDiscovery.connected().any(MythicScope::supported)){"Physical G8 not connected"}
+        val store=HeroLibraryStore(targetContext);val before=store.read()
+        val mappings=KeymapProfiles(targetContext).sharedPref
+        val preserved=before.profiles.associate{it.id to mappings.getStringSet(it.id,null)?.toSet()}
+        val selected=before.profiles.firstOrNull{runCatching{MythicScope.validateActivation(KeymapProfiles(targetContext).getProfile(it.id,false));true}.getOrDefault(false)}?:error("No existing calibrated profile; nothing activated")
+        val activity=startActivitySync(Intent(targetContext,ValidationActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))as ValidationActivity
+        var connectionReady=CountDownLatch(1);var service:xtr.keymapper.TouchPointer?=null
+        val connection=object:ServiceConnection {
+            override fun onServiceConnected(name:ComponentName?,binder:IBinder?){service=(binder as xtr.keymapper.TouchPointer.TouchPointerBinder).service;connectionReady.countDown()}
+            override fun onServiceDisconnected(name:ComponentName?){service=null}
+        }
+        val intent=Intent(targetContext,xtr.keymapper.TouchPointer::class.java).putExtra(xtr.keymapper.editor.EditorActivity.PROFILE_NAME,selected.id)
+        val lease=Any();val directory=File(targetContext.filesDir,"validation").apply{mkdirs()}
+        val readyFile=File(directory,"physical-ui-ready.json");val doneFile=File(directory,"physical-ui-done");doneFile.delete()
+        fun field(owner:Any,name:String)=owner.javaClass.getDeclaredField(name).apply{isAccessible=true}.get(owner)
+        fun await(label:String,predicate:()->Boolean){val end=SystemClock.elapsedRealtime()+6000;while(!predicate()&&SystemClock.elapsedRealtime()<end)SystemClock.sleep(25);check(predicate()){label}}
+        var observedRoot:android.view.View?=null
+        var remote:xtr.keymapper.IRemoteService?=null
+        fun diagnostics()=JSONObject(remote!!.diagnostics())
+        fun safe(){check(activity.guard.ready());check(diagnostics().getInt("logical_active_touches")==0);check(remote!!.isActive!=true||remote!!.isMappingPaused);check(store.read()==before);check(preserved.all{(id,lines)->mappings.getStringSet(id,null)?.toSet()==lines})}
+        fun shot(name:String){File(directory,"physical-$name.png").outputStream().use{check(uiAutomation.takeScreenshot().compress(android.graphics.Bitmap.CompressFormat.PNG,100,it))}}
+        val positions=targetContext.getSharedPreferences("mythic_overlay",0);val oldX=positions.all["x"];val oldY=positions.all["y"]
+        try {
+            check(Shell.getShell().isRoot)
+            val rootReady=CountDownLatch(1)
+            runOnMainSync{xtr.keymapper.server.RemoteServiceHelper.getInstance(targetContext){remote=it;rootReady.countDown()}}
+            check(rootReady.await(15,TimeUnit.SECONDS)&&remote!=null)
+            safe();val submissions=JSONArray(diagnostics().getString("samples_total")).getLong(2)
+            runOnMainSync{targetContext.bindService(intent,connection,Context.BIND_AUTO_CREATE);androidx.core.content.ContextCompat.startForegroundService(targetContext,intent)}
+            check(connectionReady.await(10,TimeUnit.SECONDS))
+            await("Overlay unavailable"){field(service!!,"favoriteOverlay")!=null}
+            val overlay=field(service!!,"favoriteOverlay")!!
+            val header=field(overlay,"header")as android.widget.Button
+            val root=field(overlay,"root")as android.widget.LinearLayout
+            observedRoot=root
+            val scroll=field(overlay,"panelScroll")as android.widget.ScrollView
+            await("Overlay not attached"){root.isAttachedToWindow&&header.width>0};safe()
+            val targetDp=header.width/activity.resources.displayMetrics.density;check(kotlin.math.abs(targetDp-48f)<1f)
+            shot("bubble-collapsed")
+            runOnMainSync{header.performClick()};waitForIdleSync();check(scroll.visibility==android.view.View.VISIBLE);shot("bubble-expanded")
+            runOnMainSync{header.performClick()};waitForIdleSync();check(scroll.visibility==android.view.View.GONE)
+            check((root.background as android.graphics.drawable.ColorDrawable).color==android.graphics.Color.TRANSPARENT)
+            runOnMainSync{xtr.keymapper.editor.EditorSessionGuard.acquire(lease)};waitForIdleSync();check(root.visibility==android.view.View.GONE)
+            runOnMainSync{xtr.keymapper.editor.EditorSessionGuard.release(lease)};waitForIdleSync();check(root.visibility==android.view.View.VISIBLE)
+            runOnMainSync{activity.requestedOrientation=android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE}
+            await("Landscape not ready"){activity.surface.width>activity.surface.height};SystemClock.sleep(900);safe();shot("bubble-landscape")
+            val editorMonitor=addMonitor(xtr.keymapper.editor.EditorActivity::class.java.name,null,false)
+            try {
+                runOnMainSync{header.performClick();scroll.fullScroll(android.view.View.FOCUS_DOWN)};waitForIdleSync();SystemClock.sleep(300)
+                runOnMainSync{val button=(field(overlay,"panel")as android.widget.LinearLayout).getChildAt(6);check(button.isEnabled){"Editor action disabled"};button.performClick()}
+                val editor=waitForMonitorWithTimeout(editorMonitor,10000)?:error("Overlay editor did not open")
+                waitForIdleSync();check(!editor.isFinishing){"Editor rejected the selected profile"}
+                runOnMainSync{editor.finish()}
+                await("Editor did not release ownership"){editor.isDestroyed&&!xtr.keymapper.editor.EditorSessionGuard.active&&activity.guard.ready()}
+                check((root.background as android.graphics.drawable.ColorDrawable).color==android.graphics.Color.TRANSPARENT)
+                shot("editor-return")
+            }finally{removeMonitor(editorMonitor)}
+            val startPosition=(field(overlay,"params")as android.view.WindowManager.LayoutParams).let{it.x to it.y}
+            if(automatic) {
+                val location=IntArray(2);runOnMainSync{header.getLocationOnScreen(location)}
+                val sx=location[0]+header.width/2f;val sy=location[1]+header.height/2f
+                val ex=activity.surface.width-200f;val now=SystemClock.uptimeMillis()
+                fun send(action:Int,x:Float){val event=android.view.MotionEvent.obtain(now,SystemClock.uptimeMillis(),action,x,sy,0);event.source=android.view.InputDevice.SOURCE_TOUCHSCREEN;check(uiAutomation.injectInputEvent(event,true));event.recycle()}
+                send(0,sx);for(i in 1..12){SystemClock.sleep(20);send(2,sx+(ex-sx)*i/12)};send(1,ex);waitForIdleSync();SystemClock.sleep(350)
+                runOnMainSync{activity.requestedOrientation=android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT};await("Portrait missing"){activity.surface.height>activity.surface.width};SystemClock.sleep(1100)
+                runOnMainSync{activity.requestedOrientation=android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE};await("Landscape missing"){activity.surface.width>activity.surface.height};SystemClock.sleep(1100)
+                doneFile.writeText("automatic geometry and restart check")
+            }
+            if(!automatic)readyFile.writeText(JSONObject().put("ready",true).put("target_dp",targetDp).put("gameplay_paused",true).put("controller","physical G8").toString())
+            val deadline=SystemClock.elapsedRealtime()+240000
+            while(!doneFile.exists()&&SystemClock.elapsedRealtime()<deadline){
+                // Keyguard may cover the surface during a manual lock test; no input is submitted.
+                check(diagnostics().getInt("logical_active_touches")==0)
+                check(JSONArray(diagnostics().getString("samples_total")).getLong(2)==submissions)
+                SystemClock.sleep(100)
+            }
+            check(doneFile.exists()){"Manual acceptance window timed out"};safe()
+            check(JSONArray(diagnostics().getString("samples_total")).getLong(2)==submissions)
+            val finalPosition=(field(overlay,"params")as android.view.WindowManager.LayoutParams).let{it.x to it.y}
+            check(finalPosition!=startPosition){"No changed drag position was observed"}
+            check(positions.getInt("x",-1)==finalPosition.first&&positions.getInt("y",-1)==finalPosition.second){"Saved position (${positions.getInt("x",-1)},${positions.getInt("y",-1)}) differs from rendered $finalPosition"}
+            runOnMainSync{targetContext.stopService(intent);targetContext.unbindService(connection);service=null}
+            await("Old overlay survived stop"){!root.isAttachedToWindow&&!serviceStarted()}
+            connectionReady=CountDownLatch(1)
+            runOnMainSync{targetContext.bindService(intent,connection,Context.BIND_AUTO_CREATE);androidx.core.content.ContextCompat.startForegroundService(targetContext,intent)}
+            check(connectionReady.await(10,TimeUnit.SECONDS))
+            await("Restarted overlay unavailable"){service?.let{field(it,"favoriteOverlay")}!=null}
+            val replacement=field(service!!,"favoriteOverlay")!!
+            val replacementRoot=field(replacement,"root")as android.view.View;observedRoot=replacementRoot
+            await("Restarted overlay not attached"){replacementRoot.isAttachedToWindow}
+            check((field(replacement,"params")as android.view.WindowManager.LayoutParams).let{it.x to it.y}==finalPosition){"Position did not survive service restart"}
+            val refreshed=CountDownLatch(1);runOnMainSync{xtr.keymapper.server.RemoteServiceHelper.getInstance(targetContext){remote=it;refreshed.countDown()}}
+            check(refreshed.await(15,TimeUnit.SECONDS)&&remote!=null);safe()
+            check(JSONArray(diagnostics().getString("samples_total")).getLong(2)==0L)
+            shot("bubble-restarted")
+            return JSONObject().put("physical_g8_observed",true).put("target_dp",targetDp).put("visible_face_dp_code",44)
+                .put("expand_collapse",true).put("transparent_collapsed_background",true).put("editor_guard_hide_restore",true)
+                .put("landscape_render",true).put("editor_return_transparent",true).put("observed_drag_position_change",true).put("service_restart_position_retained",true).put("overlay_removed_on_stop",true).put("gameplay_submission_delta",0).put("personal_profiles_and_favorites_unchanged",true)
+        }finally{
+            readyFile.delete();doneFile.delete()
+            runOnMainSync{xtr.keymapper.editor.EditorSessionGuard.release(lease);targetContext.stopService(intent);runCatching{targetContext.unbindService(connection)};activity.finish()}
+            await("Mapping service did not stop"){!serviceStarted()&&observedRoot?.isAttachedToWindow!=true}
+            if(remote?.asBinder()?.isBinderAlive==true) {
+                try{check(diagnostics().getInt("logical_active_touches")==0);remote!!.stopServer()}
+                catch(_:android.os.DeadObjectException){} // Service already completed its own graceful shutdown.
+            }
+            check(store.read()==before&&preserved.all{(id,lines)->mappings.getStringSet(id,null)?.toSet()==lines})
+            // Restore only the position keys deliberately changed by the manual drag exercise.
+            val edit=positions.edit();if(oldX is Int)edit.putInt("x",oldX)else edit.remove("x");if(oldY is Int)edit.putInt("y",oldY)else edit.remove("y");edit.commit()
+        }
     }
     private fun overlay():JSONObject {
         val activity=startActivitySync(Intent(targetContext,ValidationActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) as ValidationActivity

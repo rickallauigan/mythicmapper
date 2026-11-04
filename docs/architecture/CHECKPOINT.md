@@ -366,3 +366,55 @@ ignored. Migration MIGRATION.md and docs/MYTHICMAPPER-AVD.md were updated locall
 in the separate dirty migration repository; no commit/push there. Keep PR22 draft,
 preserve unrelated design PNG and all stack branches. Never merge or touch phone
 without a separate physical request.
+
+### Issues16/18 UI modernization
+
+Issue16 branch feature/16-floating-bubble, source57d928a, draft23 based on22.
+324 Android tests,12 tools tests, lint/build and actual AVD bubble gestures pass.
+Hosted host41640377835 and AVD41640377837 green. Original44dp circular M on48dp
+transparent target; five slots/switch gates preserved. No gameplay/fixture changes.
+
+Issue18 branch feature/18-home-redesign stacks on23. Shared Tester palette, actual
+status/actions, horizontal five-favorite strip, searchable library, confirmation
+for delete/occupied replacement and explicit starter-based creation. No fake folder
+sync or universal editor. Virtual entry remains debug-only/SIMULATED. Library
+refresh no longer parses every750ms; calibration reads run on IO. Final327 Android
+and12 Python tests, lint/debug/release compilation, native/Rust/JNI/schema/fixtures
+pass. Actual AVD Home accessibility/rotation/navigation and all seven replays pass.
+See docs/validation/ui-16 and ui-18 for APK screenshots/results. Debug SwiftShader
+scroll jank remains worse than baseline (26.71% →36.49% final repeat); no release
+performance acceptance claimed. Hosted final-head status is in the draft PR.
+
+Only emulator-5580 was commanded. Real S10e/profile/favorites, Bennett180/400,
+Kimmy/unlock and issue20 deferred scope remain untouched. Preserve both untracked
+reference PNGs. Keep feature PRs draft; do not merge or publish. Recommended next
+work is accelerated/release-like profiling and separate physical overlay acceptance.
+
+Final UI review found/fixed the expanded-card backdrop remaining after overlay→editor.
+Parent16 head d5b5eca includes collapse-helper fix, regression and actual AVD editor
+tap/return; child18 integrates parent with normal dependency merges (no PR merge or
+rewritten history). Local integrated328 tests expected/previous full run PASS; final
+rerun logs in /tmp/mythic-ui-final-fixed-host.log, AVD Home/bubble pass and seven-case
+replay in /tmp/mythic-ui-final-fixed-smoke.log. Parent fresh CI41675067373/41675067390
+running; new child final-head CI pending push. Keep both drafts; check results/artifacts
+before claiming final CI green. No new gameplay/physical commands. Both original
+reference PNGs remain untracked; temporary parent review worktree is /tmp/mythic-ui16-review.
+
+## 2026-11-04 physical UI acceptance
+
+PR23 parent1c0ef7d includes unlock presentation fix15f82e6, host shadow correction
+61e85bb and persisted anchor fixfcb6150. Child97e67ad integrates parent without
+rewriting history, adds guarded preserving S10e UI suites and read-only selected
+profile presentation. Both pushed; remain drafts. Physical user confirmed moved
+bubble returns after unlock. Home/search/editor/calibration/rotation/1.5× font
+passed; zero safe-surface gameplay submissions. Full330 Android tests pass;
+Rust/native/JNI/generator/fixture gates and seven AVD cases + both UX suites pass.
+Real-device report: docs/validation/s10e/ui-acceptance-2026-11-04/REPORT.md.
+Minified variant0 janky frames across3 scroll trials; debug baseline/new comparison
+does not establish an optimization. Final debug restored; installed SHA256 is in
+final-build.json. Mapping stopped; original profile/library digests unchanged.
+Private backups/ADB identity stay outside repository, located through private
+/tmp/mythic-current-s10e-private-dir. Do not publish those contents or raw logs.
+Hosted fresh checks running; inspect PR checks before claiming green. Issue20
+remains deferred. Do not merge, release or start universal editor. Preserve both
+untracked reference PNGs. Parent worktree:/tmp/mythic-s10e-ui16-fix.
