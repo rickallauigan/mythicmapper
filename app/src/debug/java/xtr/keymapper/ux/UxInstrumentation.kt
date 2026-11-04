@@ -69,6 +69,15 @@ class UxInstrumentation:Instrumentation() {
     private fun verifyVirtualNavigation() {
         val monitor=addMonitor(xtr.keymapper.virtual.VirtualG8Activity::class.java.name,null,false)
         try {
+            // Landscape has less vertical space: reveal the real Home action before clicking.
+            var revealed=false
+            repeat(12){
+                if(!revealed){
+                    val action=text("Virtual G8 · SIMULATED")
+                    if(action?.isVisibleToUser==true)revealed=true else scrollHome(true)
+                }
+            }
+            check(revealed){"Virtual G8 action unreachable by scrolling Home"}
             click("Virtual G8 · SIMULATED")
             val destination=waitForMonitorWithTimeout(monitor,10000)?:error("Virtual G8 Activity not launched")
             awaitVisibleText("SIMULATED — DEV ONLY")

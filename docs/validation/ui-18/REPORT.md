@@ -117,3 +117,8 @@ route runs in portrait and landscape, preserving the original assertion and addi
 lifecycle/teardown coverage. This addresses synchronization rather than hiding an
 emulator failure or retrying the complete test until it passes. Only the owned AVD
 is used; no physical S10e commands are part of consolidation.
+
+The added landscape repeat initially failed because the action was below the fold;
+its actual screenshot showed normal Home content and the first action row at the
+viewport edge. The regression now scrolls the real Home surface until the Virtual
+G8 action is visible before clicking. Destination/lifecycle assertions remain strict.
