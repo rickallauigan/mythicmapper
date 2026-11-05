@@ -46,6 +46,8 @@ jobs:
           python3 tools/virtual_g8.py ux bubble
           python3 tools/virtual_g8.py ux home
           python3 tools/virtual_g8.py ux universal
+          python3 tools/virtual_g8.py ux universal-crud
+          python3 tools/virtual_g8.py ux universal-io
       - name: Collect failure diagnostics
         if: failure()
         run: |

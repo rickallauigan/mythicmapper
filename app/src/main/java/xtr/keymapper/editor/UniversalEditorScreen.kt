@@ -122,6 +122,7 @@ import kotlin.math.hypot
             }
         }
     }
+    error?.let{message->AlertDialog(onDismissRequest=onClearError,title={Text("Action not completed")},text={Text(message)},confirmButton={TextButton(onClick=onClearError){Text("Dismiss error")}})}
     if(close)AlertDialog(onDismissRequest={close=false},title={Text("Discard unsaved changes?")},text={Text("Your last saved mapping and favorites are preserved.")},confirmButton={TextButton(onClick=onExit){Text("Discard changes")}},dismissButton={TextButton(onClick={close=false}){Text("Keep editing")}})
     destructive?.let{go->AlertDialog(onDismissRequest={destructive=null},title={Text("Confirm mapping change")},confirmButton={TextButton(onClick={destructive=null;go()}){Text("Confirm")}},dismissButton={TextButton(onClick={destructive=null}){Text("Cancel")}})}
     if(rename){var name by rememberSaveable{mutableStateOf(draft!!.value.name)};AlertDialog(onDismissRequest={rename=false},title={Text("Rename personal mapping")},text={OutlinedTextField(name,{name=it},Modifier.semantics{testTagsAsResourceId=true}.testTag("profile-name"),label={Text("Profile name")})},confirmButton={TextButton(onClick={onChange{draft!!.change(draft.value.copy(name=name))};rename=false}){Text("Apply name")}},dismissButton={TextButton(onClick={rename=false}){Text("Cancel")}})}

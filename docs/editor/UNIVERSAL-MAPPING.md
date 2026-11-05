@@ -75,3 +75,20 @@ its existing ControllerDeviceMonitor/InputService with the recording backend.
 `python3 tools/virtual_g8.py ux universal` exercises the real production editor UI in
 an isolated preference namespace, saves/reopens a disposable custom hero, then replays
 it through that same runtime. No physical device, root, MLBB or new hero class is used.
+
+## Focused development checks
+
+Run `python3 tools/virtual_g8.py ux universal` for blank creation, six synthetic
+anchors, save/reopen, marker drag, favorite assignment, rotation and real resolver
+replay. `ux universal-crud` covers the unmeasured starter, duplicate/clone UUIDs,
+remove/undo/redo, rename, Home editor routing, discard and confirmed deletion.
+`ux universal-io` drives the actual Android DocumentsUI, including editor recreation
+while the picker is open, recording preview, a new disabled import and future-schema
+rejection. Each suite uses disposable isolated data and checks original library and
+mapping snapshots afterward. The I/O suite deletes only its own exported document.
+Consult the validation report for executed results; command availability alone is
+not evidence of a pass.
+
+Import/save errors appear in a dismissible dialog so they remain visible while the
+canvas or action list is scrolled. Export validates the retained snapshot before
+opening its destination; the destination is chosen explicitly through Android SAF.
