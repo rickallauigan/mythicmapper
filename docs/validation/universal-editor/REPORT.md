@@ -162,3 +162,23 @@ Both hosted workflows on f52944c passed before this presentation follow-up (see
 [host](https://github.com/rickallauigan/mythicmapper/actions/runs/41936089115),
 [AVD](https://github.com/rickallauigan/mythicmapper/actions/runs/41936089122).
 The PR remains draft; check its current SHA for later evidence-only commits.
+
+## Export-safety checkpoint: 3be26f9
+
+All **345 Android tests** passed, including the new export regression. An invalid,
+missing or future-schema snapshot cannot invoke the destination-opening callback;
+a validated snapshot survives Bundle parceling. The Activity retains the pending
+export snapshot across recreation. The JSON picker interaction itself remains a
+separate UI acceptance case.
+
+Debug build, lint, release source compilation and release manifest checks passed.
+The actual compiled release class tree contains the production editor and no
+Virtual G8 classes; no debug validation activities appear in the release manifest.
+See [release/unit evidence](evidence/release-and-unit-checks.json).
+
+The complete local editor suite passed again with the hardened export APK. Both
+fresh hosted workflows passed on 3be26f9:
+[host](https://github.com/rickallauigan/mythicmapper/actions/runs/41937425678),
+[AVD](https://github.com/rickallauigan/mythicmapper/actions/runs/41937425695).
+The evidence/build identity now refers to this checkpoint. The remaining interaction
+and fault-injection matrix continues on the same feature branch and draft PR.

@@ -1,12 +1,12 @@
 {
-  "commit": "f52944c",
+  "commit": "3be26f9aee8a6cb84cc06cb2928b6c54e3171035",
   "host": {
     "status": "success",
-    "url": "https://github.com/rickallauigan/mythicmapper/actions/runs/41934439943"
+    "url": "https://github.com/rickallauigan/mythicmapper/actions/runs/41937425678"
   },
   "avd": {
     "status": "success",
-    "url": "https://github.com/rickallauigan/mythicmapper/actions/runs/41934439911"
+    "url": "https://github.com/rickallauigan/mythicmapper/actions/runs/41937425695"
   },
-  "scope": "Before the final portrait header/rotation follow-up; consult latest PR checks for later commits."
+  "scope": "Includes export snapshot hardening, both editor orientations and all existing regression suites."
 }

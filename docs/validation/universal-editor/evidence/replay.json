@@ -25,7 +25,7 @@
   "final_pointers": 0,
   "touch_trace": [
     {
-      "t_ms": 57,
+      "t_ms": 55,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 0,
       "pointer": 50,
@@ -34,7 +34,7 @@
       "active": 1
     },
     {
-      "t_ms": 97,
+      "t_ms": 95,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 1,
       "pointer": 50,
@@ -43,7 +43,7 @@
       "active": 0
     },
     {
-      "t_ms": 127,
+      "t_ms": 125,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 0,
       "pointer": 51,
@@ -52,7 +52,7 @@
       "active": 1
     },
     {
-      "t_ms": 167,
+      "t_ms": 166,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 1,
       "pointer": 51,
@@ -61,7 +61,7 @@
       "active": 0
     },
     {
-      "t_ms": 198,
+      "t_ms": 196,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 0,
       "pointer": 52,
@@ -70,7 +70,7 @@
       "active": 1
     },
     {
-      "t_ms": 269,
+      "t_ms": 267,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 1,
       "pointer": 52,
@@ -79,7 +79,7 @@
       "active": 0
     },
     {
-      "t_ms": 269,
+      "t_ms": 267,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 0,
       "pointer": 53,
@@ -88,7 +88,7 @@
       "active": 1
     },
     {
-      "t_ms": 339,
+      "t_ms": 337,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 1,
       "pointer": 53,
@@ -97,7 +97,7 @@
       "active": 0
     },
     {
-      "t_ms": 339,
+      "t_ms": 338,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 0,
       "pointer": 54,
@@ -106,7 +106,7 @@
       "active": 1
     },
     {
-      "t_ms": 410,
+      "t_ms": 408,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 1,
       "pointer": 54,
@@ -115,7 +115,7 @@
       "active": 0
     },
     {
-      "t_ms": 410,
+      "t_ms": 408,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 0,
       "pointer": 55,
@@ -124,7 +124,7 @@
       "active": 1
     },
     {
-      "t_ms": 481,
+      "t_ms": 479,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 1,
       "pointer": 55,
@@ -133,7 +133,7 @@
       "active": 0
     },
     {
-      "t_ms": 481,
+      "t_ms": 479,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 0,
       "pointer": 55,
@@ -142,7 +142,7 @@
       "active": 1
     },
     {
-      "t_ms": 481,
+      "t_ms": 479,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 2,
       "pointer": 55,
@@ -151,7 +151,7 @@
       "active": 1
     },
     {
-      "t_ms": 481,
+      "t_ms": 479,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 0,
       "pointer": 52,
@@ -160,7 +160,7 @@
       "active": 2
     },
     {
-      "t_ms": 481,
+      "t_ms": 479,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 1,
       "pointer": 55,
@@ -169,7 +169,7 @@
       "active": 1
     },
     {
-      "t_ms": 481,
+      "t_ms": 480,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 1,
       "pointer": 52,
@@ -178,7 +178,7 @@
       "active": 0
     },
     {
-      "t_ms": 503,
+      "t_ms": 500,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 0,
       "pointer": 55,
@@ -187,7 +187,7 @@
       "active": 1
     },
     {
-      "t_ms": 503,
+      "t_ms": 500,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 1,
       "pointer": 55,
@@ -200,132 +200,132 @@
     {
       "packet": "EV_ABS ABS_RX 80",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 56
+      "observed_ms": 54
     },
     {
       "packet": "EV_SYN SYN_REPORT 0",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 56
+      "observed_ms": 54
     },
     {
       "packet": "EV_ABS ABS_RY 80",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 56
+      "observed_ms": 54
     },
     {
       "packet": "EV_SYN SYN_REPORT 0",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 56
+      "observed_ms": 54
     },
     {
       "packet": "EV_KEY BTN_GAMEPAD DOWN",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 56
+      "observed_ms": 54
     },
     {
       "packet": "EV_KEY BTN_GAMEPAD UP",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 127
+      "observed_ms": 125
     },
     {
       "packet": "EV_KEY BTN_EAST DOWN",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 127
+      "observed_ms": 125
     },
     {
       "packet": "EV_KEY BTN_EAST UP",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 198
+      "observed_ms": 196
     },
     {
       "packet": "EV_KEY BTN_TR DOWN",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 198
+      "observed_ms": 196
     },
     {
       "packet": "EV_KEY BTN_TR UP",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 268
+      "observed_ms": 267
     },
     {
       "packet": "EV_KEY BTN_TR2 DOWN",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 269
+      "observed_ms": 267
     },
     {
       "packet": "EV_KEY BTN_TR2 UP",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 339
+      "observed_ms": 337
     },
     {
       "packet": "EV_KEY BTN_TL DOWN",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 339
+      "observed_ms": 338
     },
     {
       "packet": "EV_KEY BTN_TL UP",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 410
+      "observed_ms": 408
     },
     {
       "packet": "EV_KEY BTN_TL2 DOWN",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 410
+      "observed_ms": 408
     },
     {
       "packet": "EV_KEY BTN_TL2 UP",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 480
+      "observed_ms": 479
     },
     {
       "packet": "EV_ABS ABS_RX ff",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 481
+      "observed_ms": 479
     },
     {
       "packet": "EV_SYN SYN_REPORT 0",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 481
+      "observed_ms": 479
     },
     {
       "packet": "EV_KEY BTN_TL2 DOWN",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 481
+      "observed_ms": 479
     },
     {
       "packet": "EV_KEY BTN_TR DOWN",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 481
+      "observed_ms": 479
     },
     {
       "action": "disconnect",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 481
+      "observed_ms": 479
     },
     {
       "action": "connect",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 481
+      "observed_ms": 480
     },
     {
       "packet": "EV_KEY BTN_TL2 DOWN",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 503
+      "observed_ms": 500
     },
     {
       "action": "diagnostics_on",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 503
+      "observed_ms": 500
     },
     {
       "packet": "EV_KEY BTN_TR2 DOWN",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 503
+      "observed_ms": 500
     },
     {
       "action": "diagnostics_off",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 503
+      "observed_ms": 500
     }
   ],
   "platform_touch_submissions": 0,

@@ -1,0 +1,11 @@
+{
+  "release_editor_exported": false,
+  "debug_activities_in_release": false,
+  "virtual_g8_classes_in_release": false,
+  "signed_release": "BLOCKED: production keystore unavailable; no workaround",
+  "android_tests": 345,
+  "failures": 0,
+  "errors": 0,
+  "release_class_directory": "app/build/intermediates/built_in_kotlinc/release/compileReleaseKotlin/classes",
+  "production_editor_class_present": true
+}
