@@ -140,4 +140,84 @@ class UniversalMappingTest {
         }finally{parcel.recycle()}
     }
 
+    private class RejectCommit(private val actual:android.content.SharedPreferences):android.content.SharedPreferences by actual {
+        var rejects=0
+        override fun edit():android.content.SharedPreferences.Editor {
+            val editor=actual.edit()
+            return object:android.content.SharedPreferences.Editor by editor {
+                override fun putStringSet(key:String?,value:MutableSet<String>?):android.content.SharedPreferences.Editor {editor.putStringSet(key,value);return this}
+                override fun putString(key:String?,value:String?):android.content.SharedPreferences.Editor {editor.putString(key,value);return this}
+                override fun remove(key:String?):android.content.SharedPreferences.Editor {editor.remove(key);return this}
+                override fun commit():Boolean {val committed=editor.commit();if(rejects>0){rejects--;return false};return committed}
+            }
+        }
+    }
+    @Test fun profileAndRenameCommitFailuresPreservePriorMappingAndFavoriteOwnership(){
+        val app=org.robolectric.RuntimeEnvironment.getApplication()
+        val mappingPrefs=RejectCommit(app.getSharedPreferences("universal_fault_profiles",0))
+        val metaPrefs=RejectCommit(app.getSharedPreferences("universal_fault_library",0))
+        val context=object:android.content.ContextWrapper(app){override fun getSharedPreferences(name:String,mode:Int)=when(name){"profiles"->mappingPrefs;"mythic_hero_library"->metaPrefs;else->super.getSharedPreferences(name,mode)}}
+        val store=xtr.keymapper.mythic.HeroLibraryStore(context)
+        val p=store.clone("Fault test",UniversalStorage.pack(mapping(action("BTN_GAMEPAD"))))
+        val library=store.read();store.update(library,library.assign(2,p.id))
+        val before=store.read();val doc=UniversalStorage.read(context,p.id);val lines=mappingPrefs.getStringSet(p.id,null)!!.toSet()
+        try{
+            mappingPrefs.rejects=1
+            assertThrows(IllegalStateException::class.java){UniversalStorage.save(context,p.id,doc.edited(listOf(doc.actions.single().copy(x=700f))),lines,p.name)}
+            assertEquals(lines,mappingPrefs.getStringSet(p.id,null));assertEquals(before,store.read());assertEquals(doc,UniversalStorage.read(context,p.id))
+            metaPrefs.rejects=1
+            assertThrows(IllegalStateException::class.java){UniversalStorage.save(context,p.id,doc.copy(name="Rejected rename"),lines,p.name)}
+            assertEquals(lines,mappingPrefs.getStringSet(p.id,null));assertEquals(before,store.read());assertEquals(p.id,store.read().favorites[2])
+            mappingPrefs.rejects=2
+            val failure=assertThrows(IllegalStateException::class.java){UniversalStorage.save(context,p.id,doc.copy(name="Double failure"),lines,p.name)}
+            assertTrue(failure.message!!.contains("rollback persistence also failed"));assertEquals(before,store.read())
+        }finally{mappingPrefs.rejects=0;metaPrefs.rejects=0;store.delete(p.id)}
+    }
+    @Test fun legacyNativeAndStructuredDocumentsAreReadWithoutAutomaticMigration(){
+        val context=org.robolectric.RuntimeEnvironment.getApplication();val store=xtr.keymapper.mythic.HeroLibraryStore(context)
+        val native=setOf("APPLICATION com.mobile.legends","SCREENSIZE 2280 1080","ENABLED","BTN_TR 500 400 0")
+        val structured=xtr.keymapper.structured.StructuredProfiles.pack(xtr.keymapper.structured.ProfileCodec.fromLegacy("Legacy",native))
+        for(lines in listOf(native,structured)){
+            val p=store.clone("Legacy preserved",lines)
+            try{
+                val prefs=KeymapProfiles(context).sharedPref;val before=prefs.getStringSet(p.id,null)!!.toSet()
+                assertNull(KeymapProfiles.getProfile(before).universalMapping)
+                assertThrows(Exception::class.java){UniversalStorage.read(context,p.id)}
+                assertEquals(before,prefs.getStringSet(p.id,null));assertEquals("BTN_TR",KeymapProfiles.getProfile(before).keys.single().code)
+            }finally{store.delete(p.id)}
+        }
+    }
+
+    @Test fun backendRejectionStopsUniversalRepeatAndOnlyAFreshHealthyRuntimeRecovers(){
+        class Backend(var reject:Boolean):xtr.keymapper.server.TouchBackend {
+            var failed=false;var calls=0;var downs=0;val active=mutableSetOf<Int>()
+            override fun injectTouch(action:Int,pointer:Int,pressure:Float,x:Float,y:Float){
+                calls++;if(reject){failed=true;return}
+                when(action){android.view.MotionEvent.ACTION_DOWN->{check(active.add(pointer));downs++};android.view.MotionEvent.ACTION_UP->check(active.remove(pointer));android.view.MotionEvent.ACTION_MOVE->check(pointer in active)}
+            }
+            override fun cancelOwnedGesture():Boolean{active.clear();return !failed}
+            override fun hasSubmissionFailure()=failed
+        }
+        val d=mapping(action("BTN_TL2").copy(kind=TouchAction.REPEAT,repeatMs=400))
+        fun runtime(backend:Backend):Pair<xtr.keymapper.server.InputService,xtr.keymapper.controller.ControllerDeviceMonitor>{
+            val config=KeymapConfig(null).apply{pointerMode=KeymapConfig.POINTER_OVERLAY}
+            val callback=java.lang.reflect.Proxy.newProxyInstance(javaClass.classLoader,arrayOf(xtr.keymapper.IRemoteServiceCallback::class.java)){_,_,_->null} as xtr.keymapper.IRemoteServiceCallback
+            val service=xtr.keymapper.server.InputService(ProfileConfiguration.parse(UniversalStorage.pack(d).joinToString("\n")),config,callback,2280,1080,null,true,0,backend,true)
+            val monitor=xtr.keymapper.controller.ControllerDeviceMonitor(service,2280f,1080f){mapOf("SIMULATED:unit" to longArrayOf(1,2,0,255,128,0,255,128))}
+            org.robolectric.util.ReflectionHelpers.setField(service,"controllers",monitor);monitor.start();return service to monitor
+        }
+        val bad=Backend(true);val(old,oldMonitor)=runtime(bad)
+        try{
+            assertTrue(oldMonitor.event("SIMULATED:unit","EV_KEY BTN_TL2 DOWN"));shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(50))
+            assertTrue(old.isPausedAndReleased);assertFalse(old.isDiagnosticSafe)
+            val calls=bad.calls;shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(3));assertEquals(calls,bad.calls)
+            assertFalse(oldMonitor.event("SIMULATED:unit","EV_KEY BTN_TL2 DOWN"));old.pauseResumeKeymap();assertTrue(old.isPausedAndReleased)
+            val healthy=Backend(false);val(next,nextMonitor)=runtime(healthy)
+            try{
+                nextMonitor.event("SIMULATED:unit","EV_KEY BTN_TL2 DOWN");shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(850))
+                assertTrue(healthy.downs>=2);assertFalse(next.isPausedAndReleased);next.stop();assertTrue(healthy.active.isEmpty())
+            }finally{next.stop()}
+        }finally{old.stop()}
+    }
+
 }
