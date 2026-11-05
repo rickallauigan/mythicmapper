@@ -1,0 +1,619 @@
+{
+  "schema": 1,
+  "id": "universal-lifecycle",
+  "source": "synthetic",
+  "description": "Disposable version2 actions at synthetic canvas anchors. Exercises the real resolver/ledger through logical screen, focus, profile, SYN_DROPPED, diagnostics and disconnect transitions. Not physical root, keyguard, MLBB or issue20 acceptance. No personal profile storage is used.",
+  "steps": [
+    {
+      "at_ms": 10,
+      "document": {
+        "schema_version": 2,
+        "id": "00000000-0000-4000-8000-000000000015",
+        "name": "UI TEST Synthetic Lifecycle",
+        "hero": "",
+        "origin": "synthetic:universal-lifecycle",
+        "game": "com.mobile.legends",
+        "controller": "ORIGINAL_G8",
+        "created_at": 0,
+        "updated_at": 0,
+        "geometry": {
+          "width": 2280,
+          "height": 1080,
+          "orientation": "LANDSCAPE",
+          "coordinates": "CANONICAL_PIXELS"
+        },
+        "calibrated": true,
+        "enabled": true,
+        "movement": "NATIVE_PASSTHROUGH",
+        "actions": [
+          {
+            "id": "00000000-0000-4000-8000-000000000001",
+            "name": "BTN_GAMEPAD",
+            "inputs": [
+              "BTN_GAMEPAD"
+            ],
+            "kind": "TAP",
+            "x": 300,
+            "y": 800,
+            "enabled": true,
+            "aim": false,
+            "radius": 80,
+            "dead_zone": 0.15,
+            "sensitivity": 1,
+            "invert_y": false,
+            "repeat_ms": 400,
+            "priority": 0,
+            "exclusive_aim": true,
+            "anchor_ms": 0,
+            "cancel_others": false
+          },
+          {
+            "id": "00000000-0000-4000-8000-000000000002",
+            "name": "BTN_EAST",
+            "inputs": [
+              "BTN_EAST"
+            ],
+            "kind": "TAP",
+            "x": 600,
+            "y": 800,
+            "enabled": true,
+            "aim": false,
+            "radius": 80,
+            "dead_zone": 0.15,
+            "sensitivity": 1,
+            "invert_y": false,
+            "repeat_ms": 400,
+            "priority": 0,
+            "exclusive_aim": true,
+            "anchor_ms": 0,
+            "cancel_others": false
+          },
+          {
+            "id": "00000000-0000-4000-8000-000000000003",
+            "name": "BTN_TR",
+            "inputs": [
+              "BTN_TR"
+            ],
+            "kind": "HOLD",
+            "x": 1000,
+            "y": 800,
+            "enabled": true,
+            "aim": false,
+            "radius": 80,
+            "dead_zone": 0.15,
+            "sensitivity": 1,
+            "invert_y": false,
+            "repeat_ms": 400,
+            "priority": 0,
+            "exclusive_aim": true,
+            "anchor_ms": 0,
+            "cancel_others": false
+          },
+          {
+            "id": "00000000-0000-4000-8000-000000000004",
+            "name": "BTN_TR2",
+            "inputs": [
+              "BTN_TR2"
+            ],
+            "kind": "HOLD",
+            "x": 1300,
+            "y": 600,
+            "enabled": true,
+            "aim": false,
+            "radius": 80,
+            "dead_zone": 0.15,
+            "sensitivity": 1,
+            "invert_y": false,
+            "repeat_ms": 400,
+            "priority": 0,
+            "exclusive_aim": true,
+            "anchor_ms": 0,
+            "cancel_others": false
+          },
+          {
+            "id": "00000000-0000-4000-8000-000000000005",
+            "name": "BTN_TL",
+            "inputs": [
+              "BTN_TL"
+            ],
+            "kind": "HOLD",
+            "x": 1700,
+            "y": 400,
+            "enabled": true,
+            "aim": false,
+            "radius": 80,
+            "dead_zone": 0.15,
+            "sensitivity": 1,
+            "invert_y": false,
+            "repeat_ms": 400,
+            "priority": 0,
+            "exclusive_aim": true,
+            "anchor_ms": 0,
+            "cancel_others": false
+          },
+          {
+            "id": "00000000-0000-4000-8000-000000000006",
+            "name": "BTN_TL2",
+            "inputs": [
+              "BTN_TL2"
+            ],
+            "kind": "HOLD",
+            "x": 1900,
+            "y": 800,
+            "enabled": true,
+            "aim": true,
+            "radius": 80,
+            "dead_zone": 0.15,
+            "sensitivity": 1,
+            "invert_y": false,
+            "repeat_ms": 400,
+            "priority": 0,
+            "exclusive_aim": true,
+            "anchor_ms": 0,
+            "cancel_others": false
+          }
+        ]
+      },
+      "action": "universal_profile",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 40,
+      "code": "ABS_RX",
+      "value": 128,
+      "action": "axis"
+    },
+    {
+      "at_ms": 70,
+      "code": "ABS_RY",
+      "value": 128,
+      "action": "axis"
+    },
+    {
+      "at_ms": 100,
+      "code": "BTN_TL2",
+      "down": true,
+      "action": "button",
+      "expect": {
+        "active_pointers": 1
+      }
+    },
+    {
+      "at_ms": 130,
+      "action": "screen_off",
+      "expect": {
+        "active_pointers": 0,
+        "paused": true
+      }
+    },
+    {
+      "at_ms": 160,
+      "code": "ABS_RX",
+      "value": 255,
+      "action": "axis",
+      "expect": {
+        "active_pointers": 0,
+        "min_blocked": 1
+      }
+    },
+    {
+      "at_ms": 190,
+      "unlocked": false,
+      "action": "screen_on",
+      "expect": {
+        "active_pointers": 0,
+        "paused": true
+      }
+    },
+    {
+      "at_ms": 220,
+      "game": false,
+      "action": "foreground"
+    },
+    {
+      "at_ms": 250,
+      "unlocked": true,
+      "action": "screen_on",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 280,
+      "code": "BTN_TL2",
+      "down": true,
+      "action": "button",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 310,
+      "game": true,
+      "action": "foreground",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 340,
+      "code": "ABS_RX",
+      "value": 128,
+      "action": "axis"
+    },
+    {
+      "at_ms": 370,
+      "code": "ABS_RY",
+      "value": 128,
+      "action": "axis"
+    },
+    {
+      "at_ms": 400,
+      "code": "BTN_TL2",
+      "down": true,
+      "action": "button",
+      "expect": {
+        "active_pointers": 1
+      }
+    },
+    {
+      "at_ms": 430,
+      "game": false,
+      "action": "foreground",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 460,
+      "code": "ABS_RX",
+      "value": 0,
+      "action": "axis",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 490,
+      "game": true,
+      "action": "foreground",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 520,
+      "code": "ABS_RX",
+      "value": 128,
+      "action": "axis"
+    },
+    {
+      "at_ms": 550,
+      "code": "ABS_RY",
+      "value": 128,
+      "action": "axis"
+    },
+    {
+      "at_ms": 580,
+      "code": "BTN_TL2",
+      "down": true,
+      "action": "button",
+      "expect": {
+        "active_pointers": 1
+      }
+    },
+    {
+      "at_ms": 610,
+      "document": {
+        "schema_version": 2,
+        "id": "00000000-0000-4000-8000-000000000016",
+        "name": "UI TEST Synthetic Replacement",
+        "hero": "",
+        "origin": "synthetic:universal-lifecycle",
+        "game": "com.mobile.legends",
+        "controller": "ORIGINAL_G8",
+        "created_at": 0,
+        "updated_at": 0,
+        "geometry": {
+          "width": 2280,
+          "height": 1080,
+          "orientation": "LANDSCAPE",
+          "coordinates": "CANONICAL_PIXELS"
+        },
+        "calibrated": true,
+        "enabled": true,
+        "movement": "NATIVE_PASSTHROUGH",
+        "actions": [
+          {
+            "id": "00000000-0000-4000-8000-000000000001",
+            "name": "BTN_GAMEPAD",
+            "inputs": [
+              "BTN_GAMEPAD"
+            ],
+            "kind": "TAP",
+            "x": 300,
+            "y": 800,
+            "enabled": true,
+            "aim": false,
+            "radius": 80,
+            "dead_zone": 0.15,
+            "sensitivity": 1,
+            "invert_y": false,
+            "repeat_ms": 400,
+            "priority": 0,
+            "exclusive_aim": true,
+            "anchor_ms": 0,
+            "cancel_others": false
+          },
+          {
+            "id": "00000000-0000-4000-8000-000000000002",
+            "name": "BTN_EAST",
+            "inputs": [
+              "BTN_EAST"
+            ],
+            "kind": "TAP",
+            "x": 600,
+            "y": 800,
+            "enabled": true,
+            "aim": false,
+            "radius": 80,
+            "dead_zone": 0.15,
+            "sensitivity": 1,
+            "invert_y": false,
+            "repeat_ms": 400,
+            "priority": 0,
+            "exclusive_aim": true,
+            "anchor_ms": 0,
+            "cancel_others": false
+          },
+          {
+            "id": "00000000-0000-4000-8000-000000000003",
+            "name": "BTN_TR",
+            "inputs": [
+              "BTN_TR"
+            ],
+            "kind": "HOLD",
+            "x": 1000,
+            "y": 800,
+            "enabled": true,
+            "aim": false,
+            "radius": 80,
+            "dead_zone": 0.15,
+            "sensitivity": 1,
+            "invert_y": false,
+            "repeat_ms": 400,
+            "priority": 0,
+            "exclusive_aim": true,
+            "anchor_ms": 0,
+            "cancel_others": false
+          },
+          {
+            "id": "00000000-0000-4000-8000-000000000004",
+            "name": "BTN_TR2",
+            "inputs": [
+              "BTN_TR2"
+            ],
+            "kind": "HOLD",
+            "x": 1300,
+            "y": 600,
+            "enabled": true,
+            "aim": false,
+            "radius": 80,
+            "dead_zone": 0.15,
+            "sensitivity": 1,
+            "invert_y": false,
+            "repeat_ms": 400,
+            "priority": 0,
+            "exclusive_aim": true,
+            "anchor_ms": 0,
+            "cancel_others": false
+          },
+          {
+            "id": "00000000-0000-4000-8000-000000000005",
+            "name": "BTN_TL",
+            "inputs": [
+              "BTN_TL"
+            ],
+            "kind": "HOLD",
+            "x": 1700,
+            "y": 400,
+            "enabled": true,
+            "aim": false,
+            "radius": 80,
+            "dead_zone": 0.15,
+            "sensitivity": 1,
+            "invert_y": false,
+            "repeat_ms": 400,
+            "priority": 0,
+            "exclusive_aim": true,
+            "anchor_ms": 0,
+            "cancel_others": false
+          },
+          {
+            "id": "00000000-0000-4000-8000-000000000006",
+            "name": "BTN_TL2",
+            "inputs": [
+              "BTN_TL2"
+            ],
+            "kind": "HOLD",
+            "x": 1900,
+            "y": 800,
+            "enabled": true,
+            "aim": true,
+            "radius": 80,
+            "dead_zone": 0.15,
+            "sensitivity": 1,
+            "invert_y": false,
+            "repeat_ms": 400,
+            "priority": 0,
+            "exclusive_aim": true,
+            "anchor_ms": 0,
+            "cancel_others": false
+          }
+        ]
+      },
+      "action": "universal_profile",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 640,
+      "code": "ABS_RX",
+      "value": 128,
+      "action": "axis"
+    },
+    {
+      "at_ms": 670,
+      "code": "ABS_RY",
+      "value": 128,
+      "action": "axis"
+    },
+    {
+      "at_ms": 700,
+      "code": "BTN_TL2",
+      "down": true,
+      "action": "button",
+      "expect": {
+        "active_pointers": 1
+      }
+    },
+    {
+      "at_ms": 730,
+      "action": "syn_dropped",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 760,
+      "code": "BTN_TL2",
+      "down": false,
+      "action": "button",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 790,
+      "code": "ABS_RX",
+      "value": 128,
+      "action": "axis"
+    },
+    {
+      "at_ms": 820,
+      "code": "ABS_RY",
+      "value": 128,
+      "action": "axis"
+    },
+    {
+      "at_ms": 850,
+      "code": "BTN_TL2",
+      "down": true,
+      "action": "button",
+      "expect": {
+        "active_pointers": 1
+      }
+    },
+    {
+      "at_ms": 880,
+      "action": "diagnostics_on",
+      "expect": {
+        "active_pointers": 0,
+        "diagnostics": true
+      }
+    },
+    {
+      "at_ms": 910,
+      "code": "BTN_TL2",
+      "down": true,
+      "action": "button",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 940,
+      "action": "diagnostics_off",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 970,
+      "code": "ABS_RX",
+      "value": 128,
+      "action": "axis"
+    },
+    {
+      "at_ms": 1000,
+      "code": "ABS_RY",
+      "value": 128,
+      "action": "axis"
+    },
+    {
+      "at_ms": 1030,
+      "code": "BTN_TL2",
+      "down": true,
+      "action": "button",
+      "expect": {
+        "active_pointers": 1
+      }
+    },
+    {
+      "at_ms": 1060,
+      "action": "disconnect",
+      "expect": {
+        "active_pointers": 0,
+        "connected": false
+      }
+    },
+    {
+      "at_ms": 1090,
+      "action": "connect",
+      "expect": {
+        "active_pointers": 0,
+        "connected": true
+      }
+    },
+    {
+      "at_ms": 1120,
+      "code": "ABS_RX",
+      "value": 128,
+      "action": "axis"
+    },
+    {
+      "at_ms": 1150,
+      "code": "ABS_RY",
+      "value": 128,
+      "action": "axis"
+    },
+    {
+      "at_ms": 1180,
+      "code": "BTN_TL2",
+      "down": true,
+      "action": "button",
+      "expect": {
+        "active_pointers": 1
+      }
+    },
+    {
+      "at_ms": 1210,
+      "code": "BTN_TL2",
+      "down": false,
+      "action": "button",
+      "expect": {
+        "active_pointers": 0
+      }
+    },
+    {
+      "at_ms": 1240,
+      "action": "release_all",
+      "expect": {
+        "active_pointers": 0
+      }
+    }
+  ]
+}

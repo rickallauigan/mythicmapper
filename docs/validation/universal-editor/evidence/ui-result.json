@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "favorite_assigned_through_ui": true,
+  "home_create_entry": true,
+  "created_through_ui": true,
+  "bindings": 6,
+  "right_stick_aim": true,
+  "reopened": true,
+  "marker_drag_single_undo": true,
+  "undo_redo": true,
+  "draft_recreation": true,
+  "portrait_landscape_recreation": true,
+  "overlap_disconnect_diagnostics": true,
+  "final_pointers": 0,
+  "platform_touch_submissions": 0,
+  "original_library_and_mappings_unchanged": true
+}

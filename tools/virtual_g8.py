@@ -14,7 +14,8 @@ def command(argv, **kw):
     shown=[str(x) if len(str(x))<200 else '<argument '+str(len(str(x)))+' bytes>' for x in argv]
     print('+ '+shlex.join(shown),file=sys.stderr,flush=True)
     kw.setdefault("text",True)
-    try:return subprocess.run(list(map(str,argv)),check=True,env=ENV,**kw)
+    kw.setdefault("check",True)
+    try:return subprocess.run(list(map(str,argv)),env=ENV,**kw)
     except subprocess.CalledProcessError as error:
         if error.stderr:print(str(error.stderr)[-4000:],file=sys.stderr)
         raise
@@ -140,10 +141,29 @@ def smoke():
     if report['status']!='PASS':raise RuntimeError('UI smoke failed')
     for p in sorted((ROOT/'tools/scenarios').glob('*.json')):run(p)
 def ux(suite='bubble'):
-    if suite not in ('bubble','home'):raise ValueError('Unknown UX suite')
+    if suite not in ('bubble','home','universal','universal-crud','universal-io'):raise ValueError('Unknown UX suite')
     verify();platform_ready()
     # App-scoped overlay permission on this owned emulator only; no root/system policy changes.
     adb('shell','appops','set',PKG,'SYSTEM_ALERT_WINDOW','allow')
+    if suite in ('universal','universal-crud','universal-io'):
+        if suite in ('universal-crud','universal-io'):
+            kind='crud'if suite=='universal-crud'else'io'
+            log=adb('shell','am','instrument','-w','-e','suite',kind,PKG+'/xtr.keymapper.ux.UniversalEditorInstrumentation',capture_output=True,timeout=480).stdout
+            (WORK/('ux-'+suite+'.instrumentation.txt')).write_text(log)
+            report=instrument_report(log,'universal_editor');save('ux-'+suite+'.json',report)
+            adb('exec-out','run-as',PKG,'cat','files/universal-editor/'+kind+'-result.json',stdout=(WORK/('universal-'+kind+'-result.json')).open('wb'),text=False)
+            if report['status']!='PASS':
+                adb('exec-out','run-as',PKG,'cat','files/universal-editor/'+kind+'-failure-nodes.txt',stdout=(WORK/('universal-'+kind+'-failure-nodes.txt')).open('wb'),text=False,check=False)
+                raise RuntimeError('Universal editor '+kind+' suite failed: '+json.dumps(report))
+            print(json.dumps(report));return
+        log=adb('shell','am','instrument','-w',PKG+'/xtr.keymapper.ux.UniversalEditorInstrumentation',capture_output=True,timeout=480).stdout
+        (WORK/'ux-universal.instrumentation.txt').write_text(log)
+        report=instrument_report(log,'universal_editor');save('ux-universal.json',report)
+        for name in ('result.json','saved-profile.json','replay.json','editor.png','canvas.png','failure-nodes.txt'):
+            adb('exec-out','run-as',PKG,'cat','files/universal-editor/'+name,stdout=(WORK/('universal-'+name)).open('wb'),text=False,check=False)
+        print(json.dumps(report))
+        if report['status']!='PASS':raise RuntimeError('Universal editor UI suite failed')
+        return
     log=adb('shell','am','instrument','-w','-e','suite',suite,PKG+'/xtr.keymapper.ux.UxInstrumentation',capture_output=True,timeout=180 if suite=='home'else 120).stdout
     (WORK/('ux-'+suite+'.instrumentation.txt')).write_text(log)
     report=instrument_report(log,'ux');save('ux-'+suite+'.json',report);print(json.dumps(report))

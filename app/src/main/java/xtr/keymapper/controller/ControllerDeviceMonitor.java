@@ -64,6 +64,7 @@ public final class ControllerDeviceMonitor {
     private final float width, height;
     private boolean running;
     private String owner;
+    private final Set<String> universalRearm = new HashSet<>();
     private long lastFrame;
     private final Runnable frame = new Runnable() {
         @Override public void run() {
@@ -88,6 +89,7 @@ public final class ControllerDeviceMonitor {
         final long[] info;
         final ControllerAimHandler aim;
         final ControllerHeroHandler hero;
+        final xtr.keymapper.universal.UniversalActionHandler universal;
         final ControllerDpad dpad;
         final ControllerChordHandler chords;
         final ControllerCameraHandler camera;
@@ -96,6 +98,9 @@ public final class ControllerDeviceMonitor {
         boolean dirty;
         Device(long[] info) {
             this.info = info; rx = (int)info[4]; ry = (int)info[7];
+            var json=input.getKeymapProfile().universalMapping;
+            universal=json==null?null:new xtr.keymapper.universal.UniversalActionHandler(xtr.keymapper.universal.UniversalCodec.INSTANCE.decode(json),handler,input::injectEvent,width,height);
+            if(universal!=null)universal.blockUntilRelease(new HashSet<>(universalRearm));
             aim = new ControllerAimHandler(input.getKeymapProfile().aimKeys, input::injectEvent, width, height);
             var heroConfig=input.getKeymapProfile().heroGameplay;
             hero=heroConfig==null?null:new ControllerHeroHandler(heroConfig,aim,this::routeButton,handler,
@@ -111,13 +116,18 @@ public final class ControllerDeviceMonitor {
             xtr.keymapper.server.RuntimeMetrics.axes(rx, ry);
             float x = ControllerAimHandler.normalize(rx, (int)info[2], (int)info[3], center(info[2], info[3]));
             float y = ControllerAimHandler.normalize(ry, (int)info[5], (int)info[6], center(info[5], info[6]));
-            if(hero!=null)hero.axes(x,y);else aim.axes(x, y);
+            if(universal!=null)universal.axes(x,y);else if(hero!=null)hero.axes(x,y);else aim.axes(x, y);
             if (camera != null) camera.axes(x, y);
             dirty = false;
         }
         void button(String code, int action) {
-            if (action == 1 ? !pressed.add(code) : !pressed.remove(code)) return;
+            if(action==0){
+                universalRearm.remove(code);
+                if(!pressed.remove(code)){if(universal!=null)universal.button(code,false);return;}
+            }else if(!pressed.add(code))return;
             xtr.keymapper.server.RuntimeMetrics.button(code, action);
+            if(action==0)universalRearm.remove(code);
+            if(universal!=null){universal.button(code,action==1);return;}
             if(hero!=null&&hero.button(code,action))return;
             routeButton(code,action);
         }
@@ -133,11 +143,14 @@ public final class ControllerDeviceMonitor {
             catch (android.os.RemoteException error) { Log.e("XtMapper", "Controller key callback failed", error); }
         }
         void reset() {
+            Set<String> heldAtReset=new HashSet<>(pressed);
+            if(universal!=null)universal.close();
             if(hero!=null)hero.stop();
             if (camera != null) camera.reset();
             dpad.reset();
             for (String code : new HashSet<>(pressed)) button(code, 0);
             chords.reset(); aim.reset(); pressed.clear();
+            if(universal!=null)universalRearm.addAll(heldAtReset);
             if (camera != null) camera.reset();
         }
     }

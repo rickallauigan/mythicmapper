@@ -14,6 +14,10 @@ class VirtualHomeActivity:MainActivity() {
         super.onCreate(savedInstanceState)
         title="Development Home · virtual recording only"
     }
+    override fun openUniversalEditorFromCompose(profileId:String?) {
+        if(intent?.getBooleanExtra("ux_test",false)!=true){super.openUniversalEditorFromCompose(profileId);return}
+        startActivity(android.content.Intent(this,xtr.keymapper.ux.UniversalEditorTestActivity::class.java).putExtra("profile",profileId))
+    }
     override fun alertRootAccessNotFound(){rootUnavailable()}
     override fun alertRootAccessAndExit(){rootUnavailable()}
     private fun rootUnavailable(){if(intent?.getBooleanExtra("ux_test",false)==true)return;runOnUiThread{if(!isFinishing)Toast.makeText(this,"Root backend unavailable · Virtual G8 recording works without root",Toast.LENGTH_LONG).show()}}

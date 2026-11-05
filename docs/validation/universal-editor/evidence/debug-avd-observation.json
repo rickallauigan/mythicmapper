@@ -1,0 +1,16 @@
+{
+  "source_commit": "8122510c2c2ba27f6440683933a193d71a2f7a69",
+  "build": "debug",
+  "renderer": "SwiftShader AVD; no physical device",
+  "workload": "one in-progress universal editor accessibility workflow; partial process cumulative sample",
+  "frames": 6394,
+  "janky_frames": 2283,
+  "janky_percent": 35.71,
+  "p50_ms": 21,
+  "p95_ms": 57,
+  "p99_ms": 73,
+  "pss_kb": 127910,
+  "rss_kb": 260820,
+  "cpu_allocation_recomposition": "NOT MEASURED",
+  "limitations": "No matched baseline, no optimization claim, no gameplay/input/display latency measurement. Instrumentation ends the app process; post-suite gfxinfo unavailable. GPU histogram excluded as unreliable SwiftShader evidence."
+}

@@ -1,0 +1,87 @@
+{
+  "basic-input": {
+    "status": "PASS",
+    "final_pointers": 0,
+    "platform_touch_submissions": 0
+  },
+  "beatrix-bennett": {
+    "status": "PASS",
+    "final_pointers": 0,
+    "platform_touch_submissions": 0
+  },
+  "diagnostics-exclusive": {
+    "status": "PASS",
+    "final_pointers": 0,
+    "platform_touch_submissions": 0
+  },
+  "disconnect-reconnect": {
+    "status": "PASS",
+    "final_pointers": 0,
+    "platform_touch_submissions": 0
+  },
+  "kimmy-skill-resume": {
+    "status": "PASS",
+    "final_pointers": 0,
+    "platform_touch_submissions": 0
+  },
+  "lock-unlock": {
+    "status": "PASS",
+    "final_pointers": 0,
+    "platform_touch_submissions": 0
+  },
+  "profile-switch": {
+    "status": "PASS",
+    "final_pointers": 0,
+    "platform_touch_submissions": 0
+  },
+  "smoke": {
+    "status": "PASS",
+    "checks": [
+      "VirtualHomeActivity",
+      "offline-library-and-five-slots",
+      "TesterActivity",
+      "EditorActivity",
+      "virtual-ui-orientation"
+    ],
+    "source": "AVD UI and recording sink; not physical gameplay",
+    "platform_touch_submissions": 0,
+    "root_required": false
+  },
+  "jni": {
+    "suite": "jni",
+    "result": {
+      "abi": "x86_64",
+      "process_64bit": true,
+      "parity_vectors": 61206,
+      "max_abs_error": 0,
+      "missing_library_error_caught": true,
+      "invalid_input_neutral": true,
+      "java_reference_math": {
+        "n": 20000,
+        "p50_ns": 504,
+        "p95_ns": 2498,
+        "p99_ns": 3168
+      },
+      "rust_jni_reference_math": {
+        "n": 20000,
+        "p50_ns": 195,
+        "p95_ns": 220,
+        "p99_ns": 237
+      },
+      "measurement": "Device math microbenchmark; timer/sink overhead included; no physical display latency or hot-path migration"
+    },
+    "status": "PASS"
+  },
+  "ux-home": {
+    "status": "PASS",
+    "checks": "physical/simulated labels; favorites replace/clear; search; rename; duplicate UUID; delete confirm/cancel; all five slots; editor/Tester/Virtual navigation; ownership cleanup; portrait/landscape",
+    "source": "actual AVD accessibility; isolated disposable preferences",
+    "mapper_submissions": 0
+  },
+  "ux-bubble": {
+    "status": "PASS",
+    "checks": "48dp target; real tap/drag; expand/collapse; no drag select; selection; recreation; position; overlay editor return/backdrop; ownership hide; rotation; cleanup",
+    "mapper_submissions": 0,
+    "source": "owned AVD UI; isolated preview data; no root"
+  }
+}

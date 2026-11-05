@@ -1,0 +1,334 @@
+{
+  "source": "SIMULATED:Virtual-G8:0",
+  "profile": "CUSTOM: UI TEST Custom Hero",
+  "connected": true,
+  "paused": false,
+  "diagnostics": false,
+  "unlocked": true,
+  "game_foreground": true,
+  "active_pointers": 0,
+  "total_touches": 19,
+  "max_pointers": 2,
+  "blocked": 1,
+  "touches_since_checkpoint": 19,
+  "held": [],
+  "axes": {
+    "ABS_X": 128,
+    "ABS_Y": 128,
+    "ABS_RX": 128,
+    "ABS_RY": 128,
+    "ABS_Z": 0,
+    "ABS_RZ": 0
+  },
+  "trace_dropped": 0,
+  "input_dropped": 0,
+  "final_pointers": 0,
+  "touch_trace": [
+    {
+      "t_ms": 54,
+      "source": "SIMULATED_RECORDING_SINK",
+      "action": 0,
+      "pointer": 50,
+      "x": 300,
+      "y": 800,
+      "active": 1
+    },
+    {
+      "t_ms": 94,
+      "source": "SIMULATED_RECORDING_SINK",
+      "action": 1,
+      "pointer": 50,
+      "x": 300,
+      "y": 800,
+      "active": 0
+    },
+    {
+      "t_ms": 125,
+      "source": "SIMULATED_RECORDING_SINK",
+      "action": 0,
+      "pointer": 51,
+      "x": 600,
+      "y": 800,
+      "active": 1
+    },
+    {
+      "t_ms": 165,
+      "source": "SIMULATED_RECORDING_SINK",
+      "action": 1,
+      "pointer": 51,
+      "x": 600,
+      "y": 800,
+      "active": 0
+    },
+    {
+      "t_ms": 195,
+      "source": "SIMULATED_RECORDING_SINK",
+      "action": 0,
+      "pointer": 52,
+      "x": 1000,
+      "y": 800,
+      "active": 1
+    },
+    {
+      "t_ms": 266,
+      "source": "SIMULATED_RECORDING_SINK",
+      "action": 1,
+      "pointer": 52,
+      "x": 1000,
+      "y": 800,
+      "active": 0
+    },
+    {
+      "t_ms": 266,
+      "source": "SIMULATED_RECORDING_SINK",
+      "action": 0,
+      "pointer": 53,
+      "x": 1300,
+      "y": 600,
+      "active": 1
+    },
+    {
+      "t_ms": 337,
+      "source": "SIMULATED_RECORDING_SINK",
+      "action": 1,
+      "pointer": 53,
+      "x": 1300,
+      "y": 600,
+      "active": 0
+    },
+    {
+      "t_ms": 337,
+      "source": "SIMULATED_RECORDING_SINK",
+      "action": 0,
+      "pointer": 54,
+      "x": 1700,
+      "y": 400,
+      "active": 1
+    },
+    {
+      "t_ms": 407,
+      "source": "SIMULATED_RECORDING_SINK",
+      "action": 1,
+      "pointer": 54,
+      "x": 1700,
+      "y": 400,
+      "active": 0
+    },
+    {
+      "t_ms": 407,
+      "source": "SIMULATED_RECORDING_SINK",
+      "action": 0,
+      "pointer": 55,
+      "x": 1900,
+      "y": 800,
+      "active": 1
+    },
+    {
+      "t_ms": 478,
+      "source": "SIMULATED_RECORDING_SINK",
+      "action": 1,
+      "pointer": 55,
+      "x": 1900,
+      "y": 800,
+      "active": 0
+    },
+    {
+      "t_ms": 478,
+      "source": "SIMULATED_RECORDING_SINK",
+      "action": 0,
+      "pointer": 55,
+      "x": 1900,
+      "y": 800,
+      "active": 1
+    },
+    {
+      "t_ms": 478,
+      "source": "SIMULATED_RECORDING_SINK",
+      "action": 2,
+      "pointer": 55,
+      "x": 1980,
+      "y": 800,
+      "active": 1
+    },
+    {
+      "t_ms": 478,
+      "source": "SIMULATED_RECORDING_SINK",
+      "action": 0,
+      "pointer": 52,
+      "x": 1000,
+      "y": 800,
+      "active": 2
+    },
+    {
+      "t_ms": 478,
+      "source": "SIMULATED_RECORDING_SINK",
+      "action": 1,
+      "pointer": 55,
+      "x": 1980,
+      "y": 800,
+      "active": 1
+    },
+    {
+      "t_ms": 479,
+      "source": "SIMULATED_RECORDING_SINK",
+      "action": 1,
+      "pointer": 52,
+      "x": 1000,
+      "y": 800,
+      "active": 0
+    },
+    {
+      "t_ms": 502,
+      "source": "SIMULATED_RECORDING_SINK",
+      "action": 0,
+      "pointer": 55,
+      "x": 1900,
+      "y": 800,
+      "active": 1
+    },
+    {
+      "t_ms": 502,
+      "source": "SIMULATED_RECORDING_SINK",
+      "action": 1,
+      "pointer": 55,
+      "x": 1900,
+      "y": 800,
+      "active": 0
+    }
+  ],
+  "input_trace": [
+    {
+      "packet": "EV_ABS ABS_RX 80",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 53
+    },
+    {
+      "packet": "EV_SYN SYN_REPORT 0",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 54
+    },
+    {
+      "packet": "EV_ABS ABS_RY 80",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 54
+    },
+    {
+      "packet": "EV_SYN SYN_REPORT 0",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 54
+    },
+    {
+      "packet": "EV_KEY BTN_GAMEPAD DOWN",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 54
+    },
+    {
+      "packet": "EV_KEY BTN_GAMEPAD UP",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 124
+    },
+    {
+      "packet": "EV_KEY BTN_EAST DOWN",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 125
+    },
+    {
+      "packet": "EV_KEY BTN_EAST UP",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 195
+    },
+    {
+      "packet": "EV_KEY BTN_TR DOWN",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 195
+    },
+    {
+      "packet": "EV_KEY BTN_TR UP",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 266
+    },
+    {
+      "packet": "EV_KEY BTN_TR2 DOWN",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 266
+    },
+    {
+      "packet": "EV_KEY BTN_TR2 UP",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 336
+    },
+    {
+      "packet": "EV_KEY BTN_TL DOWN",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 337
+    },
+    {
+      "packet": "EV_KEY BTN_TL UP",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 407
+    },
+    {
+      "packet": "EV_KEY BTN_TL2 DOWN",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 407
+    },
+    {
+      "packet": "EV_KEY BTN_TL2 UP",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 478
+    },
+    {
+      "packet": "EV_ABS ABS_RX ff",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 478
+    },
+    {
+      "packet": "EV_SYN SYN_REPORT 0",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 478
+    },
+    {
+      "packet": "EV_KEY BTN_TL2 DOWN",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 478
+    },
+    {
+      "packet": "EV_KEY BTN_TR DOWN",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 478
+    },
+    {
+      "action": "disconnect",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 478
+    },
+    {
+      "action": "connect",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 479
+    },
+    {
+      "packet": "EV_KEY BTN_TL2 DOWN",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 501
+    },
+    {
+      "action": "diagnostics_on",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 502
+    },
+    {
+      "packet": "EV_KEY BTN_TR2 DOWN",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 502
+    },
+    {
+      "action": "diagnostics_off",
+      "source": "SIMULATED:Virtual-G8:0",
+      "observed_ms": 502
+    }
+  ],
+  "platform_touch_submissions": 0,
+  "movement_note": "ABS_X\/Y remain native\/pass-through in production; no fake movement touch",
+  "physical_gameplay": "UNVERIFIED; issue #20 deferred"
+}

@@ -15,6 +15,7 @@ public final class ControllerBindings {
         Map.entry("BTN_MODE", "MODE"), Map.entry("DPAD_UP", "D-UP"),
         Map.entry("DPAD_DOWN", "D-DOWN"), Map.entry("DPAD_LEFT", "D-LEFT"),
         Map.entry("DPAD_RIGHT", "D-RIGHT"));
+    public static java.util.Set<String> codes() { return LABELS.keySet(); }
     public static String canonical(String code) {
         if (code == null) return null;
         switch (code) {

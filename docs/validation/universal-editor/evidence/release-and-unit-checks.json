@@ -1,0 +1,15 @@
+{
+  "source_commit": "3f249ff3a080a697d480cf6017d4002684df45ae",
+  "android": {
+    "tests": 348,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "lint": "PASS",
+  "release_source_compilation": "PASS",
+  "production_editor_present": true,
+  "release_virtual_g8_classes": 0,
+  "release_debug_validation_activities": 0,
+  "release_signed_apk": "BLOCKED: production signing keystore unavailable; signing policy unchanged"
+}

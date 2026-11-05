@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "starter_unmeasured": true,
+  "duplicate_uuid": true,
+  "binding_remove_undo_redo": true,
+  "rename_saved": true,
+  "home_edit_route": true,
+  "discard_cancel_and_confirm": true,
+  "clone_existing": true,
+  "delete_cancel_and_confirm": true,
+  "corrupt_mapping_guarded_editor": true,
+  "invalid_mapping_preserved": true,
+  "favorite_cleared_on_delete": true,
+  "platform_touch_submissions": 0,
+  "original_data_unchanged": true,
+  "editor_lease_released": true
+}

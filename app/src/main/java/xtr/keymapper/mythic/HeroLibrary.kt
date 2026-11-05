@@ -90,7 +90,8 @@ class HeroLibraryStore internal constructor(private val prefs: android.content.S
     fun clone(name: String, lines: Set<String>, preset: String? = null): HeroProfile = synchronized(StructuredProfiles.SAVE_LOCK) {
         val previous=read(); val profile=HeroProfile(UUID.randomUUID().toString(),name,preset)
         val next=previous.copy(profiles=previous.profiles+profile).validate()
-        val checked=ProfileConfiguration.validate(lines.joinToString("\n"))
+        val universal=xtr.keymapper.universal.UniversalStorage.document(lines)
+        val checked=if(universal==null)ProfileConfiguration.validate(lines.joinToString("\n"))else xtr.keymapper.universal.UniversalStorage.pack((if(previous.profiles.any{it.id==universal.id})universal.cloned(name)else universal.copy(name=name,calibrated=false,enabled=false)).copy(id=profile.id))
         MythicScope.validateProfile(KeymapProfiles.getProfile(checked))
         StructuredProfiles.writeSet(mappings,profile.id,checked)
         // A metadata failure may leave an unreferenced mapping, never an invalid favorite.
