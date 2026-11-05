@@ -58,15 +58,15 @@
       "invalid_input_neutral": true,
       "java_reference_math": {
         "n": 20000,
-        "p50_ns": 456,
-        "p95_ns": 535,
-        "p99_ns": 879
+        "p50_ns": 504,
+        "p95_ns": 2498,
+        "p99_ns": 3168
       },
       "rust_jni_reference_math": {
         "n": 20000,
-        "p50_ns": 308,
-        "p95_ns": 381,
-        "p99_ns": 470
+        "p50_ns": 195,
+        "p95_ns": 220,
+        "p99_ns": 237
       },
       "measurement": "Device math microbenchmark; timer/sink overhead included; no physical display latency or hot-path migration"
     },

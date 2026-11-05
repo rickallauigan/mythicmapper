@@ -1,11 +1,15 @@
 {
-  "release_editor_exported": false,
-  "debug_activities_in_release": false,
-  "virtual_g8_classes_in_release": false,
-  "signed_release": "BLOCKED: production keystore unavailable; no workaround",
-  "android_tests": 345,
-  "failures": 0,
-  "errors": 0,
-  "release_class_directory": "app/build/intermediates/built_in_kotlinc/release/compileReleaseKotlin/classes",
-  "production_editor_class_present": true
+  "source_commit": "8122510c2c2ba27f6440683933a193d71a2f7a69",
+  "android": {
+    "tests": 348,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "lint": "PASS",
+  "release_source_compilation": "PASS",
+  "production_editor_present": true,
+  "release_virtual_g8_classes": 0,
+  "release_debug_validation_activities": 0,
+  "release_signed_apk": "BLOCKED: production signing keystore unavailable; signing policy unchanged"
 }

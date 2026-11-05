@@ -4,6 +4,13 @@ Development branch: `feature/15-universal-mapping-editor`, directly based on
 consolidated `dev` 54b18e1. This is an incremental draft, not release acceptance.
 Physical S10e/G8/MLBB were not used or modified. Issue #20 remains deferred.
 
+Latest local checkpoint: Android code **8122510**, additive lifecycle fixture
+**197c5e1**. **348 Android tests passed**. Actual blank/create/save/reopen, CRUD,
+DocumentsUI import/export and eight simulated scenarios passed (seven historical,
+one universal lifecycle), with zero final pointers. See the final sections below
+for current evidence; earlier sections retain their original checkpoint counts.
+The physical acceptance and controlled performance gates are still pending.
+
 ## Executed first checkpoint
 
 | Check | Observed result |
@@ -36,6 +43,8 @@ python3 tools/virtual_g8.py boot --gpu swiftshader
 python3 tools/virtual_g8.py build
 python3 tools/virtual_g8.py install
 python3 tools/virtual_g8.py ux universal
+python3 tools/virtual_g8.py ux universal-crud
+python3 tools/virtual_g8.py ux universal-io
 python3 tools/virtual_g8.py smoke
 python3 tools/virtual_g8.py ux home
 python3 tools/virtual_g8.py ux bubble
@@ -47,7 +56,7 @@ only profiles it created. It emits machine-readable saved-profile/replay/result 
 and screenshots under app-private `files/universal-editor/`; the CLI copies evidence
 into `app/build/virtual-g8/universal-*`.
 
-## Remaining acceptance work
+## Remaining acceptance work at the initial checkpoint
 
 - Full real-AVD coverage of clone starter, duplicate, remove, discard, import/
   export; model-only coverage is not a substitute.
@@ -134,7 +143,7 @@ Consult those results and PR25's current head; earlier successful host runs do n
 make a later AVD failure green. Report/evidence-only commits may follow this tested
 code checkpoint.
 
-### Continuation checkpoint
+### Historical continuation checkpoint (f52944c)
 
 1. Finish the remaining user-operation AVD matrix: unmeasured starter cloning,
    duplicate/remove/discard, JSON picker import/export and larger-font
@@ -182,3 +191,72 @@ fresh hosted workflows passed on 3be26f9:
 [AVD](https://github.com/rickallauigan/mythicmapper/actions/runs/41937425695).
 The evidence/build identity now refers to this checkpoint. The remaining interaction
 and fault-injection matrix continues on the same feature branch and draft PR.
+
+## Expanded user-operation and fault checkpoint: 8122510
+
+The new code checkpoint also includes the fault-injection tests in 7e7f965.
+Full Android unit tests: **348 passed, zero failures/errors/skips**, including 18
+universal tests. Debug assembly, lint and release Kotlin/Java/manifest compilation
+passed. Production signing remains unavailable; no release signing change was made.
+
+| Acceptance case | Executed evidence |
+|---|---|
+| Actual AVD CRUD | PASS: unmeasured starter, new UUID on duplicate/clone, remove/undo/redo, rename/save, Home edit route, keep-editing/discard, delete cancel/confirm, favorite cleanup |
+| Real Android document picker | PASS: JSON export across stopped-parent recreation, exact saved snapshot round-trip, import as a new disabled/uncalibrated UUID, source/favorites preserved |
+| Invalid import | PASS: future schema99 rejected visibly; existing mapping/library unchanged |
+| Editor safe preview | PASS: UI-triggered A DOWN/UP with ownership and recorded touch traces; STOP; no privileged backend |
+| Disposable document cleanup | PASS: DocumentsContract removed the test-created export and its scoped URI grant was released |
+| Failed writes | PASS: mapping commit and metadata rename failures restore prior mapping/favorite ownership; unrecoverable rollback is reported explicitly |
+| Legacy data | PASS: native and structured-v1 profiles remain readable with no automatic conversion |
+| Injection rejection | PASS in host simulation: actual InputService/monitor stop repeat after backend rejection; a fresh healthy runtime is required to recover |
+
+The UI harness now waits for app focus and cancels only its own touchscreen gesture
+after picker return/recreation or an interrupted test gesture. This addresses the
+observed InputDispatcher invalid-DOWN failure without changing gameplay pointer
+semantics or removing assertions. Import/save failures now use a dismissible dialog,
+so an error cannot be hidden above the current editor scroll position.
+
+The picker suite used the actual AOSP DocumentsUI, not a stub provider or direct
+profile writes. It only mutated a UUID-named disposable export created by this
+suite; original preferences and favorite snapshots matched after cleanup.
+
+Fresh hosted validation was requested on 8122510:
+[host](https://github.com/rickallauigan/mythicmapper/actions/runs/42016825826),
+[AVD](https://github.com/rickallauigan/mythicmapper/actions/runs/42016825852).
+The earlier documentation-head AVD run
+[42008751697](https://github.com/rickallauigan/mythicmapper/actions/runs/42008751697)
+failed before app tests because its SystemUI startup ANR did not dismiss within the
+bounded recovery window. This is retained as failed evidence; previous green runs
+do not substitute for the new checks.
+
+Remaining acceptance: larger-font and user-selected HUD-image interactions, detailed
+editor allocation/recomposition profiling, and optional physical root/HUD/gameplay
+validation. Two-store power-loss atomicity is not claimed. Native left-stick
+pass-through and legacy hero compatibility adapters remain; issue20 is deferred.
+The personal S10e installation, Bennett/Kimmy data and physical controller were not
+accessed. PR25 stays draft and issue15 stays open for review.
+
+### Final local replay and rendering observations
+
+The expanded core editor and CRUD suites passed again on the installed APK whose
+SHA-256 is in [build.json](evidence/build.json). Home, bubble, smoke, packaged JNI
+and all seven original Virtual G8 scenarios also passed again.
+
+The additional [universal lifecycle scenario](../../../tools/scenarios/universal-lifecycle.json)
+passed 42 ordered logical steps using disposable version2 documents: screen-off,
+locked/unlocked conditions, MLBB foreground loss/restoration, switching the active
+custom document while held, SYN_DROPPED, diagnostic ownership and disconnect.
+It recorded **14 touch events, six blocked inputs, zero final pointers and zero
+platform gameplay submissions**. This exercises the actual universal resolver and
+InputService recording backend; it does not reproduce Android keyguard broadcasts,
+physical USB behavior or MLBB's response to cancellation. Issue20 stays deferred.
+The seven historical scenarios remain unchanged; this is one additional scenario.
+
+[Debug AVD observation](evidence/debug-avd-observation.json): a partial process-wide
+sample during the core accessibility workflow reported 6,394 rendered frames,
+35.71% janky, p50/p95/p99 21/57/73 ms, PSS 127,910 KB and RSS 260,820 KB.
+These are **debug SwiftShader emulator observations**, not a matched before/after
+benchmark, input-processing latency or physical S10e result. Instrumentation ends
+the process, so the attempted post-suite gfxinfo/memory collection had no process
+to inspect. No performance improvement is claimed. CPU, allocations and Compose
+recomposition counts still need a dedicated controlled profiling run.

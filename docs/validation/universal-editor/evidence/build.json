@@ -1,13 +1,15 @@
 {
-  "source_commit": "3be26f9aee8a6cb84cc06cb2928b6c54e3171035",
+  "source_commit": "8122510c2c2ba27f6440683933a193d71a2f7a69",
   "apk": "app/build/outputs/apk/debug/app-debug.apk",
-  "sha256": "27db72cac9780f9a3cf8ec150caaeee0c5270c77b8e68bd5190622df1864bc1d",
+  "sha256": "02bc7bdeaf4abd623b4e97dbbcf0355127fde6689d70cce8fe3dd37b5ff11ec2",
+  "installed_avd_apk_hash_matches": true,
   "avd": "MythicMapper_API36_G8",
   "api": 36,
   "abi": "x86_64",
-  "android_unit_tests": 345,
+  "android_unit_tests": 348,
   "rust_tests": 5,
   "native_suites": 3,
   "existing_virtual_scenarios": 7,
-  "physical_acceptance": "NOT TESTED; physical device untouched"
+  "physical_acceptance": "NOT TESTED; physical device untouched",
+  "universal_lifecycle_scenarios": 1
 }
