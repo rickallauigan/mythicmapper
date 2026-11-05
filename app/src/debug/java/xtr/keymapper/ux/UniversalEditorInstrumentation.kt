@@ -70,15 +70,18 @@ class UniversalEditorInstrumentation:Instrumentation() {
     }
     private fun text(id:String,value:String){
         val deadline=SystemClock.uptimeMillis()+10000
+        var actual:String?=null;var accepted=false
+        fun field():Node {val root=find(id);return nodes(root).firstOrNull{it.isEditable}?:root}
         do{
-            val fresh=find(id);val editable=nodes(fresh).firstOrNull{it.isEditable}?:fresh
-            if(editable.performAction(Node.ACTION_SET_TEXT,Bundle().apply{putCharSequence(Node.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE,value)})){
-                settle();val updated=find(id);val field=nodes(updated).firstOrNull{it.isEditable}?:updated
-                if(field.text?.toString()==value)return
-            }
+            val editable=field();actual=editable.text?.toString()
+            if(actual==value)return
+            accepted=editable.performAction(Node.ACTION_SET_TEXT,Bundle().apply{putCharSequence(Node.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE,value)})
+            settle();actual=field().text?.toString()
+            // Accessibility acknowledgement may lag; the retained widget value is the assertion.
+            if(actual==value)return
             SystemClock.sleep(50)
         }while(SystemClock.uptimeMillis()<deadline)
-        error("Edit failed or value not retained: $id")
+        error("Edit failed or value not retained: $id expected=$value actual=$actual actionAccepted=$accepted")
     }
     private fun dragTarget(document:UniversalMapping){
         click("mapping-BTN_TL2")
@@ -122,7 +125,7 @@ class UniversalEditorInstrumentation:Instrumentation() {
             try{settle();click("Create mapping");activity=waitForMonitorWithTimeout(entry,10000) as? UniversalEditorTestActivity?:error("Home Create mapping route failed")}finally{removeMonitor(entry)}
             settle();text("create-name","UI TEST Custom Hero");click("create-blank")
             for((code,x,y)in listOf(Triple("BTN_GAMEPAD",300,800),Triple("BTN_EAST",600,800),Triple("BTN_TR",1000,800),Triple("BTN_TR2",1300,600),Triple("BTN_TL",1700,400),Triple("BTN_TL2",1900,800))){
-                sendStatus(0,Bundle().apply{putString("editor_step","configure $code")});click("palette-$code");text("binding-name",code);if(code in setOf("BTN_GAMEPAD","BTN_EAST"))click("Tap")
+                sendStatus(0,Bundle().apply{putString("editor_step","configure $code")});click("palette-$code");find("Selected binding · $code");text("binding-name",code);if(code in setOf("BTN_GAMEPAD","BTN_EAST"))click("Tap")
                 text("binding-x",x.toString());text("binding-y",y.toString());if(code=="BTN_TL2")click("binding-aim");click("apply-binding")
             }
             click("confirm-hud");click("enable-mapping");click("save-universal")
@@ -219,6 +222,17 @@ class UniversalEditorInstrumentation:Instrumentation() {
             val cloned=UniversalStorage.read(context,clone.id);check(cloned.actions==source.actions&&!cloned.enabled&&!cloned.calibrated)
             check(UniversalStorage.read(context,starter.id)==source)
             click("Close");closed(a);home()
+            // Only this disposable profile is corrupted: Home must route to guarded editor loading.
+            val preferences=xtr.keymapper.keymap.KeymapProfiles(context).sharedPref
+            val invalidJson=JSONObject(UniversalCodec.encode(cloned)).put("schema_version",99).toString()
+            val invalidLines=UniversalStorage.pack(cloned).map{line->if(line.startsWith(UniversalStorage.TAG+" "))UniversalStorage.TAG+" "+android.util.Base64.encodeToString(invalidJson.toByteArray(Charsets.UTF_8),android.util.Base64.NO_WRAP)else line}.toSet()
+            xtr.keymapper.structured.StructuredProfiles.writeSet(preferences,clone.id,invalidLines)
+            text("profile-search",clone.name)
+            val invalidEditor=addMonitor(UniversalEditorTestActivity::class.java.name,null,false)
+            try{click("Visual editor");a=waitForMonitorWithTimeout(invalidEditor,10000) as? UniversalEditorTestActivity?:error("Invalid mapping did not reach guarded editor");activities+=a;settle()}finally{removeMonitor(invalidEditor)}
+            find("Action not completed");check(!a.isFinishing&&!a.isDestroyed)
+            check(preferences.getStringSet(clone.id,null)==invalidLines){"Invalid mapping was silently rewritten"}
+            click("Dismiss error");click("Close");closed(a);home()
             for(profile in listOf(starter,copy,clone)){
                 val name=store.read().profiles.single{it.id==profile.id}.name
                 text("profile-search",name);click("Delete");find("Delete personal mapping?");click("Cancel");check(store.read().profiles.any{it.id==profile.id})
@@ -227,7 +241,7 @@ class UniversalEditorInstrumentation:Instrumentation() {
             check(store.read()==before)
             JSONObject().put("status","PASS").put("starter_unmeasured",true).put("duplicate_uuid",true).put("binding_remove_undo_redo",true)
                 .put("rename_saved",true).put("home_edit_route",true).put("discard_cancel_and_confirm",true).put("clone_existing",true)
-                .put("delete_cancel_and_confirm",true).put("favorite_cleared_on_delete",true).put("platform_touch_submissions",0)
+                .put("delete_cancel_and_confirm",true).put("corrupt_mapping_guarded_editor",true).put("invalid_mapping_preserved",true).put("favorite_cleared_on_delete",true).put("platform_touch_submissions",0)
         }catch(t:Throwable){File(dir,"crud-failure-nodes.txt").writeText(all().joinToString("\n"){"${it.viewIdResourceName}: ${it.text} visible=${it.isVisibleToUser}"});JSONObject().put("status","FAIL").put("error",t.stackTraceToString())}
         finally{main{activities.asReversed().forEach{it.finish()}};settle();store.read().profiles.filter{p->p.id !in before.profiles.map{it.id}}.forEach{store.delete(it.id)}}
         check(store.read()==before&&xtr.keymapper.mythic.HeroLibraryStore(targetContext).read()==original&&xtr.keymapper.keymap.KeymapProfiles(targetContext).sharedPref.all==mappings){"CRUD changed original data"}

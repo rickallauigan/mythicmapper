@@ -69,7 +69,7 @@ private fun MythicHomeContent(activity:MainActivity) {
     }
     fun action(block: ()->Unit) {runCatching{block();refresh()}.onFailure{refresh();error=it.message}}
     fun edit(profile: HeroProfile, capture: Boolean) {
-        if(!capture&&xtr.keymapper.universal.UniversalStorage.document(KeymapProfiles(activity).sharedPref.getStringSet(profile.id,null)?.toSet()?:emptySet())!=null){activity.openUniversalEditorFromCompose(profile.id);return}
+        if(!capture&&xtr.keymapper.universal.UniversalStorage.contains(KeymapProfiles(activity).sharedPref.getStringSet(profile.id,null).orEmpty().joinToString("\n"))){activity.openUniversalEditorFromCompose(profile.id);return}
         activity.startActivity(Intent(activity,EditorActivity::class.java).putExtra(EditorActivity.PROFILE_NAME,profile.id)
             .putExtra(if(capture)EditorActivity.CAPTURE else EditorActivity.VISUAL,true))
     }
