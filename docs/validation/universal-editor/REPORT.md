@@ -4,8 +4,8 @@ Development branch: `feature/15-universal-mapping-editor`, directly based on
 consolidated `dev` 54b18e1. This is an incremental draft, not release acceptance.
 Physical S10e/G8/MLBB were not used or modified. Issue #20 remains deferred.
 
-Latest local checkpoint: Android code **8122510**, additive lifecycle fixture
-**197c5e1**. **348 Android tests passed**. Actual blank/create/save/reopen, CRUD,
+Latest production-code checkpoint: **8122510**; debug picker synchronization
+follow-up **b23c963**, additive lifecycle fixture **197c5e1**. **348 Android tests passed**. Actual blank/create/save/reopen, CRUD,
 DocumentsUI import/export and eight simulated scenarios passed (seven historical,
 one universal lifecycle), with zero final pointers. See the final sections below
 for current evidence; earlier sections retain their original checkpoint counts.
@@ -260,3 +260,26 @@ benchmark, input-processing latency or physical S10e result. Instrumentation end
 the process, so the attempted post-suite gfxinfo/memory collection had no process
 to inspect. No performance improvement is claimed. CPU, allocations and Compose
 recomposition counts still need a dedicated controlled profiling run.
+
+### Hosted picker synchronization follow-up: b23c963
+
+The first expanded hosted run on 8122510 passed core editor/CRUD, but failed in
+picker Close navigation after a successful import. The saved mapping and favorite
+assertions had already passed; original-data and temporary-document cleanup also
+passed. [Failing run](https://github.com/rickallauigan/mythicmapper/actions/runs/42016825852).
+This failure is not counted as a hosted pass.
+
+The harness now awaits the editor's actual focus after every picker result, or the
+specifically recognized app-owned import error dialog. Activity focus alone is too
+strict when that modal dialog is visible. Scroll coordinates are intersected with
+the active app window; a rejected gesture reports its exact action/bounds instead
+of an uninformative assertion. No input or data-preservation assertion was removed.
+
+**Two consecutive real DocumentsUI runs passed** after the correction, including
+normal return and modal rejection. Both deleted their own temporary export and
+preserved original data. See [repeat evidence](evidence/picker-repeats.json).
+This follow-up changes debug instrumentation only; production gameplay is unchanged.
+Fresh current-head CI is required; consult PR25's checks rather than inferring green
+from an earlier host run. Run `ux universal` and `ux universal-crud` with this bounded helper as separate
+required checks. The committed screenshots/core trace are from the same production
+UI/runtime at 8122510; APK identity includes the b23c963 debug harness follow-up.

@@ -1,0 +1,34 @@
+{
+  "source_commit": "b23c963d136203eb1ad78f9c46cc2c4c2aaf2e0a",
+  "consecutive_passes": 2,
+  "runs": [
+    {
+      "status": "PASS",
+      "safe_preview_down_up": true,
+      "real_documents_ui": true,
+      "export_parent_recreation": true,
+      "export_round_trip": true,
+      "import_new_disabled_uuid": true,
+      "favorites_preserved": true,
+      "future_import_rejected": true,
+      "platform_touch_submissions": 0,
+      "temporary_document_created": true,
+      "temporary_document_deleted": true,
+      "original_data_unchanged": true
+    },
+    {
+      "status": "PASS",
+      "safe_preview_down_up": true,
+      "real_documents_ui": true,
+      "export_parent_recreation": true,
+      "export_round_trip": true,
+      "import_new_disabled_uuid": true,
+      "favorites_preserved": true,
+      "future_import_rejected": true,
+      "platform_touch_submissions": 0,
+      "temporary_document_created": true,
+      "temporary_document_deleted": true,
+      "original_data_unchanged": true
+    }
+  ]
+}
