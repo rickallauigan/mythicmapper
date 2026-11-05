@@ -28,11 +28,15 @@ class UniversalEditorInstrumentation:Instrumentation() {
     }
     private fun scroll(root:Node,forward:Boolean){
         val r=android.graphics.Rect();root.getBoundsInScreen(r)
+        val window=uiAutomation.rootInActiveWindow
+        check(window?.packageName?.toString()==targetContext.packageName){"Scroll requires app window focus"}
+        val visible=android.graphics.Rect();window!!.getBoundsInScreen(visible)
+        check(r.intersect(visible)&&r.width()>0&&r.height()>0){"Scroll root is outside the active window"}
         // The padded left margin avoids consuming drags in the mapping canvas/fields.
         val x=if(root.viewIdResourceName=="mythic-home")r.centerX().toFloat()else r.left+8*targetContext.resources.displayMetrics.density
         val y=r.top+r.height()*(if(forward).8f else .3f);val end=r.top+r.height()*(if(forward).3f else .8f)
         val start=SystemClock.uptimeMillis()
-        fun event(action:Int,p:Float){val e=android.view.MotionEvent.obtain(start,SystemClock.uptimeMillis(),action,x,p,0);e.source=android.view.InputDevice.SOURCE_TOUCHSCREEN;check(uiAutomation.injectInputEvent(e,true));e.recycle()}
+        fun event(action:Int,p:Float){val e=android.view.MotionEvent.obtain(start,SystemClock.uptimeMillis(),action,x,p,0);e.source=android.view.InputDevice.SOURCE_TOUCHSCREEN;try{check(uiAutomation.injectInputEvent(e,true)){"Scroll injection rejected: action=$action x=$x y=$p root=$r window=$visible"}}finally{e.recycle()}}
         var released=false
         try{event(0,y);repeat(8){SystemClock.sleep(20);event(2,y+(end-y)*(it+1)/8)};event(1,end);released=true}
         finally{if(!released)runCatching{event(android.view.MotionEvent.ACTION_CANCEL,end)}}
@@ -264,7 +268,16 @@ class UniversalEditorInstrumentation:Instrumentation() {
         val activities=mutableListOf<Activity>();var exportedUri:android.net.Uri?=null;var deleted=false
         fun editor():UniversalEditorTestActivity=(startActivitySync(Intent(targetContext,UniversalEditorTestActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) as UniversalEditorTestActivity).also{activities+=it;settle();resetUiGesture()}
         fun closed(a:Activity){val end=SystemClock.uptimeMillis()+10000;while(!a.isDestroyed&&SystemClock.uptimeMillis()<end)SystemClock.sleep(50);check(a.isDestroyed)}
-        fun resultUri(a:UniversalEditorTestActivity):android.net.Uri {val end=SystemClock.uptimeMillis()+10000;while(a.lastPickerUri==null&&SystemClock.uptimeMillis()<end)SystemClock.sleep(50);return requireNotNull(a.lastPickerUri){"Picker result missing"}}
+        fun resultUri(a:UniversalEditorTestActivity):android.net.Uri {
+            val end=SystemClock.uptimeMillis()+10000
+            while(SystemClock.uptimeMillis()<end){
+                val window=uiAutomation.rootInActiveWindow
+                val ownedError=window?.packageName?.toString()==targetContext.packageName&&nodes(window).any{it.text?.toString()=="Action not completed"}
+                var ready=false;main{ready=a.lastPickerUri!=null&&(a.hasWindowFocus()||ownedError)&&!a.isFinishing&&!a.isDestroyed}
+                if(ready){settle();resetUiGesture();return requireNotNull(a.lastPickerUri)}
+                SystemClock.sleep(50)
+            };error("Picker result did not return to the resumed editor window")
+        }
         val result=try{
             var a=editor();text("create-name","UI TEST Editor JSON");click("create-blank")
             click("palette-BTN_GAMEPAD");click("Tap");text("binding-x","300");text("binding-y","800");click("apply-binding")
