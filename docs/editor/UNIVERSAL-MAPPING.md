@@ -92,3 +92,9 @@ not evidence of a pass.
 Import/save errors appear in a dismissible dialog so they remain visible while the
 canvas or action list is scrolled. Export validates the retained snapshot before
 opening its destination; the destination is chosen explicitly through Android SAF.
+
+`python3 tools/virtual_g8.py run tools/scenarios/universal-lifecycle.json` replays
+in-memory version2 mappings through screen/focus/profile interruption, diagnostic
+exclusivity, SYN_DROPPED and disconnect. Its synthetic anchors and UUIDs are test
+fixtures, never user calibration or personal profile storage. Smoke runs it in
+addition to the seven unchanged historical hero/lifecycle scenarios.
