@@ -4,8 +4,8 @@ Development branch: `feature/15-universal-mapping-editor`, directly based on
 consolidated `dev` 54b18e1. This is an incremental draft, not release acceptance.
 Physical S10e/G8/MLBB were not used or modified. Issue #20 remains deferred.
 
-Latest production-code checkpoint: **8122510**; debug picker synchronization
-follow-up **b23c963**, additive lifecycle fixture **197c5e1**. **348 Android tests passed**. Actual blank/create/save/reopen, CRUD,
+Latest production/UI checkpoint: **3f249ff**, including guarded malformed-profile
+routing and retained-field synchronization; additive lifecycle fixture **197c5e1**. **348 Android tests passed**. Actual blank/create/save/reopen, CRUD,
 DocumentsUI import/export and eight simulated scenarios passed (seven historical,
 one universal lifecycle), with zero final pointers. See the final sections below
 for current evidence; earlier sections retain their original checkpoint counts.
@@ -283,3 +283,29 @@ Fresh current-head CI is required; consult PR25's checks rather than inferring g
 from an earlier host run. Run `ux universal` and `ux universal-crud` with this bounded helper as separate
 required checks. The committed screenshots/core trace are from the same production
 UI/runtime at 8122510; APK identity includes the b23c963 debug harness follow-up.
+
+### Saved-profile safety and retained-input follow-up: 3f249ff
+
+Source review identified an unguarded parse in Home's Edit callback: a malformed
+saved universal envelope could throw before reaching the editor. Home now uses the
+format marker only for routing; the existing guarded editor loader performs full
+validation and shows an error. The new AVD CRUD regression opens a disposable
+schema99 profile through Home, verifies the error/Activity remain usable, verifies
+its invalid bytes are preserved, then deletes only that test profile with the normal
+confirmation flow. This test passed. Debug build/lint, release compilation and all
+**348 unit tests** passed again with the production routing correction.
+
+The subsequent hosted run
+[42019907179](https://github.com/rickallauigan/mythicmapper/actions/runs/42019907179)
+failed on a retained numeric-field assertion after a recovered SystemUI startup ANR.
+Its captured accessibility tree contained the numeric field value, but the helper
+only checked the value when ACTION_SET_TEXT acknowledged success. The helper now
+independently verifies the retained value before/after the action, waits for the
+selected binding before typing, and reports expected/actual values and the action
+acknowledgement on failure. Exact-value requirements are retained. This is not a
+claim that the failed run passed; current-head hosted validation is still required.
+
+The complete core editor suite passed locally again on 3f249ff, including exact
+field values, marker drag/single undo, save/reopen, both orientations, favorite
+ownership and shared-runtime replay (19 touch events, max two pointers, final zero).
+The current screenshots and APK hash have been refreshed to this checkpoint.

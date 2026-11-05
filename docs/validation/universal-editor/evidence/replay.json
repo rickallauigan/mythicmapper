@@ -88,7 +88,7 @@
       "active": 1
     },
     {
-      "t_ms": 336,
+      "t_ms": 337,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 1,
       "pointer": 53,
@@ -115,7 +115,7 @@
       "active": 0
     },
     {
-      "t_ms": 408,
+      "t_ms": 407,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 0,
       "pointer": 55,
@@ -160,7 +160,7 @@
       "active": 2
     },
     {
-      "t_ms": 479,
+      "t_ms": 478,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 1,
       "pointer": 55,
@@ -178,7 +178,7 @@
       "active": 0
     },
     {
-      "t_ms": 501,
+      "t_ms": 502,
       "source": "SIMULATED_RECORDING_SINK",
       "action": 0,
       "pointer": 55,
@@ -205,17 +205,17 @@
     {
       "packet": "EV_SYN SYN_REPORT 0",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 53
+      "observed_ms": 54
     },
     {
       "packet": "EV_ABS ABS_RY 80",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 53
+      "observed_ms": 54
     },
     {
       "packet": "EV_SYN SYN_REPORT 0",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 53
+      "observed_ms": 54
     },
     {
       "packet": "EV_KEY BTN_GAMEPAD DOWN",
@@ -230,7 +230,7 @@
     {
       "packet": "EV_KEY BTN_EAST DOWN",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 124
+      "observed_ms": 125
     },
     {
       "packet": "EV_KEY BTN_EAST UP",
@@ -245,7 +245,7 @@
     {
       "packet": "EV_KEY BTN_TR UP",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 265
+      "observed_ms": 266
     },
     {
       "packet": "EV_KEY BTN_TR2 DOWN",
@@ -300,7 +300,7 @@
     {
       "action": "disconnect",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 479
+      "observed_ms": 478
     },
     {
       "action": "connect",
@@ -315,7 +315,7 @@
     {
       "action": "diagnostics_on",
       "source": "SIMULATED:Virtual-G8:0",
-      "observed_ms": 501
+      "observed_ms": 502
     },
     {
       "packet": "EV_KEY BTN_TR2 DOWN",

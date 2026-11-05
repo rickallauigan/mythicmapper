@@ -1,7 +1,7 @@
 {
-  "source_commit": "b23c963d136203eb1ad78f9c46cc2c4c2aaf2e0a",
+  "source_commit": "3f249ff3a080a697d480cf6017d4002684df45ae",
   "apk": "app/build/outputs/apk/debug/app-debug.apk",
-  "sha256": "2f116d20db3e95ee3afa0668f56f84583d715966a9e7d36e4c9924e6b2d51eb7",
+  "sha256": "1eba21b3642e5eb2c397960425f90dd10d22cd2df0c006124a21e89b7c280833",
   "installed_avd_apk_hash_matches": true,
   "avd": "MythicMapper_API36_G8",
   "api": 36,
@@ -12,6 +12,6 @@
   "existing_virtual_scenarios": 7,
   "physical_acceptance": "NOT TESTED; physical device untouched",
   "universal_lifecycle_scenarios": 1,
-  "production_ui_evidence_source_commit": "8122510c2c2ba27f6440683933a193d71a2f7a69",
-  "source_note": "b23c963 changes debug test synchronization only; production UI/runtime unchanged from 8122510."
+  "production_ui_evidence_source_commit": "3f249ff3a080a697d480cf6017d4002684df45ae",
+  "source_note": "Includes guarded malformed-profile routing and retained-field synchronization. Picker repeat evidence is separately tagged b23c963; unchanged-runtime regression evidence remains 8122510."
 }
